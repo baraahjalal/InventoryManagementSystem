@@ -41,11 +41,11 @@
             this.btnDashboard = new System.Windows.Forms.Button();
             this.picDashboard = new System.Windows.Forms.PictureBox();
             this.pnlMainContent = new System.Windows.Forms.Panel();
+            this.lblSystemID = new System.Windows.Forms.Label();
             this.lblCompanyDetails = new System.Windows.Forms.Label();
             this.lblCompanyName = new System.Windows.Forms.Label();
             this.picLogoMain = new System.Windows.Forms.PictureBox();
             this.sidebarTimer = new System.Windows.Forms.Timer(this.components);
-            this.lblSystemID = new System.Windows.Forms.Label();
             this.pnlSideBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picStockOut)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStockIn)).BeginInit();
@@ -217,6 +217,18 @@
             this.pnlMainContent.Size = new System.Drawing.Size(1054, 691);
             this.pnlMainContent.TabIndex = 3;
             // 
+            // lblSystemID
+            // 
+            this.lblSystemID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblSystemID.AutoSize = true;
+            this.lblSystemID.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.lblSystemID.ForeColor = System.Drawing.Color.Silver;
+            this.lblSystemID.Location = new System.Drawing.Point(821, 661);
+            this.lblSystemID.Name = "lblSystemID";
+            this.lblSystemID.Size = new System.Drawing.Size(221, 21);
+            this.lblSystemID.TabIndex = 16;
+            this.lblSystemID.Text = "SYSTEM USER: BARAAH AREBI";
+            // 
             // lblCompanyDetails
             // 
             this.lblCompanyDetails.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -258,18 +270,6 @@
             this.sidebarTimer.Interval = 10;
             this.sidebarTimer.Tick += new System.EventHandler(this.sidebarTimer_Tick);
             // 
-            // lblSystemID
-            // 
-            this.lblSystemID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblSystemID.AutoSize = true;
-            this.lblSystemID.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.lblSystemID.ForeColor = System.Drawing.Color.Silver;
-            this.lblSystemID.Location = new System.Drawing.Point(821, 661);
-            this.lblSystemID.Name = "lblSystemID";
-            this.lblSystemID.Size = new System.Drawing.Size(221, 21);
-            this.lblSystemID.TabIndex = 16;
-            this.lblSystemID.Text = "SYSTEM USER: BARAAH AREBI";
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -278,6 +278,7 @@
             this.Controls.Add(this.pnlMainContent);
             this.Controls.Add(this.pnlSideBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.pnlSideBar.ResumeLayout(false);
