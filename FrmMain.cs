@@ -90,5 +90,10 @@ namespace InventoryManagementSystem
         {
                         OpenChildForm(new FrmStockOut());
         }
+
+        private void btnUserManagement_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FrmUsers());
+        }
     }
 }

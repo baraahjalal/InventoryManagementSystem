@@ -46,6 +46,8 @@
             this.lblCompanyName = new System.Windows.Forms.Label();
             this.picLogoMain = new System.Windows.Forms.PictureBox();
             this.sidebarTimer = new System.Windows.Forms.Timer(this.components);
+            this.btnUserManagement = new System.Windows.Forms.Button();
+            this.picUserManagement = new System.Windows.Forms.PictureBox();
             this.pnlSideBar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picStockOut)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStockIn)).BeginInit();
@@ -54,12 +56,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.picDashboard)).BeginInit();
             this.pnlMainContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogoMain)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picUserManagement)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlSideBar
             // 
             this.pnlSideBar.AccessibleRole = System.Windows.Forms.AccessibleRole.MenuBar;
             this.pnlSideBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.pnlSideBar.Controls.Add(this.btnUserManagement);
+            this.pnlSideBar.Controls.Add(this.picUserManagement);
             this.pnlSideBar.Controls.Add(this.btnStockOut);
             this.pnlSideBar.Controls.Add(this.picStockOut);
             this.pnlSideBar.Controls.Add(this.btnStockIn);
@@ -270,6 +275,35 @@
             this.sidebarTimer.Interval = 10;
             this.sidebarTimer.Tick += new System.EventHandler(this.sidebarTimer_Tick);
             // 
+            // btnUserManagement
+            // 
+            this.btnUserManagement.BackColor = System.Drawing.Color.Transparent;
+            this.btnUserManagement.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnUserManagement.FlatAppearance.BorderSize = 0;
+            this.btnUserManagement.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(162)))), ((int)(((byte)(155)))), ((int)(((byte)(254)))));
+            this.btnUserManagement.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUserManagement.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUserManagement.ForeColor = System.Drawing.Color.White;
+            this.btnUserManagement.Location = new System.Drawing.Point(62, 418);
+            this.btnUserManagement.Name = "btnUserManagement";
+            this.btnUserManagement.Size = new System.Drawing.Size(163, 40);
+            this.btnUserManagement.TabIndex = 14;
+            this.btnUserManagement.Text = "User Management";
+            this.btnUserManagement.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnUserManagement.UseVisualStyleBackColor = false;
+            this.btnUserManagement.Click += new System.EventHandler(this.btnUserManagement_Click);
+            // 
+            // picUserManagement
+            // 
+            this.picUserManagement.BackColor = System.Drawing.Color.Transparent;
+            this.picUserManagement.Image = ((System.Drawing.Image)(resources.GetObject("picUserManagement.Image")));
+            this.picUserManagement.Location = new System.Drawing.Point(16, 421);
+            this.picUserManagement.Name = "picUserManagement";
+            this.picUserManagement.Size = new System.Drawing.Size(35, 35);
+            this.picUserManagement.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picUserManagement.TabIndex = 13;
+            this.picUserManagement.TabStop = false;
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -290,6 +324,7 @@
             this.pnlMainContent.ResumeLayout(false);
             this.pnlMainContent.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogoMain)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picUserManagement)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -312,5 +347,7 @@
         private System.Windows.Forms.Label lblCompanyDetails;
         private System.Windows.Forms.Timer sidebarTimer;
         private System.Windows.Forms.Label lblSystemID;
+        private System.Windows.Forms.Button btnUserManagement;
+        private System.Windows.Forms.PictureBox picUserManagement;
     }
 }
