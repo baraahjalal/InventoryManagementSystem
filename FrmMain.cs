@@ -88,12 +88,27 @@ namespace InventoryManagementSystem
 
         private void btnStockOut_Click(object sender, EventArgs e)
         {
-                        OpenChildForm(new FrmStockOut());
+            OpenChildForm(new FrmStockOut());
         }
 
         private void btnUserManagement_Click(object sender, EventArgs e)
         {
             OpenChildForm(new FrmUsers());
+        }
+
+        private void btnSuppliersManagement_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FrmSupplierManagement());
+        }
+
+        private void btnAuditLog_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FrmAuditLog());
+        }
+
+        private void btnReports_Click(object sender, EventArgs e)
+        {
+            OpenChildForm(new FrmReports());
         }
     }
 }

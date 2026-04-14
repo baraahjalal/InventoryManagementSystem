@@ -21,6 +21,12 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlHeader = new System.Windows.Forms.Panel();
+            this.lblProcessor = new System.Windows.Forms.Label();
+            this.cmbFilterProcessor = new System.Windows.Forms.ComboBox();
+            this.lblRAM = new System.Windows.Forms.Label();
+            this.cmbFilterRAM = new System.Windows.Forms.ComboBox();
+            this.lblSearch = new System.Windows.Forms.Label();
+            this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnCategoryPrinter = new System.Windows.Forms.Button();
             this.btnCategoryPhone = new System.Windows.Forms.Button();
             this.btnCategoryLaptop = new System.Windows.Forms.Button();
@@ -44,6 +50,12 @@
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.White;
+            this.pnlHeader.Controls.Add(this.lblProcessor);
+            this.pnlHeader.Controls.Add(this.cmbFilterProcessor);
+            this.pnlHeader.Controls.Add(this.lblRAM);
+            this.pnlHeader.Controls.Add(this.cmbFilterRAM);
+            this.pnlHeader.Controls.Add(this.lblSearch);
+            this.pnlHeader.Controls.Add(this.txtSearch);
             this.pnlHeader.Controls.Add(this.btnCategoryPrinter);
             this.pnlHeader.Controls.Add(this.btnCategoryPhone);
             this.pnlHeader.Controls.Add(this.btnCategoryLaptop);
@@ -51,8 +63,90 @@
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlHeader.Name = "pnlHeader";
             this.pnlHeader.Padding = new System.Windows.Forms.Padding(20, 20, 20, 0);
-            this.pnlHeader.Size = new System.Drawing.Size(1100, 80);
+            this.pnlHeader.Size = new System.Drawing.Size(1200, 80);
             this.pnlHeader.TabIndex = 0;
+            // 
+            // lblProcessor
+            // 
+            this.lblProcessor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblProcessor.AutoSize = true;
+            this.lblProcessor.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.lblProcessor.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.lblProcessor.Location = new System.Drawing.Point(485, 31);
+            this.lblProcessor.Name = "lblProcessor";
+            this.lblProcessor.Size = new System.Drawing.Size(68, 17);
+            this.lblProcessor.TabIndex = 8;
+            this.lblProcessor.Text = "Processor:";
+            // 
+            // cmbFilterProcessor
+            // 
+            this.cmbFilterProcessor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbFilterProcessor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFilterProcessor.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.cmbFilterProcessor.FormattingEnabled = true;
+            this.cmbFilterProcessor.Items.AddRange(new object[] {
+            "All Processors",
+            "Apple M3",
+            "Apple M2",
+            "Intel Core i9",
+            "Intel Core i7",
+            "Intel Core i5",
+            "Snapdragon 8 Gen 3",
+            "A17 Pro"});
+            this.cmbFilterProcessor.Location = new System.Drawing.Point(560, 28);
+            this.cmbFilterProcessor.Name = "cmbFilterProcessor";
+            this.cmbFilterProcessor.Size = new System.Drawing.Size(140, 25);
+            this.cmbFilterProcessor.TabIndex = 7;
+            // 
+            // lblRAM
+            // 
+            this.lblRAM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblRAM.AutoSize = true;
+            this.lblRAM.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.lblRAM.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.lblRAM.Location = new System.Drawing.Point(725, 31);
+            this.lblRAM.Name = "lblRAM";
+            this.lblRAM.Size = new System.Drawing.Size(38, 17);
+            this.lblRAM.TabIndex = 6;
+            this.lblRAM.Text = "RAM:";
+            // 
+            // cmbFilterRAM
+            // 
+            this.cmbFilterRAM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbFilterRAM.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbFilterRAM.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.cmbFilterRAM.FormattingEnabled = true;
+            this.cmbFilterRAM.Items.AddRange(new object[] {
+            "All RAM",
+            "8 GB",
+            "16 GB",
+            "32 GB",
+            "64 GB"});
+            this.cmbFilterRAM.Location = new System.Drawing.Point(770, 28);
+            this.cmbFilterRAM.Name = "cmbFilterRAM";
+            this.cmbFilterRAM.Size = new System.Drawing.Size(100, 25);
+            this.cmbFilterRAM.TabIndex = 5;
+            // 
+            // lblSearch
+            // 
+            this.lblSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblSearch.AutoSize = true;
+            this.lblSearch.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.lblSearch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.lblSearch.Location = new System.Drawing.Point(890, 31);
+            this.lblSearch.Name = "lblSearch";
+            this.lblSearch.Size = new System.Drawing.Size(50, 17);
+            this.lblSearch.TabIndex = 4;
+            this.lblSearch.Text = "Search:";
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtSearch.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.txtSearch.Location = new System.Drawing.Point(945, 28);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(220, 24);
+            this.txtSearch.TabIndex = 3;
             // 
             // btnCategoryPrinter
             // 
@@ -109,7 +203,7 @@
             this.pnlDetails.Controls.Add(this.txtProdName);
             this.pnlDetails.Controls.Add(this.lblDetailsTitle);
             this.pnlDetails.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlDetails.Location = new System.Drawing.Point(780, 80);
+            this.pnlDetails.Location = new System.Drawing.Point(880, 80);
             this.pnlDetails.Name = "pnlDetails";
             this.pnlDetails.Padding = new System.Windows.Forms.Padding(20);
             this.pnlDetails.Size = new System.Drawing.Size(320, 620);
@@ -207,7 +301,7 @@
             this.pnlGridContainer.Location = new System.Drawing.Point(0, 80);
             this.pnlGridContainer.Name = "pnlGridContainer";
             this.pnlGridContainer.Padding = new System.Windows.Forms.Padding(20);
-            this.pnlGridContainer.Size = new System.Drawing.Size(780, 620);
+            this.pnlGridContainer.Size = new System.Drawing.Size(880, 620);
             this.pnlGridContainer.TabIndex = 2;
             // 
             // dgvProducts
@@ -258,7 +352,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1100, 700);
+            this.ClientSize = new System.Drawing.Size(1200, 700);
             this.Controls.Add(this.pnlGridContainer);
             this.Controls.Add(this.pnlDetails);
             this.Controls.Add(this.pnlHeader);
@@ -266,6 +360,7 @@
             this.Name = "FrmProducts";
             this.Text = "Products";
             this.pnlHeader.ResumeLayout(false);
+            this.pnlHeader.PerformLayout();
             this.pnlDetails.ResumeLayout(false);
             this.pnlDetails.PerformLayout();
             this.pnlGridContainer.ResumeLayout(false);
@@ -291,5 +386,11 @@
         private System.Windows.Forms.Label lblDetailsTitle;
         private System.Windows.Forms.Panel pnlGridContainer;
         private System.Windows.Forms.DataGridView dgvProducts;
+        private System.Windows.Forms.Label lblProcessor;
+        private System.Windows.Forms.ComboBox cmbFilterProcessor;
+        private System.Windows.Forms.Label lblRAM;
+        private System.Windows.Forms.ComboBox cmbFilterRAM;
+        private System.Windows.Forms.Label lblSearch;
+        private System.Windows.Forms.TextBox txtSearch;
     }
 }
