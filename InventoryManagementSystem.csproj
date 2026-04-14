@@ -46,6 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FrmAuditLog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmAuditLog.Designer.cs">
+      <DependentUpon>FrmAuditLog.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmDashboard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,11 +76,23 @@
     <Compile Include="FrmProducts.Designer.cs">
       <DependentUpon>FrmProducts.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmReports.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmReports.Designer.cs">
+      <DependentUpon>FrmReports.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmStockOut.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmStockOut.Designer.cs">
       <DependentUpon>FrmStockOut.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmSupplierManagement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmSupplierManagement.Designer.cs">
+      <DependentUpon>FrmSupplierManagement.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmUsers.cs">
       <SubType>Form</SubType>
@@ -104,6 +122,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmStockOut.resx">
       <DependentUpon>FrmStockOut.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmSupplierManagement.resx">
+      <DependentUpon>FrmSupplierManagement.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -31,6 +31,14 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMain));
             this.pnlSideBar = new System.Windows.Forms.Panel();
+            this.btnReports = new System.Windows.Forms.Button();
+            this.picReports = new System.Windows.Forms.PictureBox();
+            this.btnSuppliersManagement = new System.Windows.Forms.Button();
+            this.picSupplierManagement = new System.Windows.Forms.PictureBox();
+            this.btnAuditLog = new System.Windows.Forms.Button();
+            this.picAuditLog = new System.Windows.Forms.PictureBox();
+            this.btnUserManagement = new System.Windows.Forms.Button();
+            this.picUserManagement = new System.Windows.Forms.PictureBox();
             this.btnStockOut = new System.Windows.Forms.Button();
             this.picStockOut = new System.Windows.Forms.PictureBox();
             this.btnStockIn = new System.Windows.Forms.Button();
@@ -46,9 +54,11 @@
             this.lblCompanyName = new System.Windows.Forms.Label();
             this.picLogoMain = new System.Windows.Forms.PictureBox();
             this.sidebarTimer = new System.Windows.Forms.Timer(this.components);
-            this.btnUserManagement = new System.Windows.Forms.Button();
-            this.picUserManagement = new System.Windows.Forms.PictureBox();
             this.pnlSideBar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picReports)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picSupplierManagement)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picAuditLog)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picUserManagement)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStockOut)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStockIn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picProducts)).BeginInit();
@@ -56,13 +66,18 @@
             ((System.ComponentModel.ISupportInitialize)(this.picDashboard)).BeginInit();
             this.pnlMainContent.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogoMain)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picUserManagement)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlSideBar
             // 
             this.pnlSideBar.AccessibleRole = System.Windows.Forms.AccessibleRole.MenuBar;
             this.pnlSideBar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.pnlSideBar.Controls.Add(this.btnReports);
+            this.pnlSideBar.Controls.Add(this.picReports);
+            this.pnlSideBar.Controls.Add(this.btnSuppliersManagement);
+            this.pnlSideBar.Controls.Add(this.picSupplierManagement);
+            this.pnlSideBar.Controls.Add(this.btnAuditLog);
+            this.pnlSideBar.Controls.Add(this.picAuditLog);
             this.pnlSideBar.Controls.Add(this.btnUserManagement);
             this.pnlSideBar.Controls.Add(this.picUserManagement);
             this.pnlSideBar.Controls.Add(this.btnStockOut);
@@ -77,8 +92,124 @@
             this.pnlSideBar.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlSideBar.Location = new System.Drawing.Point(0, 0);
             this.pnlSideBar.Name = "pnlSideBar";
-            this.pnlSideBar.Size = new System.Drawing.Size(235, 691);
+            this.pnlSideBar.Size = new System.Drawing.Size(235, 746);
             this.pnlSideBar.TabIndex = 2;
+            // 
+            // btnReports
+            // 
+            this.btnReports.BackColor = System.Drawing.Color.Transparent;
+            this.btnReports.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnReports.FlatAppearance.BorderSize = 0;
+            this.btnReports.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(162)))), ((int)(((byte)(155)))), ((int)(((byte)(254)))));
+            this.btnReports.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnReports.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnReports.ForeColor = System.Drawing.Color.White;
+            this.btnReports.Location = new System.Drawing.Point(62, 662);
+            this.btnReports.Name = "btnReports";
+            this.btnReports.Size = new System.Drawing.Size(163, 40);
+            this.btnReports.TabIndex = 20;
+            this.btnReports.Text = "Reports";
+            this.btnReports.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnReports.UseVisualStyleBackColor = false;
+            this.btnReports.Click += new System.EventHandler(this.btnReports_Click);
+            // 
+            // picReports
+            // 
+            this.picReports.BackColor = System.Drawing.Color.Transparent;
+            this.picReports.Image = ((System.Drawing.Image)(resources.GetObject("picReports.Image")));
+            this.picReports.Location = new System.Drawing.Point(16, 665);
+            this.picReports.Name = "picReports";
+            this.picReports.Size = new System.Drawing.Size(35, 35);
+            this.picReports.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picReports.TabIndex = 19;
+            this.picReports.TabStop = false;
+            // 
+            // btnSuppliersManagement
+            // 
+            this.btnSuppliersManagement.BackColor = System.Drawing.Color.Transparent;
+            this.btnSuppliersManagement.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnSuppliersManagement.FlatAppearance.BorderSize = 0;
+            this.btnSuppliersManagement.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(162)))), ((int)(((byte)(155)))), ((int)(((byte)(254)))));
+            this.btnSuppliersManagement.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSuppliersManagement.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSuppliersManagement.ForeColor = System.Drawing.Color.White;
+            this.btnSuppliersManagement.Location = new System.Drawing.Point(62, 493);
+            this.btnSuppliersManagement.Name = "btnSuppliersManagement";
+            this.btnSuppliersManagement.Size = new System.Drawing.Size(180, 55);
+            this.btnSuppliersManagement.TabIndex = 18;
+            this.btnSuppliersManagement.Text = "Suppliers Management";
+            this.btnSuppliersManagement.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSuppliersManagement.UseVisualStyleBackColor = false;
+            this.btnSuppliersManagement.Click += new System.EventHandler(this.btnSuppliersManagement_Click);
+            // 
+            // picSupplierManagement
+            // 
+            this.picSupplierManagement.BackColor = System.Drawing.Color.Transparent;
+            this.picSupplierManagement.Image = ((System.Drawing.Image)(resources.GetObject("picSupplierManagement.Image")));
+            this.picSupplierManagement.Location = new System.Drawing.Point(16, 502);
+            this.picSupplierManagement.Name = "picSupplierManagement";
+            this.picSupplierManagement.Size = new System.Drawing.Size(35, 35);
+            this.picSupplierManagement.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picSupplierManagement.TabIndex = 17;
+            this.picSupplierManagement.TabStop = false;
+            // 
+            // btnAuditLog
+            // 
+            this.btnAuditLog.BackColor = System.Drawing.Color.Transparent;
+            this.btnAuditLog.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAuditLog.FlatAppearance.BorderSize = 0;
+            this.btnAuditLog.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(162)))), ((int)(((byte)(155)))), ((int)(((byte)(254)))));
+            this.btnAuditLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAuditLog.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAuditLog.ForeColor = System.Drawing.Color.White;
+            this.btnAuditLog.Location = new System.Drawing.Point(63, 579);
+            this.btnAuditLog.Name = "btnAuditLog";
+            this.btnAuditLog.Size = new System.Drawing.Size(163, 40);
+            this.btnAuditLog.TabIndex = 16;
+            this.btnAuditLog.Text = "Audit Log";
+            this.btnAuditLog.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnAuditLog.UseVisualStyleBackColor = false;
+            this.btnAuditLog.Click += new System.EventHandler(this.btnAuditLog_Click);
+            // 
+            // picAuditLog
+            // 
+            this.picAuditLog.BackColor = System.Drawing.Color.Transparent;
+            this.picAuditLog.Image = ((System.Drawing.Image)(resources.GetObject("picAuditLog.Image")));
+            this.picAuditLog.Location = new System.Drawing.Point(17, 582);
+            this.picAuditLog.Name = "picAuditLog";
+            this.picAuditLog.Size = new System.Drawing.Size(35, 35);
+            this.picAuditLog.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picAuditLog.TabIndex = 15;
+            this.picAuditLog.TabStop = false;
+            // 
+            // btnUserManagement
+            // 
+            this.btnUserManagement.BackColor = System.Drawing.Color.Transparent;
+            this.btnUserManagement.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnUserManagement.FlatAppearance.BorderSize = 0;
+            this.btnUserManagement.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(162)))), ((int)(((byte)(155)))), ((int)(((byte)(254)))));
+            this.btnUserManagement.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUserManagement.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUserManagement.ForeColor = System.Drawing.Color.White;
+            this.btnUserManagement.Location = new System.Drawing.Point(62, 418);
+            this.btnUserManagement.Name = "btnUserManagement";
+            this.btnUserManagement.Size = new System.Drawing.Size(163, 40);
+            this.btnUserManagement.TabIndex = 14;
+            this.btnUserManagement.Text = "User Management";
+            this.btnUserManagement.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnUserManagement.UseVisualStyleBackColor = false;
+            this.btnUserManagement.Click += new System.EventHandler(this.btnUserManagement_Click);
+            // 
+            // picUserManagement
+            // 
+            this.picUserManagement.BackColor = System.Drawing.Color.Transparent;
+            this.picUserManagement.Image = ((System.Drawing.Image)(resources.GetObject("picUserManagement.Image")));
+            this.picUserManagement.Location = new System.Drawing.Point(16, 421);
+            this.picUserManagement.Name = "picUserManagement";
+            this.picUserManagement.Size = new System.Drawing.Size(35, 35);
+            this.picUserManagement.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picUserManagement.TabIndex = 13;
+            this.picUserManagement.TabStop = false;
             // 
             // btnStockOut
             // 
@@ -189,7 +320,7 @@
             this.btnDashboard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDashboard.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnDashboard.ForeColor = System.Drawing.Color.White;
-            this.btnDashboard.Location = new System.Drawing.Point(62, 113);
+            this.btnDashboard.Location = new System.Drawing.Point(62, 100);
             this.btnDashboard.Name = "btnDashboard";
             this.btnDashboard.Size = new System.Drawing.Size(163, 40);
             this.btnDashboard.TabIndex = 6;
@@ -202,7 +333,7 @@
             // 
             this.picDashboard.BackColor = System.Drawing.Color.Transparent;
             this.picDashboard.Image = ((System.Drawing.Image)(resources.GetObject("picDashboard.Image")));
-            this.picDashboard.Location = new System.Drawing.Point(16, 116);
+            this.picDashboard.Location = new System.Drawing.Point(16, 103);
             this.picDashboard.Name = "picDashboard";
             this.picDashboard.Size = new System.Drawing.Size(35, 35);
             this.picDashboard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -219,7 +350,7 @@
             this.pnlMainContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMainContent.Location = new System.Drawing.Point(235, 0);
             this.pnlMainContent.Name = "pnlMainContent";
-            this.pnlMainContent.Size = new System.Drawing.Size(1054, 691);
+            this.pnlMainContent.Size = new System.Drawing.Size(1054, 746);
             this.pnlMainContent.TabIndex = 3;
             // 
             // lblSystemID
@@ -228,7 +359,7 @@
             this.lblSystemID.AutoSize = true;
             this.lblSystemID.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.lblSystemID.ForeColor = System.Drawing.Color.Silver;
-            this.lblSystemID.Location = new System.Drawing.Point(821, 661);
+            this.lblSystemID.Location = new System.Drawing.Point(821, 716);
             this.lblSystemID.Name = "lblSystemID";
             this.lblSystemID.Size = new System.Drawing.Size(221, 21);
             this.lblSystemID.TabIndex = 16;
@@ -275,40 +406,11 @@
             this.sidebarTimer.Interval = 10;
             this.sidebarTimer.Tick += new System.EventHandler(this.sidebarTimer_Tick);
             // 
-            // btnUserManagement
-            // 
-            this.btnUserManagement.BackColor = System.Drawing.Color.Transparent;
-            this.btnUserManagement.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnUserManagement.FlatAppearance.BorderSize = 0;
-            this.btnUserManagement.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(162)))), ((int)(((byte)(155)))), ((int)(((byte)(254)))));
-            this.btnUserManagement.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnUserManagement.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnUserManagement.ForeColor = System.Drawing.Color.White;
-            this.btnUserManagement.Location = new System.Drawing.Point(62, 418);
-            this.btnUserManagement.Name = "btnUserManagement";
-            this.btnUserManagement.Size = new System.Drawing.Size(163, 40);
-            this.btnUserManagement.TabIndex = 14;
-            this.btnUserManagement.Text = "User Management";
-            this.btnUserManagement.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnUserManagement.UseVisualStyleBackColor = false;
-            this.btnUserManagement.Click += new System.EventHandler(this.btnUserManagement_Click);
-            // 
-            // picUserManagement
-            // 
-            this.picUserManagement.BackColor = System.Drawing.Color.Transparent;
-            this.picUserManagement.Image = ((System.Drawing.Image)(resources.GetObject("picUserManagement.Image")));
-            this.picUserManagement.Location = new System.Drawing.Point(16, 421);
-            this.picUserManagement.Name = "picUserManagement";
-            this.picUserManagement.Size = new System.Drawing.Size(35, 35);
-            this.picUserManagement.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.picUserManagement.TabIndex = 13;
-            this.picUserManagement.TabStop = false;
-            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1289, 691);
+            this.ClientSize = new System.Drawing.Size(1289, 746);
             this.Controls.Add(this.pnlMainContent);
             this.Controls.Add(this.pnlSideBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -316,6 +418,10 @@
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.pnlSideBar.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picReports)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picSupplierManagement)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picAuditLog)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picUserManagement)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStockOut)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picStockIn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picProducts)).EndInit();
@@ -324,7 +430,6 @@
             this.pnlMainContent.ResumeLayout(false);
             this.pnlMainContent.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogoMain)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picUserManagement)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -349,5 +454,11 @@
         private System.Windows.Forms.Label lblSystemID;
         private System.Windows.Forms.Button btnUserManagement;
         private System.Windows.Forms.PictureBox picUserManagement;
+        private System.Windows.Forms.Button btnAuditLog;
+        private System.Windows.Forms.PictureBox picAuditLog;
+        private System.Windows.Forms.Button btnReports;
+        private System.Windows.Forms.PictureBox picReports;
+        private System.Windows.Forms.Button btnSuppliersManagement;
+        private System.Windows.Forms.PictureBox picSupplierManagement;
     }
 }
