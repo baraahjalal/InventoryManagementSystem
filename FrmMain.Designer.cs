@@ -92,7 +92,7 @@
             this.pnlSideBar.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlSideBar.Location = new System.Drawing.Point(0, 0);
             this.pnlSideBar.Name = "pnlSideBar";
-            this.pnlSideBar.Size = new System.Drawing.Size(235, 746);
+            this.pnlSideBar.Size = new System.Drawing.Size(235, 749);
             this.pnlSideBar.TabIndex = 2;
             // 
             // btnReports
@@ -104,7 +104,7 @@
             this.btnReports.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnReports.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnReports.ForeColor = System.Drawing.Color.White;
-            this.btnReports.Location = new System.Drawing.Point(62, 662);
+            this.btnReports.Location = new System.Drawing.Point(62, 586);
             this.btnReports.Name = "btnReports";
             this.btnReports.Size = new System.Drawing.Size(163, 40);
             this.btnReports.TabIndex = 20;
@@ -117,7 +117,7 @@
             // 
             this.picReports.BackColor = System.Drawing.Color.Transparent;
             this.picReports.Image = ((System.Drawing.Image)(resources.GetObject("picReports.Image")));
-            this.picReports.Location = new System.Drawing.Point(16, 665);
+            this.picReports.Location = new System.Drawing.Point(16, 589);
             this.picReports.Name = "picReports";
             this.picReports.Size = new System.Drawing.Size(35, 35);
             this.picReports.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -133,7 +133,7 @@
             this.btnSuppliersManagement.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSuppliersManagement.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSuppliersManagement.ForeColor = System.Drawing.Color.White;
-            this.btnSuppliersManagement.Location = new System.Drawing.Point(62, 493);
+            this.btnSuppliersManagement.Location = new System.Drawing.Point(63, 421);
             this.btnSuppliersManagement.Name = "btnSuppliersManagement";
             this.btnSuppliersManagement.Size = new System.Drawing.Size(180, 55);
             this.btnSuppliersManagement.TabIndex = 18;
@@ -146,7 +146,7 @@
             // 
             this.picSupplierManagement.BackColor = System.Drawing.Color.Transparent;
             this.picSupplierManagement.Image = ((System.Drawing.Image)(resources.GetObject("picSupplierManagement.Image")));
-            this.picSupplierManagement.Location = new System.Drawing.Point(16, 502);
+            this.picSupplierManagement.Location = new System.Drawing.Point(17, 430);
             this.picSupplierManagement.Name = "picSupplierManagement";
             this.picSupplierManagement.Size = new System.Drawing.Size(35, 35);
             this.picSupplierManagement.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -162,7 +162,7 @@
             this.btnAuditLog.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAuditLog.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAuditLog.ForeColor = System.Drawing.Color.White;
-            this.btnAuditLog.Location = new System.Drawing.Point(63, 579);
+            this.btnAuditLog.Location = new System.Drawing.Point(63, 507);
             this.btnAuditLog.Name = "btnAuditLog";
             this.btnAuditLog.Size = new System.Drawing.Size(163, 40);
             this.btnAuditLog.TabIndex = 16;
@@ -175,7 +175,7 @@
             // 
             this.picAuditLog.BackColor = System.Drawing.Color.Transparent;
             this.picAuditLog.Image = ((System.Drawing.Image)(resources.GetObject("picAuditLog.Image")));
-            this.picAuditLog.Location = new System.Drawing.Point(17, 582);
+            this.picAuditLog.Location = new System.Drawing.Point(17, 510);
             this.picAuditLog.Name = "picAuditLog";
             this.picAuditLog.Size = new System.Drawing.Size(35, 35);
             this.picAuditLog.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -191,7 +191,7 @@
             this.btnUserManagement.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUserManagement.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnUserManagement.ForeColor = System.Drawing.Color.White;
-            this.btnUserManagement.Location = new System.Drawing.Point(62, 418);
+            this.btnUserManagement.Location = new System.Drawing.Point(62, 359);
             this.btnUserManagement.Name = "btnUserManagement";
             this.btnUserManagement.Size = new System.Drawing.Size(163, 40);
             this.btnUserManagement.TabIndex = 14;
@@ -204,7 +204,7 @@
             // 
             this.picUserManagement.BackColor = System.Drawing.Color.Transparent;
             this.picUserManagement.Image = ((System.Drawing.Image)(resources.GetObject("picUserManagement.Image")));
-            this.picUserManagement.Location = new System.Drawing.Point(16, 421);
+            this.picUserManagement.Location = new System.Drawing.Point(16, 362);
             this.picUserManagement.Name = "picUserManagement";
             this.picUserManagement.Size = new System.Drawing.Size(35, 35);
             this.picUserManagement.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -220,7 +220,7 @@
             this.btnStockOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStockOut.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStockOut.ForeColor = System.Drawing.Color.White;
-            this.btnStockOut.Location = new System.Drawing.Point(62, 338);
+            this.btnStockOut.Location = new System.Drawing.Point(62, 301);
             this.btnStockOut.Name = "btnStockOut";
             this.btnStockOut.Size = new System.Drawing.Size(163, 40);
             this.btnStockOut.TabIndex = 12;
@@ -233,7 +233,7 @@
             // 
             this.picStockOut.BackColor = System.Drawing.Color.Transparent;
             this.picStockOut.Image = ((System.Drawing.Image)(resources.GetObject("picStockOut.Image")));
-            this.picStockOut.Location = new System.Drawing.Point(16, 341);
+            this.picStockOut.Location = new System.Drawing.Point(16, 304);
             this.picStockOut.Name = "picStockOut";
             this.picStockOut.Size = new System.Drawing.Size(35, 35);
             this.picStockOut.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -249,7 +249,7 @@
             this.btnStockIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnStockIn.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStockIn.ForeColor = System.Drawing.Color.White;
-            this.btnStockIn.Location = new System.Drawing.Point(63, 262);
+            this.btnStockIn.Location = new System.Drawing.Point(63, 234);
             this.btnStockIn.Name = "btnStockIn";
             this.btnStockIn.Size = new System.Drawing.Size(163, 40);
             this.btnStockIn.TabIndex = 10;
@@ -262,7 +262,7 @@
             // 
             this.picStockIn.BackColor = System.Drawing.Color.Transparent;
             this.picStockIn.Image = ((System.Drawing.Image)(resources.GetObject("picStockIn.Image")));
-            this.picStockIn.Location = new System.Drawing.Point(17, 265);
+            this.picStockIn.Location = new System.Drawing.Point(17, 237);
             this.picStockIn.Name = "picStockIn";
             this.picStockIn.Size = new System.Drawing.Size(35, 35);
             this.picStockIn.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -278,7 +278,7 @@
             this.btnProducts.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnProducts.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnProducts.ForeColor = System.Drawing.Color.White;
-            this.btnProducts.Location = new System.Drawing.Point(62, 188);
+            this.btnProducts.Location = new System.Drawing.Point(62, 165);
             this.btnProducts.Name = "btnProducts";
             this.btnProducts.Size = new System.Drawing.Size(163, 40);
             this.btnProducts.TabIndex = 8;
@@ -291,7 +291,7 @@
             // 
             this.picProducts.BackColor = System.Drawing.Color.Transparent;
             this.picProducts.Image = ((System.Drawing.Image)(resources.GetObject("picProducts.Image")));
-            this.picProducts.Location = new System.Drawing.Point(16, 191);
+            this.picProducts.Location = new System.Drawing.Point(16, 168);
             this.picProducts.Name = "picProducts";
             this.picProducts.Size = new System.Drawing.Size(35, 35);
             this.picProducts.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -350,7 +350,7 @@
             this.pnlMainContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMainContent.Location = new System.Drawing.Point(235, 0);
             this.pnlMainContent.Name = "pnlMainContent";
-            this.pnlMainContent.Size = new System.Drawing.Size(1054, 746);
+            this.pnlMainContent.Size = new System.Drawing.Size(829, 749);
             this.pnlMainContent.TabIndex = 3;
             // 
             // lblSystemID
@@ -359,7 +359,7 @@
             this.lblSystemID.AutoSize = true;
             this.lblSystemID.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.lblSystemID.ForeColor = System.Drawing.Color.Silver;
-            this.lblSystemID.Location = new System.Drawing.Point(821, 716);
+            this.lblSystemID.Location = new System.Drawing.Point(821, 719);
             this.lblSystemID.Name = "lblSystemID";
             this.lblSystemID.Size = new System.Drawing.Size(221, 21);
             this.lblSystemID.TabIndex = 16;
@@ -410,7 +410,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1289, 746);
+            this.ClientSize = new System.Drawing.Size(1064, 749);
             this.Controls.Add(this.pnlMainContent);
             this.Controls.Add(this.pnlSideBar);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;

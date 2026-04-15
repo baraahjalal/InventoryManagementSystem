@@ -108,6 +108,9 @@
     <Compile Include="FrmStockIn.Designer.cs">
       <DependentUpon>FrmStockIn.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="FrmAuditLog.resx">
+      <DependentUpon>FrmAuditLog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmDashboard.resx">
       <DependentUpon>FrmDashboard.cs</DependentUpon>
     </EmbeddedResource>
