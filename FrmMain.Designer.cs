@@ -417,6 +417,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FrmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.pnlSideBar.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picReports)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picSupplierManagement)).EndInit();
