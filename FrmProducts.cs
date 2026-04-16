@@ -75,5 +75,10 @@ namespace InventoryManagementSystem
                 e.CellStyle.Font = new Font(dgvProducts.Font, FontStyle.Bold);
             }
         }
+
+        private void pnlGridContainer_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
     }
 }

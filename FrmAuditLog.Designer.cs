@@ -23,6 +23,8 @@ namespace InventoryManagementSystem
 
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.dgvAuditLog = new System.Windows.Forms.DataGridView();
             this.pnlFilterBar = new System.Windows.Forms.Panel();
@@ -31,6 +33,10 @@ namespace InventoryManagementSystem
             this.cmbDateRange = new System.Windows.Forms.ComboBox();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.lblTitle = new System.Windows.Forms.Label();
+            this.colTimestamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colUserIdentity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colActionType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTargetEntity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuditLog)).BeginInit();
             this.pnlFilterBar.SuspendLayout();
@@ -50,9 +56,47 @@ namespace InventoryManagementSystem
             // 
             // dgvAuditLog
             // 
+            this.dgvAuditLog.AllowUserToAddRows = false;
+            this.dgvAuditLog.AllowUserToResizeRows = false;
+            this.dgvAuditLog.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvAuditLog.BackgroundColor = System.Drawing.Color.White;
+            this.dgvAuditLog.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvAuditLog.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgvAuditLog.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(114)))), ((int)(((byte)(128)))));
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(10, 5, 10, 5);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(107)))), ((int)(((byte)(114)))), ((int)(((byte)(128)))));
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvAuditLog.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvAuditLog.ColumnHeadersHeight = 50;
+            this.dgvAuditLog.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colTimestamp,
+            this.colUserIdentity,
+            this.colActionType,
+            this.colTargetEntity});
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 10F);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(55)))), ((int)(((byte)(65)))), ((int)(((byte)(81)))));
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(10, 5, 10, 5);
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(24)))), ((int)(((byte)(39)))));
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvAuditLog.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvAuditLog.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvAuditLog.EnableHeadersVisualStyles = false;
+            this.dgvAuditLog.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(231)))), ((int)(((byte)(235)))));
             this.dgvAuditLog.Location = new System.Drawing.Point(30, 83);
+            this.dgvAuditLog.MultiSelect = false;
             this.dgvAuditLog.Name = "dgvAuditLog";
+            this.dgvAuditLog.ReadOnly = true;
+            this.dgvAuditLog.RowHeadersVisible = false;
+            this.dgvAuditLog.RowTemplate.Height = 45;
+            this.dgvAuditLog.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvAuditLog.Size = new System.Drawing.Size(940, 487);
             this.dgvAuditLog.TabIndex = 1;
             this.dgvAuditLog.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DgvAuditLog_CellFormatting);
@@ -143,6 +187,34 @@ namespace InventoryManagementSystem
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Audit Log";
             // 
+            // colTimestamp
+            // 
+            this.colTimestamp.FillWeight = 15F;
+            this.colTimestamp.HeaderText = "Timestamp";
+            this.colTimestamp.Name = "colTimestamp";
+            this.colTimestamp.ReadOnly = true;
+            // 
+            // colUserIdentity
+            // 
+            this.colUserIdentity.FillWeight = 20F;
+            this.colUserIdentity.HeaderText = "User Identity";
+            this.colUserIdentity.Name = "colUserIdentity";
+            this.colUserIdentity.ReadOnly = true;
+            // 
+            // colActionType
+            // 
+            this.colActionType.FillWeight = 15F;
+            this.colActionType.HeaderText = "Action Type";
+            this.colActionType.Name = "colActionType";
+            this.colActionType.ReadOnly = true;
+            // 
+            // colTargetEntity
+            // 
+            this.colTargetEntity.FillWeight = 25F;
+            this.colTargetEntity.HeaderText = "Target Entity";
+            this.colTargetEntity.Name = "colTargetEntity";
+            this.colTargetEntity.ReadOnly = true;
+            // 
             // FrmAuditLog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -171,108 +243,9 @@ namespace InventoryManagementSystem
         private System.Windows.Forms.ComboBox cmbDateRange;
         private System.Windows.Forms.ComboBox cmbActionType;
         private System.Windows.Forms.Button btnFilter;
-
-        // Custom Layout and Behavior Logic Moved from Code-Behind
-        private void FrmAuditLog_Load(object sender, EventArgs e)
-        {
-            EnableDoubleBuffered(dgvAuditLog);
-            SetupGridStyle();
-            LoadStaticData();
-        }
-
-        private void EnableDoubleBuffered(DataGridView dgv)
-        {
-            typeof(DataGridView).InvokeMember(
-                "DoubleBuffered",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
-                null,
-                dgv,
-                new object[] { true }
-            );
-        }
-
-        private void SetupGridStyle()
-        {
-            dgvAuditLog.EnableHeadersVisualStyles = false;
-
-            dgvAuditLog.ColumnHeadersDefaultCellStyle.BackColor = Color.FromArgb(249, 250, 251);
-            dgvAuditLog.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(107, 114, 128);
-            dgvAuditLog.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
-            dgvAuditLog.ColumnHeadersDefaultCellStyle.Padding = new Padding(10, 5, 10, 5);
-            dgvAuditLog.ColumnHeadersHeight = 50;
-            dgvAuditLog.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
-
-            dgvAuditLog.DefaultCellStyle.BackColor = Color.White;
-            dgvAuditLog.DefaultCellStyle.ForeColor = Color.FromArgb(55, 65, 81);
-            dgvAuditLog.DefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Regular);
-            dgvAuditLog.DefaultCellStyle.SelectionBackColor = Color.FromArgb(243, 244, 246);
-            dgvAuditLog.DefaultCellStyle.SelectionForeColor = Color.FromArgb(17, 24, 39);
-            dgvAuditLog.DefaultCellStyle.Padding = new Padding(10, 5, 10, 5);
-            dgvAuditLog.RowTemplate.Height = 45;
-
-            dgvAuditLog.BackgroundColor = Color.White;
-            dgvAuditLog.BorderStyle = BorderStyle.None;
-            dgvAuditLog.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dgvAuditLog.GridColor = Color.FromArgb(229, 231, 235);
-            dgvAuditLog.RowHeadersVisible = false;
-            dgvAuditLog.AllowUserToAddRows = false;
-            dgvAuditLog.AllowUserToResizeRows = false;
-            dgvAuditLog.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dgvAuditLog.MultiSelect = false;
-            dgvAuditLog.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-        }
-
-        private void LoadStaticData()
-        {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Timestamp");
-            dt.Columns.Add("User Identity");
-            dt.Columns.Add("Action Type");
-            dt.Columns.Add("Target Entity");
-            dt.Columns.Add("Modification Details");
-
-            dt.Rows.Add("Apr 15, 08:32 AM", "Sarah Jenkins (Admin)", "STOCK IN", "MacBook Pro 14\" (APP-MBP-2023)", "Qty: 0 → 24");
-            dt.Rows.Add("Apr 15, 09:15 AM", "Mike Ross (Manager)", "MODIFICATION", "Dell XPS 15 (DELL-XPS-2023)", "Price: $1,699 → $1,799");
-            dt.Rows.Add("Apr 14, 02:40 PM", "System Auto", "DELETION", "HP LaserJet 1020", "Record Permanently Removed");
-            dt.Rows.Add("Apr 14, 11:20 AM", "Sarah Jenkins (Admin)", "STOCK OUT", "iPad Air 5th Gen", "Qty: 35 → 30 (Assigned to IT)");
-            dt.Rows.Add("Apr 14, 09:05 AM", "Mike Ross (Manager)", "ADDITION", "Supplier: Ingram Micro", "New Vendor Onboarded");
-
-            dgvAuditLog.DataSource = dt;
-
-            dgvAuditLog.Columns["Timestamp"].FillWeight = 15;
-            dgvAuditLog.Columns["User Identity"].FillWeight = 20;
-            dgvAuditLog.Columns["Action Type"].FillWeight = 15;
-            dgvAuditLog.Columns["Target Entity"].FillWeight = 25;
-            dgvAuditLog.Columns["Modification Details"].FillWeight = 25;
-
-            dgvAuditLog.ClearSelection();
-        }
-
-        private void DgvAuditLog_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (e.RowIndex >= 0 && e.Value != null && dgvAuditLog.Columns[e.ColumnIndex].Name == "Action Type")
-            {
-                string action = e.Value.ToString();
-                e.CellStyle.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold);
-
-                switch (action)
-                {
-                    case "STOCK IN":
-                    case "ADDITION":
-                        e.CellStyle.ForeColor = Color.FromArgb(16, 185, 129); // Vibrant Green
-                        break;
-                    case "STOCK OUT":
-                    case "MODIFICATION":
-                        e.CellStyle.ForeColor = Color.FromArgb(59, 130, 246); // Clean Blue
-                        break;
-                    case "DELETION":
-                        e.CellStyle.ForeColor = Color.FromArgb(239, 68, 68); // Alert Red
-                        break;
-                    default:
-                        e.CellStyle.ForeColor = Color.FromArgb(107, 114, 128); // Standard Gray
-                        break;
-                }
-            }
-        }
+        private DataGridViewTextBoxColumn colTimestamp;
+        private DataGridViewTextBoxColumn colUserIdentity;
+        private DataGridViewTextBoxColumn colActionType;
+        private DataGridViewTextBoxColumn colTargetEntity;
     }
 }

@@ -54,11 +54,9 @@
             this.lblWarrantyInfo = new System.Windows.Forms.Label();
             this.txtWarrantyInfo = new System.Windows.Forms.TextBox();
             this.btnExecute = new System.Windows.Forms.Button();
-
             this.pnlMainCard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).BeginInit();
             this.SuspendLayout();
-
             // 
             // lblHeader
             // 
@@ -67,10 +65,9 @@
             this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.lblHeader.Location = new System.Drawing.Point(40, 30);
             this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Size = new System.Drawing.Size(248, 41);
+            this.lblHeader.Size = new System.Drawing.Size(236, 41);
             this.lblHeader.TabIndex = 0;
             this.lblHeader.Text = "Stock In Receipt";
-
             // 
             // lblSubHeader
             // 
@@ -79,10 +76,9 @@
             this.lblSubHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(94)))), ((int)(((byte)(92)))));
             this.lblSubHeader.Location = new System.Drawing.Point(45, 75);
             this.lblSubHeader.Name = "lblSubHeader";
-            this.lblSubHeader.Size = new System.Drawing.Size(462, 20);
+            this.lblSubHeader.Size = new System.Drawing.Size(467, 20);
             this.lblSubHeader.TabIndex = 1;
             this.lblSubHeader.Text = "Record incoming inventory, supplier details, and physical placements.";
-
             // 
             // pnlMainCard
             // 
@@ -106,7 +102,6 @@
             this.pnlMainCard.Name = "pnlMainCard";
             this.pnlMainCard.Size = new System.Drawing.Size(850, 500);
             this.pnlMainCard.TabIndex = 2;
-
             // 
             // lblSupplier
             // 
@@ -115,10 +110,9 @@
             this.lblSupplier.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblSupplier.Location = new System.Drawing.Point(35, 30);
             this.lblSupplier.Name = "lblSupplier";
-            this.lblSupplier.Size = new System.Drawing.Size(58, 17);
+            this.lblSupplier.Size = new System.Drawing.Size(57, 17);
             this.lblSupplier.TabIndex = 3;
             this.lblSupplier.Text = "Supplier";
-
             // 
             // cmbSupplier
             // 
@@ -129,7 +123,6 @@
             this.cmbSupplier.Name = "cmbSupplier";
             this.cmbSupplier.Size = new System.Drawing.Size(370, 28);
             this.cmbSupplier.TabIndex = 4;
-
             // 
             // lblOrderNumber
             // 
@@ -138,10 +131,9 @@
             this.lblOrderNumber.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblOrderNumber.Location = new System.Drawing.Point(437, 30);
             this.lblOrderNumber.Name = "lblOrderNumber";
-            this.lblOrderNumber.Size = new System.Drawing.Size(149, 17);
+            this.lblOrderNumber.Size = new System.Drawing.Size(156, 17);
             this.lblOrderNumber.TabIndex = 5;
             this.lblOrderNumber.Text = "Purchase Order Number";
-
             // 
             // txtOrderNumber
             // 
@@ -150,7 +142,6 @@
             this.txtOrderNumber.Name = "txtOrderNumber";
             this.txtOrderNumber.Size = new System.Drawing.Size(370, 27);
             this.txtOrderNumber.TabIndex = 6;
-
             // 
             // lblProduct
             // 
@@ -159,10 +150,9 @@
             this.lblProduct.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblProduct.Location = new System.Drawing.Point(35, 105);
             this.lblProduct.Name = "lblProduct";
-            this.lblProduct.Size = new System.Drawing.Size(96, 17);
+            this.lblProduct.Size = new System.Drawing.Size(95, 17);
             this.lblProduct.TabIndex = 7;
             this.lblProduct.Text = "Select Product";
-
             // 
             // cmbProduct
             // 
@@ -173,7 +163,6 @@
             this.cmbProduct.Name = "cmbProduct";
             this.cmbProduct.Size = new System.Drawing.Size(772, 28);
             this.cmbProduct.TabIndex = 8;
-
             // 
             // lblQuantity
             // 
@@ -182,20 +171,22 @@
             this.lblQuantity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblQuantity.Location = new System.Drawing.Point(35, 180);
             this.lblQuantity.Name = "lblQuantity";
-            this.lblQuantity.Size = new System.Drawing.Size(121, 17);
+            this.lblQuantity.Size = new System.Drawing.Size(118, 17);
             this.lblQuantity.TabIndex = 9;
             this.lblQuantity.Text = "Received Quantity";
-
             // 
             // numQuantity
             // 
             this.numQuantity.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.numQuantity.Location = new System.Drawing.Point(38, 205);
-            this.numQuantity.Maximum = new decimal(new int[] { 10000, 0, 0, 0 });
+            this.numQuantity.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
             this.numQuantity.Name = "numQuantity";
             this.numQuantity.Size = new System.Drawing.Size(370, 27);
             this.numQuantity.TabIndex = 10;
-
             // 
             // lblStorageZone
             // 
@@ -207,7 +198,6 @@
             this.lblStorageZone.Size = new System.Drawing.Size(163, 17);
             this.lblStorageZone.TabIndex = 11;
             this.lblStorageZone.Text = "Destination Storage Zone";
-
             // 
             // cmbStorageZone
             // 
@@ -222,7 +212,6 @@
             this.cmbStorageZone.Name = "cmbStorageZone";
             this.cmbStorageZone.Size = new System.Drawing.Size(370, 28);
             this.cmbStorageZone.TabIndex = 12;
-
             // 
             // lblSerialNumbers
             // 
@@ -231,21 +220,19 @@
             this.lblSerialNumbers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblSerialNumbers.Location = new System.Drawing.Point(35, 255);
             this.lblSerialNumbers.Name = "lblSerialNumbers";
-            this.lblSerialNumbers.Size = new System.Drawing.Size(193, 17);
+            this.lblSerialNumbers.Size = new System.Drawing.Size(189, 17);
             this.lblSerialNumbers.TabIndex = 13;
             this.lblSerialNumbers.Text = "Serial Numbers (One per Line)";
-
             // 
             // txtSerialNumbers
             // 
             this.txtSerialNumbers.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSerialNumbers.Location = new System.Drawing.Point(38, 280);
             this.txtSerialNumbers.Multiline = true;
-            this.txtSerialNumbers.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtSerialNumbers.Name = "txtSerialNumbers";
+            this.txtSerialNumbers.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtSerialNumbers.Size = new System.Drawing.Size(370, 95);
             this.txtSerialNumbers.TabIndex = 14;
-
             // 
             // lblWarrantyInfo
             // 
@@ -254,10 +241,9 @@
             this.lblWarrantyInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblWarrantyInfo.Location = new System.Drawing.Point(437, 255);
             this.lblWarrantyInfo.Name = "lblWarrantyInfo";
-            this.lblWarrantyInfo.Size = new System.Drawing.Size(262, 17);
+            this.lblWarrantyInfo.Size = new System.Drawing.Size(243, 17);
             this.lblWarrantyInfo.TabIndex = 15;
             this.lblWarrantyInfo.Text = "Warranty Information (e.g., 12 Months)";
-
             // 
             // txtWarrantyInfo
             // 
@@ -266,11 +252,10 @@
             this.txtWarrantyInfo.Name = "txtWarrantyInfo";
             this.txtWarrantyInfo.Size = new System.Drawing.Size(370, 27);
             this.txtWarrantyInfo.TabIndex = 16;
-
             // 
             // btnExecute
             // 
-            this.btnExecute.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(212))))); // Microsoft Fluent Primary Blue
+            this.btnExecute.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(120)))), ((int)(((byte)(212)))));
             this.btnExecute.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnExecute.FlatAppearance.BorderSize = 0;
             this.btnExecute.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(110)))), ((int)(((byte)(190)))));
@@ -283,13 +268,12 @@
             this.btnExecute.TabIndex = 17;
             this.btnExecute.Text = "Register Stock Entry";
             this.btnExecute.UseVisualStyleBackColor = false;
-
             // 
             // FrmStockIn
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(242)))), ((int)(((byte)(241))))); // Microsoft Fluent App Background Light Gray
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(242)))), ((int)(((byte)(241)))));
             this.ClientSize = new System.Drawing.Size(950, 750);
             this.Controls.Add(this.pnlMainCard);
             this.Controls.Add(this.lblSubHeader);
@@ -297,12 +281,12 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FrmStockIn";
             this.Text = "Stock In Operations";
-
             this.pnlMainCard.ResumeLayout(false);
             this.pnlMainCard.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
     }
 }

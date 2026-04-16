@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlDetails = new System.Windows.Forms.Panel();
             this.lblPermissionsTitle = new System.Windows.Forms.Label();
             this.pnlPermissions = new System.Windows.Forms.Panel();
@@ -54,11 +54,6 @@
             this.toolStripMenuItemDelete = new System.Windows.Forms.ToolStripMenuItem();
             this.lblDetailsTitle = new System.Windows.Forms.Label();
             this.pnlGridContainer = new System.Windows.Forms.Panel();
-            this.pnlActionButtons = new System.Windows.Forms.Panel();
-            this.btnRefresh = new System.Windows.Forms.Button();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnUpdate = new System.Windows.Forms.Button();
-            this.btnAdd = new System.Windows.Forms.Button();
             this.dgvUsers = new System.Windows.Forms.DataGridView();
             this.colId = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -67,14 +62,21 @@
             this.colJob = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colRegNum = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colImage = new System.Windows.Forms.DataGridViewImageColumn();
+            this.pnlActionButtons = new System.Windows.Forms.Panel();
+            this.btnRefresh = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnAdd = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.lblMainTitle = new System.Windows.Forms.Label();
+            this.lblSubTitle = new System.Windows.Forms.Label();
             this.pnlDetails.SuspendLayout();
             this.pnlPermissions.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picUser)).BeginInit();
             this.cmsDeletePicture.SuspendLayout();
             this.pnlGridContainer.SuspendLayout();
-            this.pnlActionButtons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsers)).BeginInit();
+            this.pnlActionButtons.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlDetails
@@ -107,7 +109,7 @@
             this.lblPermissionsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.lblPermissionsTitle.Location = new System.Drawing.Point(18, 410);
             this.lblPermissionsTitle.Name = "lblPermissionsTitle";
-            this.lblPermissionsTitle.Size = new System.Drawing.Size(134, 21);
+            this.lblPermissionsTitle.Size = new System.Drawing.Size(132, 21);
             this.lblPermissionsTitle.TabIndex = 11;
             this.lblPermissionsTitle.Text = "User Permissions";
             // 
@@ -152,7 +154,7 @@
             this.chkUsers.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.chkUsers.Location = new System.Drawing.Point(11, 97);
             this.chkUsers.Name = "chkUsers";
-            this.chkUsers.Size = new System.Drawing.Size(115, 23);
+            this.chkUsers.Size = new System.Drawing.Size(116, 23);
             this.chkUsers.TabIndex = 3;
             this.chkUsers.Text = "Manage Users";
             this.chkUsers.UseVisualStyleBackColor = true;
@@ -174,7 +176,7 @@
             this.chkInsert.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.chkInsert.Location = new System.Drawing.Point(11, 39);
             this.chkInsert.Name = "chkInsert";
-            this.chkInsert.Size = new System.Drawing.Size(95, 23);
+            this.chkInsert.Size = new System.Drawing.Size(96, 23);
             this.chkInsert.TabIndex = 1;
             this.chkInsert.Text = "Insert Data";
             this.chkInsert.UseVisualStyleBackColor = true;
@@ -186,7 +188,7 @@
             this.chkAdmin.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.chkAdmin.Location = new System.Drawing.Point(11, 10);
             this.chkAdmin.Name = "chkAdmin";
-            this.chkAdmin.Size = new System.Drawing.Size(117, 23);
+            this.chkAdmin.Size = new System.Drawing.Size(114, 23);
             this.chkAdmin.TabIndex = 0;
             this.chkAdmin.Text = "Administrator";
             this.chkAdmin.UseVisualStyleBackColor = true;
@@ -297,12 +299,12 @@
             this.cmsDeletePicture.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemDelete});
             this.cmsDeletePicture.Name = "cmsDeletePicture";
-            this.cmsDeletePicture.Size = new System.Drawing.Size(147, 26);
+            this.cmsDeletePicture.Size = new System.Drawing.Size(148, 26);
             // 
             // toolStripMenuItemDelete
             // 
             this.toolStripMenuItemDelete.Name = "toolStripMenuItemDelete";
-            this.toolStripMenuItemDelete.Size = new System.Drawing.Size(146, 22);
+            this.toolStripMenuItemDelete.Size = new System.Drawing.Size(147, 22);
             this.toolStripMenuItemDelete.Text = "Delete Picture";
             // 
             // lblDetailsTitle
@@ -321,12 +323,113 @@
             this.pnlGridContainer.BackColor = System.Drawing.Color.White;
             this.pnlGridContainer.Controls.Add(this.dgvUsers);
             this.pnlGridContainer.Controls.Add(this.pnlActionButtons);
-            this.pnlGridContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlGridContainer.Location = new System.Drawing.Point(0, 0);
+            this.pnlGridContainer.Location = new System.Drawing.Point(0, 80);
             this.pnlGridContainer.Name = "pnlGridContainer";
             this.pnlGridContainer.Padding = new System.Windows.Forms.Padding(20);
-            this.pnlGridContainer.Size = new System.Drawing.Size(750, 700);
+            this.pnlGridContainer.Size = new System.Drawing.Size(750, 620);
             this.pnlGridContainer.TabIndex = 1;
+            // 
+            // dgvUsers
+            // 
+            this.dgvUsers.AllowUserToAddRows = false;
+            this.dgvUsers.AllowUserToDeleteRows = false;
+            this.dgvUsers.AllowUserToResizeRows = false;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
+            this.dgvUsers.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            this.dgvUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvUsers.BackgroundColor = System.Drawing.Color.White;
+            this.dgvUsers.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvUsers.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgvUsers.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvUsers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            this.dgvUsers.ColumnHeadersHeight = 45;
+            this.dgvUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvUsers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colId,
+            this.colNo,
+            this.colUserName,
+            this.colPassword,
+            this.colJob,
+            this.colRegNum,
+            this.colImage});
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 10F);
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(240)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvUsers.DefaultCellStyle = dataGridViewCellStyle6;
+            this.dgvUsers.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvUsers.EnableHeadersVisualStyles = false;
+            this.dgvUsers.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.dgvUsers.Location = new System.Drawing.Point(20, 20);
+            this.dgvUsers.MultiSelect = false;
+            this.dgvUsers.Name = "dgvUsers";
+            this.dgvUsers.ReadOnly = true;
+            this.dgvUsers.RowHeadersVisible = false;
+            this.dgvUsers.RowTemplate.Height = 40;
+            this.dgvUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvUsers.Size = new System.Drawing.Size(710, 510);
+            this.dgvUsers.TabIndex = 0;
+            // 
+            // colId
+            // 
+            this.colId.HeaderText = "Id";
+            this.colId.Name = "colId";
+            this.colId.ReadOnly = true;
+            this.colId.Visible = false;
+            // 
+            // colNo
+            // 
+            this.colNo.FillWeight = 40F;
+            this.colNo.HeaderText = "No";
+            this.colNo.Name = "colNo";
+            this.colNo.ReadOnly = true;
+            this.colNo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colUserName
+            // 
+            this.colUserName.FillWeight = 180F;
+            this.colUserName.HeaderText = "Username";
+            this.colUserName.Name = "colUserName";
+            this.colUserName.ReadOnly = true;
+            // 
+            // colPassword
+            // 
+            this.colPassword.HeaderText = "Password";
+            this.colPassword.Name = "colPassword";
+            this.colPassword.ReadOnly = true;
+            this.colPassword.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // colJob
+            // 
+            this.colJob.FillWeight = 110F;
+            this.colJob.HeaderText = "Job";
+            this.colJob.Name = "colJob";
+            this.colJob.ReadOnly = true;
+            // 
+            // colRegNum
+            // 
+            this.colRegNum.FillWeight = 80F;
+            this.colRegNum.HeaderText = "Reg Number";
+            this.colRegNum.Name = "colRegNum";
+            this.colRegNum.ReadOnly = true;
+            // 
+            // colImage
+            // 
+            this.colImage.FillWeight = 80F;
+            this.colImage.HeaderText = "Image";
+            this.colImage.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
+            this.colImage.Name = "colImage";
+            this.colImage.ReadOnly = true;
             // 
             // pnlActionButtons
             // 
@@ -335,7 +438,7 @@
             this.pnlActionButtons.Controls.Add(this.btnUpdate);
             this.pnlActionButtons.Controls.Add(this.btnAdd);
             this.pnlActionButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlActionButtons.Location = new System.Drawing.Point(20, 610);
+            this.pnlActionButtons.Location = new System.Drawing.Point(20, 530);
             this.pnlActionButtons.Name = "pnlActionButtons";
             this.pnlActionButtons.Size = new System.Drawing.Size(710, 70);
             this.pnlActionButtons.TabIndex = 1;
@@ -402,111 +505,31 @@
             this.btnAdd.Text = "Add User";
             this.btnAdd.UseVisualStyleBackColor = false;
             // 
-            // dgvUsers
-            // 
-            this.dgvUsers.AllowUserToAddRows = false;
-            this.dgvUsers.AllowUserToDeleteRows = false;
-            this.dgvUsers.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
-            this.dgvUsers.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.dgvUsers.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvUsers.BackgroundColor = System.Drawing.Color.White;
-            this.dgvUsers.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvUsers.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
-            this.dgvUsers.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvUsers.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.dgvUsers.ColumnHeadersHeight = 45;
-            this.dgvUsers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.dgvUsers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colId,
-            this.colNo,
-            this.colUserName,
-            this.colPassword,
-            this.colJob,
-            this.colRegNum,
-            this.colImage});
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(240)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvUsers.DefaultCellStyle = dataGridViewCellStyle3;
-            this.dgvUsers.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvUsers.EnableHeadersVisualStyles = false;
-            this.dgvUsers.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.dgvUsers.Location = new System.Drawing.Point(20, 20);
-            this.dgvUsers.MultiSelect = false;
-            this.dgvUsers.Name = "dgvUsers";
-            this.dgvUsers.ReadOnly = true;
-            this.dgvUsers.RowHeadersVisible = false;
-            this.dgvUsers.RowTemplate.Height = 40;
-            this.dgvUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvUsers.Size = new System.Drawing.Size(710, 590);
-            this.dgvUsers.TabIndex = 0;
-            // 
-            // colId
-            // 
-            this.colId.HeaderText = "Id";
-            this.colId.Name = "colId";
-            this.colId.ReadOnly = true;
-            this.colId.Visible = false;
-            // 
-            // colNo
-            // 
-            this.colNo.FillWeight = 40F;
-            this.colNo.HeaderText = "No";
-            this.colNo.Name = "colNo";
-            this.colNo.ReadOnly = true;
-            this.colNo.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colUserName
-            // 
-            this.colUserName.FillWeight = 180F;
-            this.colUserName.HeaderText = "Username";
-            this.colUserName.Name = "colUserName";
-            this.colUserName.ReadOnly = true;
-            // 
-            // colPassword
-            // 
-            this.colPassword.HeaderText = "Password";
-            this.colPassword.Name = "colPassword";
-            this.colPassword.ReadOnly = true;
-            this.colPassword.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // colJob
-            // 
-            this.colJob.FillWeight = 110F;
-            this.colJob.HeaderText = "Job";
-            this.colJob.Name = "colJob";
-            this.colJob.ReadOnly = true;
-            // 
-            // colRegNum
-            // 
-            this.colRegNum.FillWeight = 80F;
-            this.colRegNum.HeaderText = "Reg Number";
-            this.colRegNum.Name = "colRegNum";
-            this.colRegNum.ReadOnly = true;
-            // 
-            // colImage
-            // 
-            this.colImage.FillWeight = 80F;
-            this.colImage.HeaderText = "Image";
-            this.colImage.ImageLayout = System.Windows.Forms.DataGridViewImageCellLayout.Zoom;
-            this.colImage.Name = "colImage";
-            this.colImage.ReadOnly = true;
-            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
+            // 
+            // lblMainTitle
+            // 
+            this.lblMainTitle.AutoSize = true;
+            this.lblMainTitle.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMainTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.lblMainTitle.Location = new System.Drawing.Point(12, 9);
+            this.lblMainTitle.Name = "lblMainTitle";
+            this.lblMainTitle.Size = new System.Drawing.Size(308, 45);
+            this.lblMainTitle.TabIndex = 4;
+            this.lblMainTitle.Text = "Users Management";
+            // 
+            // lblSubTitle
+            // 
+            this.lblSubTitle.AutoSize = true;
+            this.lblSubTitle.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSubTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.lblSubTitle.Location = new System.Drawing.Point(16, 54);
+            this.lblSubTitle.Name = "lblSubTitle";
+            this.lblSubTitle.Size = new System.Drawing.Size(183, 20);
+            this.lblSubTitle.TabIndex = 5;
+            this.lblSubTitle.Text = "Manage your current users";
             // 
             // FrmUsers
             // 
@@ -514,6 +537,8 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1100, 700);
+            this.Controls.Add(this.lblMainTitle);
+            this.Controls.Add(this.lblSubTitle);
             this.Controls.Add(this.pnlGridContainer);
             this.Controls.Add(this.pnlDetails);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -528,9 +553,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.picUser)).EndInit();
             this.cmsDeletePicture.ResumeLayout(false);
             this.pnlGridContainer.ResumeLayout(false);
-            this.pnlActionButtons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsers)).EndInit();
+            this.pnlActionButtons.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -572,5 +598,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colJob;
         private System.Windows.Forms.DataGridViewTextBoxColumn colRegNum;
         private System.Windows.Forms.DataGridViewImageColumn colImage;
+        private System.Windows.Forms.Label lblMainTitle;
+        private System.Windows.Forms.Label lblSubTitle;
     }
 }

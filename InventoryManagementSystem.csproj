@@ -123,11 +123,17 @@
     <EmbeddedResource Include="FrmProducts.resx">
       <DependentUpon>FrmProducts.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FrmStockIn.resx">
+      <DependentUpon>FrmStockIn.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmStockOut.resx">
       <DependentUpon>FrmStockOut.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmSupplierManagement.resx">
       <DependentUpon>FrmSupplierManagement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmUsers.resx">
+      <DependentUpon>FrmUsers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
