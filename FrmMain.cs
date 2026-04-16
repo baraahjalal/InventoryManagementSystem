@@ -110,5 +110,10 @@ namespace InventoryManagementSystem
         {
             OpenChildForm(new FrmReports());
         }
+
+        private void FrmMain_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

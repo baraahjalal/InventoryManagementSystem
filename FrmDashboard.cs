@@ -90,17 +90,8 @@ namespace InventoryManagementSystem
             dt.Rows.Add("Dell XPS 15 (SN: DELL-XPS-2023)", "STOCK OUT", "-1", "Apr 11, 02:10 PM", "Mike Ross");
             dt.Rows.Add("Logitech MX Master 3S (SN: LOGI-MX-3S)", "RESTOCK", "+50", "Apr 11, 09:00 AM", "System Auto");
 
+            dgvRecentActions.AutoGenerateColumns = false;
             dgvRecentActions.DataSource = dt;
-
-            // Adjust relative column widths to look like a clean dashboard widget
-            if (dgvRecentActions.Columns.Count > 0)
-            {
-                dgvRecentActions.Columns["Product Details"].FillWeight = 40;
-                dgvRecentActions.Columns["Type"].FillWeight = 15;
-                dgvRecentActions.Columns["Quantity"].FillWeight = 15;
-                dgvRecentActions.Columns["Timestamp"].FillWeight = 15;
-                dgvRecentActions.Columns["Operator"].FillWeight = 15;
-            }
         }
 
         private void DgvRecentActions_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)

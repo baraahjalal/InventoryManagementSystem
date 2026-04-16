@@ -20,6 +20,12 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colProductName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colStock = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.lblProcessor = new System.Windows.Forms.Label();
             this.cmbFilterProcessor = new System.Windows.Forms.ComboBox();
@@ -74,7 +80,7 @@
             this.lblProcessor.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblProcessor.Location = new System.Drawing.Point(485, 31);
             this.lblProcessor.Name = "lblProcessor";
-            this.lblProcessor.Size = new System.Drawing.Size(68, 17);
+            this.lblProcessor.Size = new System.Drawing.Size(69, 17);
             this.lblProcessor.TabIndex = 8;
             this.lblProcessor.Text = "Processor:";
             // 
@@ -106,7 +112,7 @@
             this.lblRAM.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblRAM.Location = new System.Drawing.Point(725, 31);
             this.lblRAM.Name = "lblRAM";
-            this.lblRAM.Size = new System.Drawing.Size(38, 17);
+            this.lblRAM.Size = new System.Drawing.Size(39, 17);
             this.lblRAM.TabIndex = 6;
             this.lblRAM.Text = "RAM:";
             // 
@@ -297,7 +303,6 @@
             // 
             this.pnlGridContainer.BackColor = System.Drawing.Color.White;
             this.pnlGridContainer.Controls.Add(this.dgvProducts);
-            this.pnlGridContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlGridContainer.Location = new System.Drawing.Point(0, 80);
             this.pnlGridContainer.Name = "pnlGridContainer";
             this.pnlGridContainer.Padding = new System.Windows.Forms.Padding(20);
@@ -326,6 +331,13 @@
             this.dgvProducts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.dgvProducts.ColumnHeadersHeight = 45;
             this.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvProducts.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colID,
+            this.colProductName,
+            this.colCategory,
+            this.colStock,
+            this.colPrice,
+            this.colStatus});
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -344,8 +356,51 @@
             this.dgvProducts.RowHeadersVisible = false;
             this.dgvProducts.RowTemplate.Height = 40;
             this.dgvProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProducts.Size = new System.Drawing.Size(740, 580);
+            this.dgvProducts.Size = new System.Drawing.Size(840, 580);
             this.dgvProducts.TabIndex = 0;
+            // 
+            // colID
+            // 
+            this.colID.DataPropertyName = "ID";
+            this.colID.HeaderText = "ID";
+            this.colID.Name = "colID";
+            this.colID.ReadOnly = true;
+            // 
+            // colProductName
+            // 
+            this.colProductName.DataPropertyName = "Product Name";
+            this.colProductName.HeaderText = "Product Name";
+            this.colProductName.Name = "colProductName";
+            this.colProductName.ReadOnly = true;
+            // 
+            // colCategory
+            // 
+            this.colCategory.DataPropertyName = "Category";
+            this.colCategory.HeaderText = "Category";
+            this.colCategory.Name = "colCategory";
+            this.colCategory.ReadOnly = true;
+            // 
+            // colStock
+            // 
+            this.colStock.DataPropertyName = "Stock";
+            this.colStock.HeaderText = "Stock";
+            this.colStock.Name = "colStock";
+            this.colStock.ReadOnly = true;
+            // 
+            // colPrice
+            // 
+            this.colPrice.DataPropertyName = "Price";
+            this.colPrice.HeaderText = "Price";
+            this.colPrice.Name = "colPrice";
+            this.colPrice.ReadOnly = true;
+            // 
+            // colStatus
+            // 
+            this.colStatus.DataPropertyName = "Status";
+            this.colStatus.HeaderText = "Status";
+            this.colStatus.Name = "colStatus";
+            this.colStatus.ReadOnly = true;
+
             // 
             // FrmProducts
             // 
@@ -353,9 +408,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1200, 700);
-            this.Controls.Add(this.pnlGridContainer);
             this.Controls.Add(this.pnlDetails);
             this.Controls.Add(this.pnlHeader);
+            this.Controls.Add(this.pnlGridContainer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FrmProducts";
             this.Text = "Products";
@@ -392,5 +447,11 @@
         private System.Windows.Forms.ComboBox cmbFilterRAM;
         private System.Windows.Forms.Label lblSearch;
         private System.Windows.Forms.TextBox txtSearch;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colID;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCategory;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colStock;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colPrice;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
     }
 }

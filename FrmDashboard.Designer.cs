@@ -26,6 +26,11 @@
             this.lblLowStockNum = new System.Windows.Forms.Label();
             this.lblLowStockTitle = new System.Windows.Forms.Label();
             this.dgvRecentActions = new System.Windows.Forms.DataGridView();
+            this.colProductDetails = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTimestamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colOperator = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblRecentMovements = new System.Windows.Forms.Label();
             this.pnlTotalProducts.SuspendLayout();
             this.pnlLowStock.SuspendLayout();
@@ -57,7 +62,7 @@
             // pnlTotalProducts
             // 
             this.pnlTotalProducts.BackColor = System.Drawing.Color.White;
-            this.pnlTotalProducts.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlTotalProducts.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.pnlTotalProducts.Controls.Add(this.lblTotalDesc);
             this.pnlTotalProducts.Controls.Add(this.lblTotalNum);
             this.pnlTotalProducts.Controls.Add(this.lblTotalTitle);
@@ -102,7 +107,7 @@
             // pnlLowStock
             // 
             this.pnlLowStock.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
-            this.pnlLowStock.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlLowStock.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.pnlLowStock.Controls.Add(this.lblLowStockDesc);
             this.pnlLowStock.Controls.Add(this.lblLowStockNum);
             this.pnlLowStock.Controls.Add(this.lblLowStockTitle);
@@ -167,6 +172,12 @@
             this.dgvRecentActions.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvRecentActions.ColumnHeadersHeight = 40;
             this.dgvRecentActions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvRecentActions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colProductDetails,
+            this.colType,
+            this.colQuantity,
+            this.colTimestamp,
+            this.colOperator});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -195,6 +206,46 @@
             this.dgvRecentActions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvRecentActions.Size = new System.Drawing.Size(1000, 310);
             this.dgvRecentActions.TabIndex = 5;
+            // 
+            // colProductDetails
+            // 
+            this.colProductDetails.DataPropertyName = "Product Details";
+            this.colProductDetails.FillWeight = 40F;
+            this.colProductDetails.HeaderText = "Product Details";
+            this.colProductDetails.Name = "ProductDetails";
+            this.colProductDetails.ReadOnly = true;
+            // 
+            // colType
+            // 
+            this.colType.DataPropertyName = "Type";
+            this.colType.FillWeight = 15F;
+            this.colType.HeaderText = "Type";
+            this.colType.Name = "Type";
+            this.colType.ReadOnly = true;
+            // 
+            // colQuantity
+            // 
+            this.colQuantity.DataPropertyName = "Quantity";
+            this.colQuantity.FillWeight = 15F;
+            this.colQuantity.HeaderText = "Quantity";
+            this.colQuantity.Name = "Quantity";
+            this.colQuantity.ReadOnly = true;
+            // 
+            // colTimestamp
+            // 
+            this.colTimestamp.DataPropertyName = "Timestamp";
+            this.colTimestamp.FillWeight = 15F;
+            this.colTimestamp.HeaderText = "Timestamp";
+            this.colTimestamp.Name = "Timestamp";
+            this.colTimestamp.ReadOnly = true;
+            // 
+            // colOperator
+            // 
+            this.colOperator.DataPropertyName = "Operator";
+            this.colOperator.FillWeight = 15F;
+            this.colOperator.HeaderText = "Operator";
+            this.colOperator.Name = "Operator";
+            this.colOperator.ReadOnly = true;
             // 
             // lblRecentMovements
             // 
@@ -243,5 +294,10 @@
         private System.Windows.Forms.Label lblLowStockTitle;
         private System.Windows.Forms.DataGridView dgvRecentActions;
         private System.Windows.Forms.Label lblRecentMovements;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colProductDetails;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colType;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colQuantity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colTimestamp;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colOperator;
     }
 }
