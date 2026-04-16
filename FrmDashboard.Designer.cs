@@ -26,11 +26,11 @@
             this.lblLowStockNum = new System.Windows.Forms.Label();
             this.lblLowStockTitle = new System.Windows.Forms.Label();
             this.dgvRecentActions = new System.Windows.Forms.DataGridView();
-            this.colProductDetails = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colQuantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTimestamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colOperator = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ProductDetails = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Quantity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Timestamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Operator = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblRecentMovements = new System.Windows.Forms.Label();
             this.pnlTotalProducts.SuspendLayout();
             this.pnlLowStock.SuspendLayout();
@@ -44,7 +44,7 @@
             this.lblMainTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.lblMainTitle.Location = new System.Drawing.Point(40, 30);
             this.lblMainTitle.Name = "lblMainTitle";
-            this.lblMainTitle.Size = new System.Drawing.Size(183, 45);
+            this.lblMainTitle.Size = new System.Drawing.Size(229, 54);
             this.lblMainTitle.TabIndex = 0;
             this.lblMainTitle.Text = "Dashboard";
             // 
@@ -53,16 +53,15 @@
             this.lblSubTitle.AutoSize = true;
             this.lblSubTitle.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSubTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblSubTitle.Location = new System.Drawing.Point(44, 75);
+            this.lblSubTitle.Location = new System.Drawing.Point(44, 78);
             this.lblSubTitle.Name = "lblSubTitle";
-            this.lblSubTitle.Size = new System.Drawing.Size(268, 20);
+            this.lblSubTitle.Size = new System.Drawing.Size(324, 25);
             this.lblSubTitle.TabIndex = 1;
             this.lblSubTitle.Text = "Overview of current inventory health.";
             // 
             // pnlTotalProducts
             // 
             this.pnlTotalProducts.BackColor = System.Drawing.Color.White;
-            this.pnlTotalProducts.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.pnlTotalProducts.Controls.Add(this.lblTotalDesc);
             this.pnlTotalProducts.Controls.Add(this.lblTotalNum);
             this.pnlTotalProducts.Controls.Add(this.lblTotalTitle);
@@ -78,7 +77,7 @@
             this.lblTotalDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
             this.lblTotalDesc.Location = new System.Drawing.Point(22, 115);
             this.lblTotalDesc.Name = "lblTotalDesc";
-            this.lblTotalDesc.Size = new System.Drawing.Size(130, 17);
+            this.lblTotalDesc.Size = new System.Drawing.Size(165, 23);
             this.lblTotalDesc.TabIndex = 2;
             this.lblTotalDesc.Text = "Active items in stock";
             // 
@@ -89,7 +88,7 @@
             this.lblTotalNum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.lblTotalNum.Location = new System.Drawing.Point(13, 45);
             this.lblTotalNum.Name = "lblTotalNum";
-            this.lblTotalNum.Size = new System.Drawing.Size(153, 65);
+            this.lblTotalNum.Size = new System.Drawing.Size(191, 81);
             this.lblTotalNum.TabIndex = 0;
             this.lblTotalNum.Text = "1,284";
             // 
@@ -100,14 +99,13 @@
             this.lblTotalTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblTotalTitle.Location = new System.Drawing.Point(20, 20);
             this.lblTotalTitle.Name = "lblTotalTitle";
-            this.lblTotalTitle.Size = new System.Drawing.Size(115, 21);
+            this.lblTotalTitle.Size = new System.Drawing.Size(141, 28);
             this.lblTotalTitle.TabIndex = 1;
             this.lblTotalTitle.Text = "Total Products";
             // 
             // pnlLowStock
             // 
             this.pnlLowStock.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(248)))), ((int)(((byte)(248)))));
-            this.pnlLowStock.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.pnlLowStock.Controls.Add(this.lblLowStockDesc);
             this.pnlLowStock.Controls.Add(this.lblLowStockNum);
             this.pnlLowStock.Controls.Add(this.lblLowStockTitle);
@@ -123,7 +121,7 @@
             this.lblLowStockDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.lblLowStockDesc.Location = new System.Drawing.Point(22, 115);
             this.lblLowStockDesc.Name = "lblLowStockDesc";
-            this.lblLowStockDesc.Size = new System.Drawing.Size(155, 17);
+            this.lblLowStockDesc.Size = new System.Drawing.Size(198, 23);
             this.lblLowStockDesc.TabIndex = 2;
             this.lblLowStockDesc.Text = "Requires immediate refill";
             // 
@@ -134,7 +132,7 @@
             this.lblLowStockNum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.lblLowStockNum.Location = new System.Drawing.Point(13, 45);
             this.lblLowStockNum.Name = "lblLowStockNum";
-            this.lblLowStockNum.Size = new System.Drawing.Size(84, 65);
+            this.lblLowStockNum.Size = new System.Drawing.Size(105, 81);
             this.lblLowStockNum.TabIndex = 0;
             this.lblLowStockNum.Text = "18";
             // 
@@ -145,7 +143,7 @@
             this.lblLowStockTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.lblLowStockTitle.Location = new System.Drawing.Point(20, 20);
             this.lblLowStockTitle.Name = "lblLowStockTitle";
-            this.lblLowStockTitle.Size = new System.Drawing.Size(133, 21);
+            this.lblLowStockTitle.Size = new System.Drawing.Size(165, 28);
             this.lblLowStockTitle.TabIndex = 1;
             this.lblLowStockTitle.Text = "Low-Stock Alerts";
             // 
@@ -154,8 +152,8 @@
             this.dgvRecentActions.AllowUserToAddRows = false;
             this.dgvRecentActions.AllowUserToDeleteRows = false;
             this.dgvRecentActions.AllowUserToResizeRows = false;
-            this.dgvRecentActions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.dgvRecentActions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvRecentActions.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvRecentActions.BackgroundColor = System.Drawing.Color.White;
@@ -173,11 +171,11 @@
             this.dgvRecentActions.ColumnHeadersHeight = 40;
             this.dgvRecentActions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvRecentActions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colProductDetails,
-            this.colType,
-            this.colQuantity,
-            this.colTimestamp,
-            this.colOperator});
+            this.ProductDetails,
+            this.Type,
+            this.Quantity,
+            this.Timestamp,
+            this.Operator});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -202,50 +200,56 @@
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvRecentActions.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvRecentActions.RowHeadersVisible = false;
+            this.dgvRecentActions.RowHeadersWidth = 51;
             this.dgvRecentActions.RowTemplate.Height = 35;
             this.dgvRecentActions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvRecentActions.Size = new System.Drawing.Size(1000, 310);
             this.dgvRecentActions.TabIndex = 5;
             // 
-            // colProductDetails
+            // ProductDetails
             // 
-            this.colProductDetails.DataPropertyName = "Product Details";
-            this.colProductDetails.FillWeight = 40F;
-            this.colProductDetails.HeaderText = "Product Details";
-            this.colProductDetails.Name = "ProductDetails";
-            this.colProductDetails.ReadOnly = true;
+            this.ProductDetails.DataPropertyName = "Product Details";
+            this.ProductDetails.FillWeight = 40F;
+            this.ProductDetails.HeaderText = "Product Details";
+            this.ProductDetails.MinimumWidth = 6;
+            this.ProductDetails.Name = "ProductDetails";
+            this.ProductDetails.ReadOnly = true;
             // 
-            // colType
+            // Type
             // 
-            this.colType.DataPropertyName = "Type";
-            this.colType.FillWeight = 15F;
-            this.colType.HeaderText = "Type";
-            this.colType.Name = "Type";
-            this.colType.ReadOnly = true;
+            this.Type.DataPropertyName = "Type";
+            this.Type.FillWeight = 15F;
+            this.Type.HeaderText = "Type";
+            this.Type.MinimumWidth = 6;
+            this.Type.Name = "Type";
+            this.Type.ReadOnly = true;
             // 
-            // colQuantity
+            // Quantity
             // 
-            this.colQuantity.DataPropertyName = "Quantity";
-            this.colQuantity.FillWeight = 15F;
-            this.colQuantity.HeaderText = "Quantity";
-            this.colQuantity.Name = "Quantity";
-            this.colQuantity.ReadOnly = true;
+            this.Quantity.DataPropertyName = "Quantity";
+            this.Quantity.FillWeight = 15F;
+            this.Quantity.HeaderText = "Quantity";
+            this.Quantity.MinimumWidth = 6;
+            this.Quantity.Name = "Quantity";
+            this.Quantity.ReadOnly = true;
             // 
-            // colTimestamp
+            // Timestamp
             // 
-            this.colTimestamp.DataPropertyName = "Timestamp";
-            this.colTimestamp.FillWeight = 15F;
-            this.colTimestamp.HeaderText = "Timestamp";
-            this.colTimestamp.Name = "Timestamp";
-            this.colTimestamp.ReadOnly = true;
+            this.Timestamp.DataPropertyName = "Timestamp";
+            this.Timestamp.FillWeight = 15F;
+            this.Timestamp.HeaderText = "Timestamp";
+            this.Timestamp.MinimumWidth = 6;
+            this.Timestamp.Name = "Timestamp";
+            this.Timestamp.ReadOnly = true;
             // 
-            // colOperator
+            // Operator
             // 
-            this.colOperator.DataPropertyName = "Operator";
-            this.colOperator.FillWeight = 15F;
-            this.colOperator.HeaderText = "Operator";
-            this.colOperator.Name = "Operator";
-            this.colOperator.ReadOnly = true;
+            this.Operator.DataPropertyName = "Operator";
+            this.Operator.FillWeight = 15F;
+            this.Operator.HeaderText = "Operator";
+            this.Operator.MinimumWidth = 6;
+            this.Operator.Name = "Operator";
+            this.Operator.ReadOnly = true;
             // 
             // lblRecentMovements
             // 
@@ -254,7 +258,7 @@
             this.lblRecentMovements.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.lblRecentMovements.Location = new System.Drawing.Point(43, 310);
             this.lblRecentMovements.Name = "lblRecentMovements";
-            this.lblRecentMovements.Size = new System.Drawing.Size(232, 25);
+            this.lblRecentMovements.Size = new System.Drawing.Size(289, 32);
             this.lblRecentMovements.TabIndex = 4;
             this.lblRecentMovements.Text = "Recent Stock Movements";
             // 
@@ -299,5 +303,10 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn colQuantity;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTimestamp;
         private System.Windows.Forms.DataGridViewTextBoxColumn colOperator;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ProductDetails;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Quantity;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Timestamp;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Operator;
     }
 }
