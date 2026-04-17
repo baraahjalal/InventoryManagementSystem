@@ -28,7 +28,7 @@ namespace InventoryManagementSystem
         
         private void FrmProducts_Load(object sender, EventArgs e)
         {
-            LoadStaticData();
+            // LoadStaticData(); // تم الإيقاف للحفاظ على شكل الديزاين الأصلي
             LoadGridData();
         }
 
