@@ -113,7 +113,34 @@ namespace InventoryManagementSystem
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
+            ApplyUserPermissions();
+            
+            // Optionally open the Dashboard by default if they have permission
+            if (MemoryStore.CurrentUser != null && MemoryStore.CurrentUser.CanViewDashboard)
+            {
+                btnDashboard_Click(this, EventArgs.Empty);
+            }
+        }
 
+        private void ApplyUserPermissions()
+        {
+            // Safety check
+            if (MemoryStore.CurrentUser == null) return;
+
+            var user = MemoryStore.CurrentUser;
+
+            // If the user is a super admin, everything is visible by default (Assuming buttons are visible from designer)
+            if (user.IsAdmin) return;
+
+            // Apply granular permissions by hiding buttons they don't have access to
+            btnDashboard.Visible = user.CanViewDashboard;
+            btnProducts.Visible = user.CanViewProducts;
+            btnStockIn.Visible = user.CanDoStockIn;
+            btnStockOut.Visible = user.CanDoStockOut;
+            btnUserManagement.Visible = user.CanViewUsers || user.CanManageUsers;
+            btnSuppliersManagement.Visible = user.CanViewSuppliers || user.CanEditSuppliers || user.CanAddSuppliers;
+            btnAuditLog.Visible = user.CanViewAuditLog;
+            btnReports.Visible = user.CanViewReports;
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
