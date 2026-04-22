@@ -13,13 +13,34 @@ namespace InventoryManagementSystem
         public string Password { get; set; }
         public string Role { get; set; }
 
-        // RBAC Permissions
-        public bool IsAdmin { get; set; }
-        public bool CanInsert { get; set; }
-        public bool CanUpdate { get; set; }
-        public bool CanManageUsers { get; set; }
+        public bool IsAdmin { get; set; } // Super User override
+
+        // Dashboard Permissions
+        public bool CanViewDashboard { get; set; }
+
+        // Product Permissions
+        public bool CanViewProducts { get; set; }
+        public bool CanAddProducts { get; set; }
+        public bool CanEditProducts { get; set; }
+        public bool CanDeleteProducts { get; set; }
+
+        // Stock Movement Permissions
+        public bool CanDoStockIn { get; set; }
+        public bool CanDoStockOut { get; set; }
+
+        // Supplier Permissions
+        public bool CanViewSuppliers { get; set; }
+        public bool CanAddSuppliers { get; set; }
+        public bool CanEditSuppliers { get; set; }
+
+        // User & Security Permissions
+        public bool CanViewUsers { get; set; }
+        public bool CanManageUsers { get; set; } // Add, Edit, Change Permissions
+        public bool CanViewAuditLog { get; set; }
+
+        // Reports Permissions
+        public bool CanViewReports { get; set; }
         public bool CanPrint { get; set; }
-        public bool CanManageSettings { get; set; }
     }
 
     public class Supplier
@@ -148,12 +169,56 @@ namespace InventoryManagementSystem
         #region Seed Initial Data
         private static void SeedData()
         {
-            // Seed Users
+            // Seed Users with realistic, granular RBAC (Role-Based Access Control)
             Users.AddRange(new[]
             {
-                new User { Id = 1, Username = "admin.super", Password = "123", Role = "System Administrator", IsAdmin = true, CanInsert = true, CanUpdate = true, CanManageUsers = true, CanPrint = true, CanManageSettings = true },
-                new User { Id = 2, Username = "john.doe", Password = "123", Role = "Inventory Manager", IsAdmin = false, CanInsert = true, CanUpdate = true, CanManageUsers = false, CanPrint = true, CanManageSettings = false },
-                new User { Id = 3, Username = "sarah.smith", Password = "123", Role = "Sales Representative", IsAdmin = false, CanInsert = false, CanUpdate = false, CanManageUsers = false, CanPrint = true, CanManageSettings = false }
+                // 1. System Administrator: Has access to absolutely everything.
+                new User
+                {
+                    Id = 1, Username = "admin.super", Password = "123", Role = "System Administrator",
+                    IsAdmin = true,
+                    CanViewDashboard = true, CanViewProducts = true, CanAddProducts = true, CanEditProducts = true, CanDeleteProducts = true,
+                    CanDoStockIn = true, CanDoStockOut = true,
+                    CanViewSuppliers = true, CanAddSuppliers = true, CanEditSuppliers = true,
+                    CanViewUsers = true, CanManageUsers = true, CanViewAuditLog = true,
+                    CanViewReports = true, CanPrint = true
+                },
+                
+                // 2. Stock Clerk: Can view products and dashboard, do stock in/out, view suppliers. CANNOT add products/suppliers.
+                new User
+                {
+                    Id = 2, Username = "ahmed.clerk", Password = "123", Role = "Stock Clerk",
+                    IsAdmin = false,
+                    CanViewDashboard = true, CanViewProducts = true, CanAddProducts = false, CanEditProducts = false, CanDeleteProducts = false,
+                    CanDoStockIn = true, CanDoStockOut = true,
+                    CanViewSuppliers = true, CanAddSuppliers = false, CanEditSuppliers = false,
+                    CanViewUsers = false, CanManageUsers = false, CanViewAuditLog = false,
+                    CanViewReports = false, CanPrint = false
+                },
+
+                // 3. Reporting Officer / Viewer: Can view products, view reports and print. CANNOT change stock, manage users, or edit suppliers.
+                new User
+                {
+                    Id = 3, Username = "sara.reports", Password = "123", Role = "Reporting Officer",
+                    IsAdmin = false,
+                    CanViewDashboard = true, CanViewProducts = true, CanAddProducts = false, CanEditProducts = false, CanDeleteProducts = false,
+                    CanDoStockIn = false, CanDoStockOut = false,
+                    CanViewSuppliers = true, CanAddSuppliers = false, CanEditSuppliers = false,
+                    CanViewUsers = false, CanManageUsers = false, CanViewAuditLog = false,
+                    CanViewReports = true, CanPrint = true
+                },
+
+                // 4. Procurement Manager: Can view/add/edit suppliers, view products, print reports. CANNOT manage users or view Audit log.
+                new User
+                {
+                    Id = 4, Username = "omar.proc", Password = "123", Role = "Procurement Manager",
+                    IsAdmin = false,
+                    CanViewDashboard = true, CanViewProducts = true, CanAddProducts = false, CanEditProducts = false, CanDeleteProducts = false,
+                    CanDoStockIn = true, CanDoStockOut = false,
+                    CanViewSuppliers = true, CanAddSuppliers = true, CanEditSuppliers = true,
+                    CanViewUsers = false, CanManageUsers = false, CanViewAuditLog = false,
+                    CanViewReports = true, CanPrint = true
+                }
             });
 
             // Seed Suppliers

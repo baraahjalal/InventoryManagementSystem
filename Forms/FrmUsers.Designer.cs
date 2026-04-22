@@ -34,18 +34,29 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlDetails = new System.Windows.Forms.Panel();
             this.lblPermissionsTitle = new System.Windows.Forms.Label();
-            this.pnlPermissions = new System.Windows.Forms.Panel();
-            this.chkSettings = new System.Windows.Forms.CheckBox();
-            this.chkPrint = new System.Windows.Forms.CheckBox();
-            this.chkUsers = new System.Windows.Forms.CheckBox();
-            this.chkUpdate = new System.Windows.Forms.CheckBox();
-            this.chkInsert = new System.Windows.Forms.CheckBox();
-            this.chkAdmin = new System.Windows.Forms.CheckBox();
+            this.tcPermissions = new System.Windows.Forms.TabControl();
+            this.tabInventory = new System.Windows.Forms.TabPage();
+            this.chkCanViewProducts = new System.Windows.Forms.CheckBox();
+            this.chkCanAddProducts = new System.Windows.Forms.CheckBox();
+            this.chkCanEditProducts = new System.Windows.Forms.CheckBox();
+            this.chkCanDeleteProducts = new System.Windows.Forms.CheckBox();
+            this.chkCanDoStockIn = new System.Windows.Forms.CheckBox();
+            this.chkCanDoStockOut = new System.Windows.Forms.CheckBox();
+            this.tabAdmin = new System.Windows.Forms.TabPage();
+            this.chkCanViewDashboard = new System.Windows.Forms.CheckBox();
+            this.chkCanViewSuppliers = new System.Windows.Forms.CheckBox();
+            this.chkCanManageSuppliers = new System.Windows.Forms.CheckBox();
+            this.chkCanViewUsers = new System.Windows.Forms.CheckBox();
+            this.chkCanManageUsers = new System.Windows.Forms.CheckBox();
+            this.tabReports = new System.Windows.Forms.TabPage();
+            this.chkCanViewReports = new System.Windows.Forms.CheckBox();
+            this.chkCanPrint = new System.Windows.Forms.CheckBox();
+            this.chkCanViewAuditLog = new System.Windows.Forms.CheckBox();
             this.btnResetPass = new System.Windows.Forms.Button();
             this.lblUserPassword = new System.Windows.Forms.Label();
             this.txtUserPassword = new System.Windows.Forms.TextBox();
-            this.lblUserJob = new System.Windows.Forms.Label();
-            this.txtUserJob = new System.Windows.Forms.TextBox();
+            this.lblRole = new System.Windows.Forms.Label();
+            this.cmbRole = new System.Windows.Forms.ComboBox();
             this.lblUserName = new System.Windows.Forms.Label();
             this.txtUserName = new System.Windows.Forms.TextBox();
             this.btnSetPic = new System.Windows.Forms.Button();
@@ -71,7 +82,10 @@
             this.lblMainTitle = new System.Windows.Forms.Label();
             this.lblSubTitle = new System.Windows.Forms.Label();
             this.pnlDetails.SuspendLayout();
-            this.pnlPermissions.SuspendLayout();
+            this.tcPermissions.SuspendLayout();
+            this.tabInventory.SuspendLayout();
+            this.tabAdmin.SuspendLayout();
+            this.tabReports.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picUser)).BeginInit();
             this.cmsDeletePicture.SuspendLayout();
             this.pnlGridContainer.SuspendLayout();
@@ -84,22 +98,22 @@
             this.pnlDetails.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
             this.pnlDetails.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlDetails.Controls.Add(this.lblPermissionsTitle);
-            this.pnlDetails.Controls.Add(this.pnlPermissions);
+            this.pnlDetails.Controls.Add(this.tcPermissions);
             this.pnlDetails.Controls.Add(this.btnResetPass);
             this.pnlDetails.Controls.Add(this.lblUserPassword);
             this.pnlDetails.Controls.Add(this.txtUserPassword);
-            this.pnlDetails.Controls.Add(this.lblUserJob);
-            this.pnlDetails.Controls.Add(this.txtUserJob);
+            this.pnlDetails.Controls.Add(this.lblRole);
+            this.pnlDetails.Controls.Add(this.cmbRole);
             this.pnlDetails.Controls.Add(this.lblUserName);
             this.pnlDetails.Controls.Add(this.txtUserName);
             this.pnlDetails.Controls.Add(this.btnSetPic);
             this.pnlDetails.Controls.Add(this.picUser);
             this.pnlDetails.Controls.Add(this.lblDetailsTitle);
             this.pnlDetails.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlDetails.Location = new System.Drawing.Point(750, 0);
+            this.pnlDetails.Location = new System.Drawing.Point(680, 0);
             this.pnlDetails.Name = "pnlDetails";
             this.pnlDetails.Padding = new System.Windows.Forms.Padding(20);
-            this.pnlDetails.Size = new System.Drawing.Size(350, 700);
+            this.pnlDetails.Size = new System.Drawing.Size(420, 700);
             this.pnlDetails.TabIndex = 0;
             // 
             // lblPermissionsTitle
@@ -113,85 +127,205 @@
             this.lblPermissionsTitle.TabIndex = 11;
             this.lblPermissionsTitle.Text = "User Permissions";
             // 
-            // pnlPermissions
+            // tcPermissions
             // 
-            this.pnlPermissions.Controls.Add(this.chkSettings);
-            this.pnlPermissions.Controls.Add(this.chkPrint);
-            this.pnlPermissions.Controls.Add(this.chkUsers);
-            this.pnlPermissions.Controls.Add(this.chkUpdate);
-            this.pnlPermissions.Controls.Add(this.chkInsert);
-            this.pnlPermissions.Controls.Add(this.chkAdmin);
-            this.pnlPermissions.Location = new System.Drawing.Point(22, 440);
-            this.pnlPermissions.Name = "pnlPermissions";
-            this.pnlPermissions.Size = new System.Drawing.Size(306, 190);
-            this.pnlPermissions.TabIndex = 10;
+            this.tcPermissions.Controls.Add(this.tabInventory);
+            this.tcPermissions.Controls.Add(this.tabAdmin);
+            this.tcPermissions.Controls.Add(this.tabReports);
+            this.tcPermissions.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.tcPermissions.ItemSize = new System.Drawing.Size(110, 30);
+            this.tcPermissions.Location = new System.Drawing.Point(22, 440);
+            this.tcPermissions.Name = "tcPermissions";
+            this.tcPermissions.SelectedIndex = 0;
+            this.tcPermissions.Size = new System.Drawing.Size(376, 190);
+            this.tcPermissions.TabIndex = 10;
             // 
-            // chkSettings
+            // tabInventory
             // 
-            this.chkSettings.AutoSize = true;
-            this.chkSettings.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.chkSettings.Location = new System.Drawing.Point(11, 155);
-            this.chkSettings.Name = "chkSettings";
-            this.chkSettings.Size = new System.Drawing.Size(125, 23);
-            this.chkSettings.TabIndex = 5;
-            this.chkSettings.Text = "System Settings";
-            this.chkSettings.UseVisualStyleBackColor = true;
+            this.tabInventory.BackColor = System.Drawing.Color.White;
+            this.tabInventory.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tabInventory.Controls.Add(this.chkCanViewProducts);
+            this.tabInventory.Controls.Add(this.chkCanAddProducts);
+            this.tabInventory.Controls.Add(this.chkCanEditProducts);
+            this.tabInventory.Controls.Add(this.chkCanDeleteProducts);
+            this.tabInventory.Controls.Add(this.chkCanDoStockIn);
+            this.tabInventory.Controls.Add(this.chkCanDoStockOut);
+            this.tabInventory.Location = new System.Drawing.Point(4, 34);
+            this.tabInventory.Name = "tabInventory";
+            this.tabInventory.Padding = new System.Windows.Forms.Padding(15);
+            this.tabInventory.Size = new System.Drawing.Size(368, 152);
+            this.tabInventory.TabIndex = 0;
+            this.tabInventory.Text = "Inventory";
             // 
-            // chkPrint
+            // chkCanViewProducts
             // 
-            this.chkPrint.AutoSize = true;
-            this.chkPrint.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.chkPrint.Location = new System.Drawing.Point(11, 126);
-            this.chkPrint.Name = "chkPrint";
-            this.chkPrint.Size = new System.Drawing.Size(108, 23);
-            this.chkPrint.TabIndex = 4;
-            this.chkPrint.Text = "Print Reports";
-            this.chkPrint.UseVisualStyleBackColor = true;
+            this.chkCanViewProducts.AutoSize = true;
+            this.chkCanViewProducts.Location = new System.Drawing.Point(18, 18);
+            this.chkCanViewProducts.Name = "chkCanViewProducts";
+            this.chkCanViewProducts.Size = new System.Drawing.Size(111, 21);
+            this.chkCanViewProducts.TabIndex = 0;
+            this.chkCanViewProducts.Text = "View Products";
+            this.chkCanViewProducts.UseVisualStyleBackColor = true;
             // 
-            // chkUsers
+            // chkCanAddProducts
             // 
-            this.chkUsers.AutoSize = true;
-            this.chkUsers.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.chkUsers.Location = new System.Drawing.Point(11, 97);
-            this.chkUsers.Name = "chkUsers";
-            this.chkUsers.Size = new System.Drawing.Size(116, 23);
-            this.chkUsers.TabIndex = 3;
-            this.chkUsers.Text = "Manage Users";
-            this.chkUsers.UseVisualStyleBackColor = true;
+            this.chkCanAddProducts.AutoSize = true;
+            this.chkCanAddProducts.Location = new System.Drawing.Point(18, 58);
+            this.chkCanAddProducts.Name = "chkCanAddProducts";
+            this.chkCanAddProducts.Size = new System.Drawing.Size(107, 21);
+            this.chkCanAddProducts.TabIndex = 1;
+            this.chkCanAddProducts.Text = "Add Products";
+            this.chkCanAddProducts.UseVisualStyleBackColor = true;
             // 
-            // chkUpdate
+            // chkCanEditProducts
             // 
-            this.chkUpdate.AutoSize = true;
-            this.chkUpdate.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.chkUpdate.Location = new System.Drawing.Point(11, 68);
-            this.chkUpdate.Name = "chkUpdate";
-            this.chkUpdate.Size = new System.Drawing.Size(106, 23);
-            this.chkUpdate.TabIndex = 2;
-            this.chkUpdate.Text = "Update Data";
-            this.chkUpdate.UseVisualStyleBackColor = true;
+            this.chkCanEditProducts.AutoSize = true;
+            this.chkCanEditProducts.Location = new System.Drawing.Point(18, 98);
+            this.chkCanEditProducts.Name = "chkCanEditProducts";
+            this.chkCanEditProducts.Size = new System.Drawing.Size(105, 21);
+            this.chkCanEditProducts.TabIndex = 2;
+            this.chkCanEditProducts.Text = "Edit Products";
+            this.chkCanEditProducts.UseVisualStyleBackColor = true;
             // 
-            // chkInsert
+            // chkCanDeleteProducts
             // 
-            this.chkInsert.AutoSize = true;
-            this.chkInsert.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.chkInsert.Location = new System.Drawing.Point(11, 39);
-            this.chkInsert.Name = "chkInsert";
-            this.chkInsert.Size = new System.Drawing.Size(96, 23);
-            this.chkInsert.TabIndex = 1;
-            this.chkInsert.Text = "Insert Data";
-            this.chkInsert.UseVisualStyleBackColor = true;
+            this.chkCanDeleteProducts.AutoSize = true;
+            this.chkCanDeleteProducts.Location = new System.Drawing.Point(180, 18);
+            this.chkCanDeleteProducts.Name = "chkCanDeleteProducts";
+            this.chkCanDeleteProducts.Size = new System.Drawing.Size(120, 21);
+            this.chkCanDeleteProducts.TabIndex = 3;
+            this.chkCanDeleteProducts.Text = "Delete Products";
+            this.chkCanDeleteProducts.UseVisualStyleBackColor = true;
             // 
-            // chkAdmin
+            // chkCanDoStockIn
             // 
-            this.chkAdmin.AutoSize = true;
-            this.chkAdmin.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
-            this.chkAdmin.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.chkAdmin.Location = new System.Drawing.Point(11, 10);
-            this.chkAdmin.Name = "chkAdmin";
-            this.chkAdmin.Size = new System.Drawing.Size(114, 23);
-            this.chkAdmin.TabIndex = 0;
-            this.chkAdmin.Text = "Administrator";
-            this.chkAdmin.UseVisualStyleBackColor = true;
+            this.chkCanDoStockIn.AutoSize = true;
+            this.chkCanDoStockIn.Location = new System.Drawing.Point(180, 58);
+            this.chkCanDoStockIn.Name = "chkCanDoStockIn";
+            this.chkCanDoStockIn.Size = new System.Drawing.Size(126, 21);
+            this.chkCanDoStockIn.TabIndex = 4;
+            this.chkCanDoStockIn.Text = "Process Stock In";
+            this.chkCanDoStockIn.UseVisualStyleBackColor = true;
+            // 
+            // chkCanDoStockOut
+            // 
+            this.chkCanDoStockOut.AutoSize = true;
+            this.chkCanDoStockOut.Location = new System.Drawing.Point(180, 98);
+            this.chkCanDoStockOut.Name = "chkCanDoStockOut";
+            this.chkCanDoStockOut.Size = new System.Drawing.Size(136, 21);
+            this.chkCanDoStockOut.TabIndex = 5;
+            this.chkCanDoStockOut.Text = "Process Stock Out";
+            this.chkCanDoStockOut.UseVisualStyleBackColor = true;
+            // 
+            // tabAdmin
+            // 
+            this.tabAdmin.BackColor = System.Drawing.Color.White;
+            this.tabAdmin.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tabAdmin.Controls.Add(this.chkCanViewDashboard);
+            this.tabAdmin.Controls.Add(this.chkCanViewSuppliers);
+            this.tabAdmin.Controls.Add(this.chkCanManageSuppliers);
+            this.tabAdmin.Controls.Add(this.chkCanViewUsers);
+            this.tabAdmin.Controls.Add(this.chkCanManageUsers);
+            this.tabAdmin.Location = new System.Drawing.Point(4, 34);
+            this.tabAdmin.Name = "tabAdmin";
+            this.tabAdmin.Padding = new System.Windows.Forms.Padding(15);
+            this.tabAdmin.Size = new System.Drawing.Size(368, 152);
+            this.tabAdmin.TabIndex = 1;
+            this.tabAdmin.Text = "Administration";
+            // 
+            // chkCanViewDashboard
+            // 
+            this.chkCanViewDashboard.AutoSize = true;
+            this.chkCanViewDashboard.Location = new System.Drawing.Point(18, 18);
+            this.chkCanViewDashboard.Name = "chkCanViewDashboard";
+            this.chkCanViewDashboard.Size = new System.Drawing.Size(123, 21);
+            this.chkCanViewDashboard.TabIndex = 0;
+            this.chkCanViewDashboard.Text = "View Dashboard";
+            this.chkCanViewDashboard.UseVisualStyleBackColor = true;
+            // 
+            // chkCanViewSuppliers
+            // 
+            this.chkCanViewSuppliers.AutoSize = true;
+            this.chkCanViewSuppliers.Location = new System.Drawing.Point(18, 58);
+            this.chkCanViewSuppliers.Name = "chkCanViewSuppliers";
+            this.chkCanViewSuppliers.Size = new System.Drawing.Size(113, 21);
+            this.chkCanViewSuppliers.TabIndex = 1;
+            this.chkCanViewSuppliers.Text = "View Suppliers";
+            this.chkCanViewSuppliers.UseVisualStyleBackColor = true;
+            // 
+            // chkCanManageSuppliers
+            // 
+            this.chkCanManageSuppliers.AutoSize = true;
+            this.chkCanManageSuppliers.Location = new System.Drawing.Point(18, 98);
+            this.chkCanManageSuppliers.Name = "chkCanManageSuppliers";
+            this.chkCanManageSuppliers.Size = new System.Drawing.Size(133, 21);
+            this.chkCanManageSuppliers.TabIndex = 2;
+            this.chkCanManageSuppliers.Text = "Manage Suppliers";
+            this.chkCanManageSuppliers.UseVisualStyleBackColor = true;
+            // 
+            // chkCanViewUsers
+            // 
+            this.chkCanViewUsers.AutoSize = true;
+            this.chkCanViewUsers.Location = new System.Drawing.Point(180, 18);
+            this.chkCanViewUsers.Name = "chkCanViewUsers";
+            this.chkCanViewUsers.Size = new System.Drawing.Size(91, 21);
+            this.chkCanViewUsers.TabIndex = 3;
+            this.chkCanViewUsers.Text = "View Users";
+            this.chkCanViewUsers.UseVisualStyleBackColor = true;
+            // 
+            // chkCanManageUsers
+            // 
+            this.chkCanManageUsers.AutoSize = true;
+            this.chkCanManageUsers.Location = new System.Drawing.Point(180, 58);
+            this.chkCanManageUsers.Name = "chkCanManageUsers";
+            this.chkCanManageUsers.Size = new System.Drawing.Size(111, 21);
+            this.chkCanManageUsers.TabIndex = 4;
+            this.chkCanManageUsers.Text = "Manage Users";
+            this.chkCanManageUsers.UseVisualStyleBackColor = true;
+            // 
+            // tabReports
+            // 
+            this.tabReports.BackColor = System.Drawing.Color.White;
+            this.tabReports.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tabReports.Controls.Add(this.chkCanViewReports);
+            this.tabReports.Controls.Add(this.chkCanPrint);
+            this.tabReports.Controls.Add(this.chkCanViewAuditLog);
+            this.tabReports.Location = new System.Drawing.Point(4, 34);
+            this.tabReports.Name = "tabReports";
+            this.tabReports.Padding = new System.Windows.Forms.Padding(15);
+            this.tabReports.Size = new System.Drawing.Size(368, 152);
+            this.tabReports.TabIndex = 2;
+            this.tabReports.Text = "Reports & Logs";
+            // 
+            // chkCanViewReports
+            // 
+            this.chkCanViewReports.AutoSize = true;
+            this.chkCanViewReports.Location = new System.Drawing.Point(18, 18);
+            this.chkCanViewReports.Name = "chkCanViewReports";
+            this.chkCanViewReports.Size = new System.Drawing.Size(105, 21);
+            this.chkCanViewReports.TabIndex = 0;
+            this.chkCanViewReports.Text = "View Reports";
+            this.chkCanViewReports.UseVisualStyleBackColor = true;
+            // 
+            // chkCanPrint
+            // 
+            this.chkCanPrint.AutoSize = true;
+            this.chkCanPrint.Location = new System.Drawing.Point(180, 18);
+            this.chkCanPrint.Name = "chkCanPrint";
+            this.chkCanPrint.Size = new System.Drawing.Size(117, 21);
+            this.chkCanPrint.TabIndex = 1;
+            this.chkCanPrint.Text = "Print Outcomes";
+            this.chkCanPrint.UseVisualStyleBackColor = true;
+            // 
+            // chkCanViewAuditLog
+            // 
+            this.chkCanViewAuditLog.AutoSize = true;
+            this.chkCanViewAuditLog.Location = new System.Drawing.Point(18, 58);
+            this.chkCanViewAuditLog.Name = "chkCanViewAuditLog";
+            this.chkCanViewAuditLog.Size = new System.Drawing.Size(115, 21);
+            this.chkCanViewAuditLog.TabIndex = 2;
+            this.chkCanViewAuditLog.Text = "View Audit Log";
+            this.chkCanViewAuditLog.UseVisualStyleBackColor = true;
             // 
             // btnResetPass
             // 
@@ -229,24 +363,31 @@
             this.txtUserPassword.TabIndex = 7;
             this.txtUserPassword.UseSystemPasswordChar = true;
             // 
-            // lblUserJob
+            // lblRole
             // 
-            this.lblUserJob.AutoSize = true;
-            this.lblUserJob.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblUserJob.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblUserJob.Location = new System.Drawing.Point(19, 335);
-            this.lblUserJob.Name = "lblUserJob";
-            this.lblUserJob.Size = new System.Drawing.Size(25, 15);
-            this.lblUserJob.TabIndex = 6;
-            this.lblUserJob.Text = "Job";
+            this.lblRole.AutoSize = true;
+            this.lblRole.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblRole.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.lblRole.Location = new System.Drawing.Point(19, 335);
+            this.lblRole.Name = "lblRole";
+            this.lblRole.Size = new System.Drawing.Size(72, 15);
+            this.lblRole.TabIndex = 6;
+            this.lblRole.Text = "System Role";
             // 
-            // txtUserJob
+            // cmbRole
             // 
-            this.txtUserJob.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.txtUserJob.Location = new System.Drawing.Point(22, 355);
-            this.txtUserJob.Name = "txtUserJob";
-            this.txtUserJob.Size = new System.Drawing.Size(306, 27);
-            this.txtUserJob.TabIndex = 5;
+            this.cmbRole.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbRole.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.cmbRole.FormattingEnabled = true;
+            this.cmbRole.Items.AddRange(new object[] {
+            "System Administrator",
+            "Stock Clerk",
+            "Reporting Officer",
+            "Procurement Manager"});
+            this.cmbRole.Location = new System.Drawing.Point(22, 355);
+            this.cmbRole.Name = "cmbRole";
+            this.cmbRole.Size = new System.Drawing.Size(306, 28);
+            this.cmbRole.TabIndex = 5;
             // 
             // lblUserName
             // 
@@ -326,7 +467,7 @@
             this.pnlGridContainer.Location = new System.Drawing.Point(0, 80);
             this.pnlGridContainer.Name = "pnlGridContainer";
             this.pnlGridContainer.Padding = new System.Windows.Forms.Padding(20);
-            this.pnlGridContainer.Size = new System.Drawing.Size(750, 620);
+            this.pnlGridContainer.Size = new System.Drawing.Size(680, 620);
             this.pnlGridContainer.TabIndex = 1;
             // 
             // dgvUsers
@@ -377,7 +518,7 @@
             this.dgvUsers.RowHeadersVisible = false;
             this.dgvUsers.RowTemplate.Height = 40;
             this.dgvUsers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvUsers.Size = new System.Drawing.Size(710, 510);
+            this.dgvUsers.Size = new System.Drawing.Size(640, 510);
             this.dgvUsers.TabIndex = 0;
             // 
             // colId
@@ -440,7 +581,7 @@
             this.pnlActionButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlActionButtons.Location = new System.Drawing.Point(20, 530);
             this.pnlActionButtons.Name = "pnlActionButtons";
-            this.pnlActionButtons.Size = new System.Drawing.Size(710, 70);
+            this.pnlActionButtons.Size = new System.Drawing.Size(640, 70);
             this.pnlActionButtons.TabIndex = 1;
             // 
             // btnRefresh
@@ -482,7 +623,7 @@
             this.btnUpdate.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnUpdate.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnUpdate.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.btnUpdate.Location = new System.Drawing.Point(475, 15);
+            this.btnUpdate.Location = new System.Drawing.Point(405, 15);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(110, 40);
             this.btnUpdate.TabIndex = 4;
@@ -498,7 +639,7 @@
             this.btnAdd.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAdd.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.btnAdd.ForeColor = System.Drawing.Color.White;
-            this.btnAdd.Location = new System.Drawing.Point(600, 15);
+            this.btnAdd.Location = new System.Drawing.Point(530, 15);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(110, 40);
             this.btnAdd.TabIndex = 3;
@@ -548,8 +689,13 @@
             this.Text = "Manage Users";
             this.pnlDetails.ResumeLayout(false);
             this.pnlDetails.PerformLayout();
-            this.pnlPermissions.ResumeLayout(false);
-            this.pnlPermissions.PerformLayout();
+            this.tcPermissions.ResumeLayout(false);
+            this.tabInventory.ResumeLayout(false);
+            this.tabInventory.PerformLayout();
+            this.tabAdmin.ResumeLayout(false);
+            this.tabAdmin.PerformLayout();
+            this.tabReports.ResumeLayout(false);
+            this.tabReports.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picUser)).EndInit();
             this.cmsDeletePicture.ResumeLayout(false);
             this.pnlGridContainer.ResumeLayout(false);
@@ -575,19 +721,30 @@
         private System.Windows.Forms.Button btnSetPic;
         private System.Windows.Forms.Label lblUserName;
         private System.Windows.Forms.TextBox txtUserName;
-        private System.Windows.Forms.Label lblUserJob;
-        private System.Windows.Forms.TextBox txtUserJob;
+        private System.Windows.Forms.Label lblRole;
+        private System.Windows.Forms.ComboBox cmbRole;
         private System.Windows.Forms.Label lblUserPassword;
         private System.Windows.Forms.TextBox txtUserPassword;
         private System.Windows.Forms.Button btnResetPass;
-        private System.Windows.Forms.Panel pnlPermissions;
         private System.Windows.Forms.Label lblPermissionsTitle;
-        private System.Windows.Forms.CheckBox chkAdmin;
-        private System.Windows.Forms.CheckBox chkInsert;
-        private System.Windows.Forms.CheckBox chkUpdate;
-        private System.Windows.Forms.CheckBox chkUsers;
-        private System.Windows.Forms.CheckBox chkPrint;
-        private System.Windows.Forms.CheckBox chkSettings;
+        private System.Windows.Forms.TabControl tcPermissions;
+        private System.Windows.Forms.TabPage tabInventory;
+        private System.Windows.Forms.CheckBox chkCanViewProducts;
+        private System.Windows.Forms.CheckBox chkCanAddProducts;
+        private System.Windows.Forms.CheckBox chkCanEditProducts;
+        private System.Windows.Forms.CheckBox chkCanDeleteProducts;
+        private System.Windows.Forms.CheckBox chkCanDoStockIn;
+        private System.Windows.Forms.CheckBox chkCanDoStockOut;
+        private System.Windows.Forms.TabPage tabAdmin;
+        private System.Windows.Forms.CheckBox chkCanViewDashboard;
+        private System.Windows.Forms.CheckBox chkCanViewSuppliers;
+        private System.Windows.Forms.CheckBox chkCanManageSuppliers;
+        private System.Windows.Forms.CheckBox chkCanViewUsers;
+        private System.Windows.Forms.CheckBox chkCanManageUsers;
+        private System.Windows.Forms.TabPage tabReports;
+        private System.Windows.Forms.CheckBox chkCanViewReports;
+        private System.Windows.Forms.CheckBox chkCanPrint;
+        private System.Windows.Forms.CheckBox chkCanViewAuditLog;
         private System.Windows.Forms.ContextMenuStrip cmsDeletePicture;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemDelete;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
