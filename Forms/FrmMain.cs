@@ -115,5 +115,32 @@ namespace InventoryManagementSystem
         {
 
         }
+
+        private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            // نتحقق أولاً أن الإغلاق تم بواسطة المستخدم (مثلاً عبر زر X)
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                // إظهار رسالة تأكيد احترافية
+                DialogResult result = MessageBox.Show(
+                    "Are you sure you want to exit the system?",
+                    "Confirm Exit",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2 // لجعل خيار "No" هو الافتراضي لتجنب الإغلاق بالخطأ
+                );
+
+                // إذا اختار المستخدم "لا"، نلغي عملية الإغلاق
+                if (result == DialogResult.No)
+                {
+                    e.Cancel = true;
+                }
+                else
+                {
+                    // إذا اختار "نعم"، نقوم بإنهاء النظام بالكامل بما في ذلك FrmLogin المخفي
+                    Application.Exit();
+                }
+            }
+        }
     }
 }

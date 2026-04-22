@@ -46,93 +46,94 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FrmAuditLog.cs">
+    <Compile Include="Classes\MemoryStore.cs" />
+    <Compile Include="Forms\FrmAuditLog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmAuditLog.Designer.cs">
+    <Compile Include="Forms\FrmAuditLog.Designer.cs">
       <DependentUpon>FrmAuditLog.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmDashboard.cs">
+    <Compile Include="Forms\FrmDashboard.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmDashboard.Designer.cs">
+    <Compile Include="Forms\FrmDashboard.Designer.cs">
       <DependentUpon>FrmDashboard.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmLogin.cs">
+    <Compile Include="Forms\FrmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmLogin.Designer.cs">
+    <Compile Include="Forms\FrmLogin.Designer.cs">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmMain.cs">
+    <Compile Include="Forms\FrmMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmMain.Designer.cs">
+    <Compile Include="Forms\FrmMain.Designer.cs">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmProducts.cs">
+    <Compile Include="Forms\FrmProducts.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmProducts.Designer.cs">
+    <Compile Include="Forms\FrmProducts.Designer.cs">
       <DependentUpon>FrmProducts.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmReports.cs">
+    <Compile Include="Forms\FrmReports.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmReports.Designer.cs">
+    <Compile Include="Forms\FrmReports.Designer.cs">
       <DependentUpon>FrmReports.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmStockOut.cs">
+    <Compile Include="Forms\FrmStockOut.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmStockOut.Designer.cs">
+    <Compile Include="Forms\FrmStockOut.Designer.cs">
       <DependentUpon>FrmStockOut.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmSupplierManagement.cs">
+    <Compile Include="Forms\FrmSupplierManagement.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmSupplierManagement.Designer.cs">
+    <Compile Include="Forms\FrmSupplierManagement.Designer.cs">
       <DependentUpon>FrmSupplierManagement.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmUsers.cs">
+    <Compile Include="Forms\FrmUsers.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmUsers.Designer.cs">
+    <Compile Include="Forms\FrmUsers.Designer.cs">
       <DependentUpon>FrmUsers.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FrmStockIn.cs">
+    <Compile Include="Forms\FrmStockIn.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmStockIn.Designer.cs">
+    <Compile Include="Forms\FrmStockIn.Designer.cs">
       <DependentUpon>FrmStockIn.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="FrmAuditLog.resx">
+    <EmbeddedResource Include="Forms\FrmAuditLog.resx">
       <DependentUpon>FrmAuditLog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmDashboard.resx">
+    <EmbeddedResource Include="Forms\FrmDashboard.resx">
       <DependentUpon>FrmDashboard.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmLogin.resx">
+    <EmbeddedResource Include="Forms\FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmMain.resx">
+    <EmbeddedResource Include="Forms\FrmMain.resx">
       <DependentUpon>FrmMain.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmProducts.resx">
+    <EmbeddedResource Include="Forms\FrmProducts.resx">
       <DependentUpon>FrmProducts.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmStockIn.resx">
+    <EmbeddedResource Include="Forms\FrmStockIn.resx">
       <DependentUpon>FrmStockIn.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmStockOut.resx">
+    <EmbeddedResource Include="Forms\FrmStockOut.resx">
       <DependentUpon>FrmStockOut.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmSupplierManagement.resx">
+    <EmbeddedResource Include="Forms\FrmSupplierManagement.resx">
       <DependentUpon>FrmSupplierManagement.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmUsers.resx">
+    <EmbeddedResource Include="Forms\FrmUsers.resx">
       <DependentUpon>FrmUsers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -157,5 +158,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
