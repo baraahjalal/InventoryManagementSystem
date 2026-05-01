@@ -43,11 +43,13 @@ namespace InventoryManagementSystem
 
         private void btnDashboard_Click(object sender, EventArgs e)
         {
+            if (!CheckPermission(u => u.CanViewDashboard)) return;
             OpenChildForm(new FrmDashboard());
         }
 
         private void btnProducts_Click(object sender, EventArgs e)
         {
+            if (!CheckPermission(u => u.CanViewProducts)) return;
             OpenChildForm(new FrmProducts());
         }
 
@@ -83,31 +85,37 @@ namespace InventoryManagementSystem
 
         private void btnStockIn_Click(object sender, EventArgs e)
         {
+            if (!CheckPermission(u => u.CanDoStockIn)) return;
             OpenChildForm(new FrmStockIn());
         }
 
         private void btnStockOut_Click(object sender, EventArgs e)
         {
+            if (!CheckPermission(u => u.CanDoStockOut)) return;
             OpenChildForm(new FrmStockOut());
         }
 
         private void btnUserManagement_Click(object sender, EventArgs e)
         {
+            if (!CheckPermission(u => u.CanViewUsers || u.CanManageUsers)) return;
             OpenChildForm(new FrmUsers());
         }
 
         private void btnSuppliersManagement_Click(object sender, EventArgs e)
         {
+            if (!CheckPermission(u => u.CanViewSuppliers || u.CanEditSuppliers || u.CanAddSuppliers)) return;
             OpenChildForm(new FrmSupplierManagement());
         }
 
         private void btnAuditLog_Click(object sender, EventArgs e)
         {
+            if (!CheckPermission(u => u.CanViewAuditLog)) return;
             OpenChildForm(new FrmAuditLog());
         }
 
         private void btnReports_Click(object sender, EventArgs e)
         {
+            if (!CheckPermission(u => u.CanViewReports)) return;
             OpenChildForm(new FrmReports());
         }
 
@@ -124,48 +132,48 @@ namespace InventoryManagementSystem
 
         private void ApplyUserPermissions()
         {
-            // Safety check
-            if (MemoryStore.CurrentUser == null) return;
+            // We let all UI buttons remain fully visible to all users.
+            // Access restrictions are strictly enforced when they attempt to click the feature!
+        }
 
+        private bool CheckPermission(Func<User, bool> permission)
+        {
             var user = MemoryStore.CurrentUser;
-
-            // If the user is a super admin, everything is visible by default (Assuming buttons are visible from designer)
-            if (user.IsAdmin) return;
-
-            // Apply granular permissions by hiding buttons they don't have access to
-            btnDashboard.Visible = user.CanViewDashboard;
-            btnProducts.Visible = user.CanViewProducts;
-            btnStockIn.Visible = user.CanDoStockIn;
-            btnStockOut.Visible = user.CanDoStockOut;
-            btnUserManagement.Visible = user.CanViewUsers || user.CanManageUsers;
-            btnSuppliersManagement.Visible = user.CanViewSuppliers || user.CanEditSuppliers || user.CanAddSuppliers;
-            btnAuditLog.Visible = user.CanViewAuditLog;
-            btnReports.Visible = user.CanViewReports;
+            if (user != null && !user.IsAdmin && !permission(user))
+            {
+                MessageBox.Show("Access Denied: You do not have permission to access this module.\n\nExplanation: Your assigned role restricts you from using this feature. Please contact the administrator if you need access.", "Permission Restricted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+            return true;
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // نتحقق أولاً أن الإغلاق تم بواسطة المستخدم (مثلاً عبر زر X)
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                // إظهار رسالة تأكيد احترافية
-                DialogResult result = MessageBox.Show(
-                    "Are you sure you want to exit the system?",
-                    "Confirm Exit",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button2 // لجعل خيار "No" هو الافتراضي لتجنب الإغلاق بالخطأ
-                );
+                // استدعاء الفورم المخصص كـ Dialog
+                using (var exitDialog = new Forms.FrmExitDialog())
+                {
+                    exitDialog.ShowDialog(this);
 
-                // إذا اختار المستخدم "لا"، نلغي عملية الإغلاق
-                if (result == DialogResult.No)
-                {
-                    e.Cancel = true;
-                }
-                else
-                {
-                    // إذا اختار "نعم"، نقوم بإنهاء النظام بالكامل بما في ذلك FrmLogin المخفي
-                    Application.Exit();
+                    if (exitDialog.SelectedAction == Forms.ExitAction.Cancel)
+                    {
+                        // إذا تم اختيار إلغاء نمنع إغلاق الفورم
+                        e.Cancel = true;
+                    }
+                    else if (exitDialog.SelectedAction == Forms.ExitAction.LogOut)
+                    {
+                        // في حالة تسجيل الخروج، نسمح بإغلاق الفورم الحالي (الـ Main) 
+                        // ولكننا نقوم بعمل إعادة تشغيل للتطبيق لضمان تنظيف كافة الـ MemoryStore 
+                        // وظهور شاشة تسجيل الدخول من جديد بشكل نظيف
+                        e.Cancel = true; // نلغي الإغلاق العادي
+                        Application.Restart();
+                    }
+                    else if (exitDialog.SelectedAction == Forms.ExitAction.CloseSystem)
+                    {
+                        // إغلاق النظام بالكامل
+                        Application.Exit();
+                    }
                 }
             }
         }

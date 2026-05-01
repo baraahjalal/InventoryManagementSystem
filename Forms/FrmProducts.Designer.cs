@@ -27,15 +27,16 @@
             this.colPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlHeader = new System.Windows.Forms.Panel();
+            this.btnAddProduct = new System.Windows.Forms.Button();
             this.lblProcessor = new System.Windows.Forms.Label();
             this.cmbFilterProcessor = new System.Windows.Forms.ComboBox();
             this.lblRAM = new System.Windows.Forms.Label();
             this.cmbFilterRAM = new System.Windows.Forms.ComboBox();
             this.lblSearch = new System.Windows.Forms.Label();
             this.txtSearch = new System.Windows.Forms.TextBox();
-            this.btnCategoryPrinter = new System.Windows.Forms.Button();
-            this.btnCategoryPhone = new System.Windows.Forms.Button();
-            this.btnCategoryLaptop = new System.Windows.Forms.Button();
+            this.btnAddCategory = new System.Windows.Forms.Button();
+            this.cmbCategory = new System.Windows.Forms.ComboBox();
+            this.lblCategory = new System.Windows.Forms.Label();
             this.pnlDetails = new System.Windows.Forms.Panel();
             this.lblProdSpec = new System.Windows.Forms.Label();
             this.lblProdPrice = new System.Windows.Forms.Label();
@@ -106,21 +107,37 @@
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.White;
+            this.pnlHeader.Controls.Add(this.btnAddProduct);
             this.pnlHeader.Controls.Add(this.lblProcessor);
             this.pnlHeader.Controls.Add(this.cmbFilterProcessor);
             this.pnlHeader.Controls.Add(this.lblRAM);
             this.pnlHeader.Controls.Add(this.cmbFilterRAM);
             this.pnlHeader.Controls.Add(this.lblSearch);
             this.pnlHeader.Controls.Add(this.txtSearch);
-            this.pnlHeader.Controls.Add(this.btnCategoryPrinter);
-            this.pnlHeader.Controls.Add(this.btnCategoryPhone);
-            this.pnlHeader.Controls.Add(this.btnCategoryLaptop);
+            this.pnlHeader.Controls.Add(this.btnAddCategory);
+            this.pnlHeader.Controls.Add(this.cmbCategory);
+            this.pnlHeader.Controls.Add(this.lblCategory);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlHeader.Name = "pnlHeader";
             this.pnlHeader.Padding = new System.Windows.Forms.Padding(20, 20, 20, 0);
             this.pnlHeader.Size = new System.Drawing.Size(1200, 80);
             this.pnlHeader.TabIndex = 0;
+            // 
+            // btnAddProduct
+            // 
+            this.btnAddProduct.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(130)))), ((int)(((byte)(246)))));
+            this.btnAddProduct.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAddProduct.FlatAppearance.BorderSize = 0;
+            this.btnAddProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddProduct.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold);
+            this.btnAddProduct.ForeColor = System.Drawing.Color.White;
+            this.btnAddProduct.Location = new System.Drawing.Point(320, 26);
+            this.btnAddProduct.Name = "btnAddProduct";
+            this.btnAddProduct.Size = new System.Drawing.Size(110, 28);
+            this.btnAddProduct.TabIndex = 12;
+            this.btnAddProduct.Text = "Add Product";
+            this.btnAddProduct.UseVisualStyleBackColor = false;
             // 
             // lblProcessor
             // 
@@ -204,47 +221,47 @@
             this.txtSearch.Size = new System.Drawing.Size(220, 24);
             this.txtSearch.TabIndex = 3;
             // 
-            // btnCategoryPrinter
+            // btnAddCategory
             // 
-            this.btnCategoryPrinter.BackColor = System.Drawing.Color.White;
-            this.btnCategoryPrinter.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
-            this.btnCategoryPrinter.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCategoryPrinter.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnCategoryPrinter.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.btnCategoryPrinter.Location = new System.Drawing.Point(260, 25);
-            this.btnCategoryPrinter.Name = "btnCategoryPrinter";
-            this.btnCategoryPrinter.Size = new System.Drawing.Size(100, 35);
-            this.btnCategoryPrinter.TabIndex = 2;
-            this.btnCategoryPrinter.Text = "Printers";
-            this.btnCategoryPrinter.UseVisualStyleBackColor = false;
+            this.btnAddCategory.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
+            this.btnAddCategory.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
+            this.btnAddCategory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddCategory.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnAddCategory.ForeColor = System.Drawing.Color.Black;
+            this.btnAddCategory.Location = new System.Drawing.Point(240, 28);
+            this.btnAddCategory.Name = "btnAddCategory";
+            this.btnAddCategory.Size = new System.Drawing.Size(70, 25);
+            this.btnAddCategory.TabIndex = 11;
+            this.btnAddCategory.Text = "+ Add";
+            this.btnAddCategory.UseVisualStyleBackColor = false;
+            this.btnAddCategory.Click += new System.EventHandler(this.btnAddCategory_Click);
             // 
-            // btnCategoryPhone
+            // cmbCategory
             // 
-            this.btnCategoryPhone.BackColor = System.Drawing.Color.White;
-            this.btnCategoryPhone.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
-            this.btnCategoryPhone.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCategoryPhone.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.btnCategoryPhone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.btnCategoryPhone.Location = new System.Drawing.Point(140, 25);
-            this.btnCategoryPhone.Name = "btnCategoryPhone";
-            this.btnCategoryPhone.Size = new System.Drawing.Size(100, 35);
-            this.btnCategoryPhone.TabIndex = 1;
-            this.btnCategoryPhone.Text = "Phones";
-            this.btnCategoryPhone.UseVisualStyleBackColor = false;
+            this.cmbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbCategory.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.cmbCategory.FormattingEnabled = true;
+            this.cmbCategory.Items.AddRange(new object[] {
+            "All Categories",
+            "Laptops",
+            "Phones",
+            "Printers",
+            "Accessories"});
+            this.cmbCategory.Location = new System.Drawing.Point(90, 28);
+            this.cmbCategory.Name = "cmbCategory";
+            this.cmbCategory.Size = new System.Drawing.Size(140, 25);
+            this.cmbCategory.TabIndex = 10;
             // 
-            // btnCategoryLaptop
+            // lblCategory
             // 
-            this.btnCategoryLaptop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
-            this.btnCategoryLaptop.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
-            this.btnCategoryLaptop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnCategoryLaptop.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
-            this.btnCategoryLaptop.ForeColor = System.Drawing.Color.Black;
-            this.btnCategoryLaptop.Location = new System.Drawing.Point(20, 25);
-            this.btnCategoryLaptop.Name = "btnCategoryLaptop";
-            this.btnCategoryLaptop.Size = new System.Drawing.Size(100, 35);
-            this.btnCategoryLaptop.TabIndex = 0;
-            this.btnCategoryLaptop.Text = "Laptops";
-            this.btnCategoryLaptop.UseVisualStyleBackColor = false;
+            this.lblCategory.AutoSize = true;
+            this.lblCategory.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.lblCategory.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.lblCategory.Location = new System.Drawing.Point(20, 31);
+            this.lblCategory.Name = "lblCategory";
+            this.lblCategory.Size = new System.Drawing.Size(64, 17);
+            this.lblCategory.TabIndex = 9;
+            this.lblCategory.Text = "Category:";
             // 
             // pnlDetails
             // 
@@ -457,9 +474,10 @@
         #endregion
 
         private System.Windows.Forms.Panel pnlHeader;
-        private System.Windows.Forms.Button btnCategoryPrinter;
-        private System.Windows.Forms.Button btnCategoryPhone;
-        private System.Windows.Forms.Button btnCategoryLaptop;
+        private System.Windows.Forms.Label lblCategory;
+        private System.Windows.Forms.ComboBox cmbCategory;
+        private System.Windows.Forms.Button btnAddCategory;
+        private System.Windows.Forms.Button btnAddProduct;
         private System.Windows.Forms.Panel pnlDetails;
         private System.Windows.Forms.Label lblProdSpec;
         private System.Windows.Forms.Label lblProdPrice;

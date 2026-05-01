@@ -53,6 +53,13 @@ namespace InventoryManagementSystem
         public bool IsActive { get; set; }
     }
 
+    public class CategoryTemplate
+    {
+        public string CategoryName { get; set; }
+        // Key: Filter Name (e.g., "RAM"), Value: Available Options (e.g., ["8GB", "16GB", "32GB"])
+        public Dictionary<string, List<string>> AvailableFilters { get; set; } = new Dictionary<string, List<string>>();
+    }
+
     public class Product
     {
         public int Id { get; set; }
@@ -62,6 +69,9 @@ namespace InventoryManagementSystem
         public decimal Price { get; set; }
         public string SerialNumber { get; set; }
         public int? SupplierId { get; set; } // Nullable foreign key
+
+        // Dynamic specifications to hold varied data (Key = Processor, Value = Apple M3)
+        public Dictionary<string, string> Specifications { get; set; } = new Dictionary<string, string>();
 
         // Computed Read-Only property
         public string Status
@@ -108,6 +118,9 @@ namespace InventoryManagementSystem
         public static List<Product> Products { get; private set; } = new List<Product>();
         public static List<StockMovement> StockMovements { get; private set; } = new List<StockMovement>();
         public static List<SystemLog> AuditLogs { get; private set; } = new List<SystemLog>();
+        
+        // Store Category Templates
+        public static List<CategoryTemplate> CategoryTemplates { get; private set; } = new List<CategoryTemplate>();
 
         // Static constructor initializes dummy data
         static MemoryStore()
@@ -138,6 +151,19 @@ namespace InventoryManagementSystem
         /// </summary>
         public static bool PerformStockMovement(int productId, int quantityChange, string movementType, string notes = "")
         {
+            // Security check using permissions
+            if (CurrentUser != null && !CurrentUser.IsAdmin)
+            {
+                if ((movementType == "STOCK IN" || movementType == "RESTOCK") && !CurrentUser.CanDoStockIn)
+                {
+                    throw new UnauthorizedAccessException("You do not have permission to perform Stock In.");
+                }
+                if (movementType == "STOCK OUT" && !CurrentUser.CanDoStockOut)
+                {
+                    throw new UnauthorizedAccessException("You do not have permission to perform Stock Out.");
+                }
+            }
+
             var product = Products.FirstOrDefault(p => p.Id == productId);
             if (product == null) return false;
 
@@ -169,6 +195,32 @@ namespace InventoryManagementSystem
         #region Seed Initial Data
         private static void SeedData()
         {
+            // Seed Templates
+            CategoryTemplates.AddRange(new[]
+            {
+                new CategoryTemplate {
+                    CategoryName = "Laptops",
+                    AvailableFilters = new Dictionary<string, List<string>> {
+                        { "Processor", new List<string> { "Apple M3", "Apple M2", "Intel Core i7", "Intel Core i9" } },
+                        { "RAM", new List<string> { "8GB", "16GB", "32GB", "64GB" } }
+                    }
+                },
+                new CategoryTemplate {
+                    CategoryName = "Phones",
+                    AvailableFilters = new Dictionary<string, List<string>> {
+                        { "Storage", new List<string> { "128GB", "256GB", "512GB", "1TB" } },
+                        { "Color", new List<string> { "Space Black", "Titanium", "Silver" } }
+                    }
+                },
+                new CategoryTemplate {
+                    CategoryName = "Printers",
+                    AvailableFilters = new Dictionary<string, List<string>> {
+                        { "Type", new List<string> { "Laser", "Inkjet" } },
+                        { "Color Support", new List<string> { "Monochrome", "Color" } }
+                    }
+                }
+            });
+
             // Seed Users with realistic, granular RBAC (Role-Based Access Control)
             Users.AddRange(new[]
             {
@@ -231,9 +283,12 @@ namespace InventoryManagementSystem
             // Seed Products
             Products.AddRange(new[]
             {
-                new Product { Id = 101, Name = "MacBook Pro 14\" M3", Category = "Laptops", Quantity = 24, Price = 1999m, SerialNumber = "APP-MBP-2023", SupplierId = 1 },
-                new Product { Id = 102, Name = "iPhone 15 Pro Max", Category = "Phones", Quantity = 8, Price = 1199m, SerialNumber = "APP-IPH-2023", SupplierId = 2 },
-                new Product { Id = 104, Name = "HP LaserJet Pro", Category = "Printers", Quantity = 0, Price = 450m, SerialNumber = "PRN-HP-2024", SupplierId = 1 }
+                new Product { Id = 101, Name = "MacBook Pro 14\" M3", Category = "Laptops", Quantity = 24, Price = 1999m, SerialNumber = "APP-MBP-2023", SupplierId = 1,
+                    Specifications = new Dictionary<string, string> { { "Processor", "Apple M3" }, { "RAM", "16GB" } } },
+                new Product { Id = 102, Name = "iPhone 15 Pro Max", Category = "Phones", Quantity = 8, Price = 1199m, SerialNumber = "APP-IPH-2023", SupplierId = 2,
+                    Specifications = new Dictionary<string, string> { { "Storage", "256GB" }, { "Color", "Titanium" } } },
+                new Product { Id = 104, Name = "HP LaserJet Pro", Category = "Printers", Quantity = 0, Price = 450m, SerialNumber = "PRN-HP-2024", SupplierId = 1,
+                    Specifications = new Dictionary<string, string> { { "Type", "Laser" }, { "Color Support", "Monochrome" } } }
             });
 
             // Seed initial movements
