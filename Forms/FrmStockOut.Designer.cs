@@ -44,9 +44,9 @@
             this.lblRecipient = new System.Windows.Forms.Label();
             this.cmbOutReason = new System.Windows.Forms.ComboBox();
             this.lblOutReason = new System.Windows.Forms.Label();
-            this.lblSystemID = new System.Windows.Forms.Label();
             this.txtWarrantyStatus = new System.Windows.Forms.TextBox();
             this.lblWarrantyInfoDetails = new System.Windows.Forms.Label();
+            this.lblSystemID = new System.Windows.Forms.Label();
             this.pnlMainCard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numQty)).BeginInit();
             this.SuspendLayout();
@@ -137,25 +137,6 @@
             this.lblStockStatus.TabIndex = 10;
             this.lblStockStatus.Text = "In Stock: 0";
             // 
-            // txtWarrantyStatus
-            // 
-            this.txtWarrantyStatus.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtWarrantyStatus.Location = new System.Drawing.Point(43, 322);
-            this.txtWarrantyStatus.Name = "txtWarrantyStatus";
-            this.txtWarrantyStatus.Size = new System.Drawing.Size(340, 27);
-            this.txtWarrantyStatus.TabIndex = 13;
-            // 
-            // lblWarrantyInfoDetails
-            // 
-            this.lblWarrantyInfoDetails.AutoSize = true;
-            this.lblWarrantyInfoDetails.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblWarrantyInfoDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblWarrantyInfoDetails.Location = new System.Drawing.Point(40, 300);
-            this.lblWarrantyInfoDetails.Name = "lblWarrantyInfoDetails";
-            this.lblWarrantyInfoDetails.Size = new System.Drawing.Size(148, 15);
-            this.lblWarrantyInfoDetails.TabIndex = 14;
-            this.lblWarrantyInfoDetails.Text = "WARRANTY DETAILS / INFO";
-            // 
             // numQty
             // 
             this.numQty.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -169,7 +150,7 @@
             this.numQty.Size = new System.Drawing.Size(120, 27);
             this.numQty.TabIndex = 9;
             this.numQty.Value = new decimal(new int[] {
-            1,
+            6,
             0,
             0,
             0});
@@ -181,7 +162,7 @@
             this.lblQty.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblQty.Location = new System.Drawing.Point(417, 195);
             this.lblQty.Name = "lblQty";
-            this.lblQty.Size = new System.Drawing.Size(160, 15);
+            this.lblQty.Size = new System.Drawing.Size(142, 15);
             this.lblQty.TabIndex = 8;
             this.lblQty.Text = "TOTAL SELECTED (AUTO)";
             // 
@@ -195,7 +176,7 @@
             "SN: APP-MBP-1003"});
             this.clbSerialNumbers.Location = new System.Drawing.Point(43, 217);
             this.clbSerialNumbers.Name = "clbSerialNumbers";
-            this.clbSerialNumbers.Size = new System.Drawing.Size(340, 68);
+            this.clbSerialNumbers.Size = new System.Drawing.Size(340, 64);
             this.clbSerialNumbers.TabIndex = 7;
             // 
             // lblSerialNumber
@@ -205,7 +186,7 @@
             this.lblSerialNumber.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblSerialNumber.Location = new System.Drawing.Point(40, 195);
             this.lblSerialNumber.Name = "lblSerialNumber";
-            this.lblSerialNumber.Size = new System.Drawing.Size(262, 15);
+            this.lblSerialNumber.Size = new System.Drawing.Size(274, 15);
             this.lblSerialNumber.TabIndex = 6;
             this.lblSerialNumber.Text = "SELECT SPECIFIC SERIAL NUMBERS TO DISPATCH";
             // 
@@ -274,6 +255,25 @@
             this.lblOutReason.Size = new System.Drawing.Size(119, 15);
             this.lblOutReason.TabIndex = 0;
             this.lblOutReason.Text = "TRANSACTION TYPE";
+            // 
+            // txtWarrantyStatus
+            // 
+            this.txtWarrantyStatus.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtWarrantyStatus.Location = new System.Drawing.Point(43, 322);
+            this.txtWarrantyStatus.Name = "txtWarrantyStatus";
+            this.txtWarrantyStatus.Size = new System.Drawing.Size(340, 27);
+            this.txtWarrantyStatus.TabIndex = 13;
+            // 
+            // lblWarrantyInfoDetails
+            // 
+            this.lblWarrantyInfoDetails.AutoSize = true;
+            this.lblWarrantyInfoDetails.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblWarrantyInfoDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.lblWarrantyInfoDetails.Location = new System.Drawing.Point(40, 300);
+            this.lblWarrantyInfoDetails.Name = "lblWarrantyInfoDetails";
+            this.lblWarrantyInfoDetails.Size = new System.Drawing.Size(160, 15);
+            this.lblWarrantyInfoDetails.TabIndex = 14;
+            this.lblWarrantyInfoDetails.Text = "WARRANTY DETAILS / INFO";
             // 
             // lblSystemID
             // 

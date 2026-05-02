@@ -17,7 +17,7 @@ namespace InventoryManagementSystem
         private System.Windows.Forms.Label lblUserNameTitle;
         private System.Windows.Forms.ComboBox cmbUserName;
         private System.Windows.Forms.Label lblPasswordTitle;
-        private System.Windows.Forms.TextBox txtAccessKey;
+        private System.Windows.Forms.TextBox txtPassword;
 
         // Actions
         private System.Windows.Forms.Button btnAuthenticate;
@@ -35,16 +35,19 @@ namespace InventoryManagementSystem
 
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmLogin));
             this.pnlCard = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.lblTitle = new System.Windows.Forms.Label();
             this.lblSubTitle = new System.Windows.Forms.Label();
             this.lblUserNameTitle = new System.Windows.Forms.Label();
             this.cmbUserName = new System.Windows.Forms.ComboBox();
             this.lblPasswordTitle = new System.Windows.Forms.Label();
-            this.txtAccessKey = new System.Windows.Forms.TextBox();
+            this.txtPassword = new System.Windows.Forms.TextBox();
             this.btnAuthenticate = new System.Windows.Forms.Button();
             this.picLogo = new System.Windows.Forms.PictureBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.pnlCard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
             this.SuspendLayout();
@@ -52,18 +55,29 @@ namespace InventoryManagementSystem
             // pnlCard
             // 
             this.pnlCard.BackColor = System.Drawing.Color.White;
+            this.pnlCard.Controls.Add(this.label1);
             this.pnlCard.Controls.Add(this.lblTitle);
             this.pnlCard.Controls.Add(this.lblSubTitle);
             this.pnlCard.Controls.Add(this.lblUserNameTitle);
             this.pnlCard.Controls.Add(this.cmbUserName);
             this.pnlCard.Controls.Add(this.lblPasswordTitle);
-            this.pnlCard.Controls.Add(this.txtAccessKey);
+            this.pnlCard.Controls.Add(this.txtPassword);
             this.pnlCard.Controls.Add(this.btnAuthenticate);
             this.pnlCard.Controls.Add(this.picLogo);
             this.pnlCard.Location = new System.Drawing.Point(0, 0);
             this.pnlCard.Name = "pnlCard";
             this.pnlCard.Size = new System.Drawing.Size(434, 611);
             this.pnlCard.TabIndex = 0;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(127, 473);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(175, 15);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Locked. Try again in 30 seconds.";
+            this.label1.Visible = false;
             // 
             // lblTitle
             // 
@@ -120,14 +134,14 @@ namespace InventoryManagementSystem
             this.lblPasswordTitle.TabIndex = 8;
             this.lblPasswordTitle.Text = "Password:";
             // 
-            // txtAccessKey
+            // txtPassword
             // 
-            this.txtAccessKey.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.txtAccessKey.Location = new System.Drawing.Point(50, 353);
-            this.txtAccessKey.Name = "txtAccessKey";
-            this.txtAccessKey.Size = new System.Drawing.Size(330, 29);
-            this.txtAccessKey.TabIndex = 6;
-            this.txtAccessKey.UseSystemPasswordChar = true;
+            this.txtPassword.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.txtPassword.Location = new System.Drawing.Point(50, 353);
+            this.txtPassword.Name = "txtPassword";
+            this.txtPassword.Size = new System.Drawing.Size(330, 29);
+            this.txtPassword.TabIndex = 6;
+            this.txtPassword.UseSystemPasswordChar = true;
             // 
             // btnAuthenticate
             // 
@@ -159,6 +173,10 @@ namespace InventoryManagementSystem
             this.picLogo.TabIndex = 0;
             this.picLogo.TabStop = false;
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // FrmLogin
             // 
             this.AcceptButton = this.btnAuthenticate;
@@ -182,5 +200,8 @@ namespace InventoryManagementSystem
         }
 
         #endregion
+
+        private Label label1;
+        private Timer timer1;
     }
 }
