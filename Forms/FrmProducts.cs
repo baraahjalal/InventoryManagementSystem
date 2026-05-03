@@ -32,8 +32,7 @@ namespace InventoryManagementSystem
                 AutoSize = true,
                 WrapContents = false,
                 Location = new System.Drawing.Point(485, 28),
-                Height = 35,
-                Anchor = AnchorStyles.Top | AnchorStyles.Left
+                Height = 35
             };
             pnlHeader.Controls.Add(_flpDynamicFilters);
 
@@ -116,7 +115,7 @@ namespace InventoryManagementSystem
                 {
                     Text = filter.Key + ":",
                     AutoSize = true,
-                    Font = new System.Drawing.Font("Segoe UI", 9.5F),
+                    Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold),
                     ForeColor = System.Drawing.Color.White,
                     Margin = new Padding(0, 3, 6, 0)
                 };
@@ -126,8 +125,8 @@ namespace InventoryManagementSystem
                 {
                     DropDownStyle = ComboBoxStyle.DropDownList,
                     Font = new System.Drawing.Font("Segoe UI", 9.5F),
-                    Width = 140,
-                    Margin = new Padding(0, 0, 25, 0)
+                    Width = 110, // Reduced width to prevent overlapping the search box
+                    Margin = new Padding(0, 0, 15, 0) // Reduced margin to ensure filters fit when sidebar opens
                 };
 
                 cmb.Items.Add("All");
