@@ -33,7 +33,7 @@ namespace InventoryManagementSystem
                 WrapContents = false,
                 Location = new System.Drawing.Point(485, 28),
                 Height = 35,
-                Anchor = AnchorStyles.Top | AnchorStyles.Right
+                Anchor = AnchorStyles.Top | AnchorStyles.Left
             };
             pnlHeader.Controls.Add(_flpDynamicFilters);
 
