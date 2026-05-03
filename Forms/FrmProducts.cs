@@ -15,6 +15,11 @@ namespace InventoryManagementSystem
         private Dictionary<string, ComboBox> _dynamicFilters = new Dictionary<string, ComboBox>();
         private FlowLayoutPanel _flpDynamicFilters;
 
+        private const int DynamicFiltersRightPadding = 20;
+        private const int DynamicFiltersTop = 20;
+        private const int DynamicFiltersHeight = 50;
+        private const int DynamicFiltersGapFromSearch = 12;
+
         // Public flag to request the form show only low-stock items when opened
         public bool ShowLowStockFilter { get; set; } = false;
 
@@ -31,8 +36,8 @@ namespace InventoryManagementSystem
                 FlowDirection = FlowDirection.LeftToRight,
                 AutoSize = true,
                 WrapContents = false,
-                Location = new System.Drawing.Point(485, 28),
-                Height = 35
+                Location = new System.Drawing.Point(480, 25),
+                Height = DynamicFiltersHeight
             };
             pnlHeader.Controls.Add(_flpDynamicFilters);
 
@@ -113,20 +118,13 @@ namespace InventoryManagementSystem
                 // Create Label
                 Label lbl = new Label
                 {
-                    Text = filter.Key + ":",
-                    AutoSize = true,
-                    Font = new System.Drawing.Font("Segoe UI", 9.5F),
-                    ForeColor = System.Drawing.Color.FromArgb(100, 100, 100),
-                    Margin = new Padding(0, 3, 5, 0)
+                    Text = filter.Key + ":"
                 };
 
                 // Create ComboBox
                 ComboBox cmb = new ComboBox
                 {
-                    DropDownStyle = ComboBoxStyle.DropDownList,
-                    Font = new System.Drawing.Font("Segoe UI", 9.5F),
-                    Width = 130,
-                    Margin = new Padding(0, 0, 15, 0)
+                    DropDownStyle = ComboBoxStyle.DropDownList
                 };
 
                 cmb.Items.Add("All");
