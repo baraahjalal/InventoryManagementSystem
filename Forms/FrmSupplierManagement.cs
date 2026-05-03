@@ -1,6 +1,8 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -8,6 +10,9 @@ namespace InventoryManagementSystem
 {
     public partial class FrmSupplierManagement : Form
     {
+        private bool isEditMode = false;
+        private int currentEditId = 0;
+
         public FrmSupplierManagement()
         {
             InitializeComponent();
@@ -17,6 +22,22 @@ namespace InventoryManagementSystem
             
             // Enable double buffering to fix any grid flickering, matching the dashboard
             EnableDoubleBuffered(dgvSuppliers);
+
+            // Wire up button events
+            btnSave.Click += BtnSave_Click;
+            btnClear.Click += BtnClear_Click;
+            btnAddSupplier.Click += BtnAddSupplier_Click;
+            btnEditSupplier.Click += BtnEditSupplier_Click;
+            btnDeleteSupplier.Click += BtnDeleteSupplier_Click;
+            btnExport.Click += BtnExport_Click;
+            
+            // Wire up search events
+            txtSearch.TextChanged += TxtSearch_TextChanged;
+            txtSearch.Enter += TxtSearch_Enter;
+            txtSearch.Leave += TxtSearch_Leave;
+
+            // Wire up custom cell formatting for status colors
+            dgvSuppliers.CellFormatting += DgvSuppliers_CellFormatting;
         }
 
         private void EnableDoubleBuffered(DataGridView dgv)
@@ -32,24 +53,262 @@ namespace InventoryManagementSystem
 
         private void FrmSupplierManagement_Load(object sender, EventArgs e)
         {
-            LoadStaticData();
+            ClearForm();
+            LoadData();
         }
 
-        private void LoadStaticData()
+        private void LoadData(string searchTerm = "")
         {
-            // Adding realistic dummy data for IT inventory suppliers
-            dgvSuppliers.Rows.Add("Apple Inc.", "Manufacturer", "Tim Cook", "+1-800-692-7753", "contact@apple.com", "Laptops, Phones", "Active");
-            dgvSuppliers.Rows.Add("Dell Technologies", "Manufacturer", "Michael Dell", "+1-800-456-3355", "support@dell.com", "Laptops, Monitors", "Active");
-            dgvSuppliers.Rows.Add("Tech Data Corp", "Distributor", "Sarah Jenkins", "+1-800-237-8931", "sales@techdata.com", "Accessories, Networking", "Active");
-            dgvSuppliers.Rows.Add("HP Enterprise", "Manufacturer", "Antonio Neri", "+1-800-786-0404", "partner@hpe.com", "Printers, Laptops", "Inactive");
-            dgvSuppliers.Rows.Add("Ingram Micro", "Distributor", "Paul Bay", "+1-800-456-8000", "vendors@ingrammicro.com", "Phones, Accessories", "Active");
-            dgvSuppliers.Rows.Add("Samsung Electronics", "Manufacturer", "JH Han", "+1-800-726-7864", "b2b.sales@samsung.com", "Phones, Monitors", "Active");
+            dgvSuppliers.Rows.Clear();
+            var query = MemoryStore.Suppliers.AsEnumerable();
 
-            // Clear the default blue selection highlight so it looks clean empty initially
+            if (!string.IsNullOrWhiteSpace(searchTerm) && searchTerm != "Search...")
+            {
+                searchTerm = searchTerm.ToLower();
+                query = query.Where(s => 
+                    s.Name.ToLower().Contains(searchTerm) || 
+                    s.ContactPerson.ToLower().Contains(searchTerm) ||
+                    s.Email.ToLower().Contains(searchTerm) ||
+                    (s.Category != null && s.Category.ToLower().Contains(searchTerm)) ||
+                    (s.Phone != null && s.Phone.ToLower().Contains(searchTerm))
+                );
+            }
+
+            foreach (var sup in query)
+            {
+                string products = sup.SuppliedProducts != null ? string.Join(", ", sup.SuppliedProducts) : "";
+                string status = sup.IsActive ? "Active" : "Inactive";
+                dgvSuppliers.Rows.Add(sup.Name, sup.Category ?? "", sup.ContactPerson, sup.Phone, sup.Email, products, status);
+                
+                // Store the ID in the row's Tag property for easy access
+                dgvSuppliers.Rows[dgvSuppliers.Rows.Count - 1].Tag = sup.Id;
+            }
+
             dgvSuppliers.ClearSelection();
+        }
 
-            // Wire up custom cell formatting for status colors
-            dgvSuppliers.CellFormatting += DgvSuppliers_CellFormatting;
+        private void TxtSearch_Enter(object sender, EventArgs e)
+        {
+            if (txtSearch.Text == "Search...")
+            {
+                txtSearch.Text = "";
+            }
+        }
+
+        private void TxtSearch_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtSearch.Text))
+            {
+                txtSearch.Text = "Search...";
+            }
+        }
+
+        private void TxtSearch_TextChanged(object sender, EventArgs e)
+        {
+            LoadData(txtSearch.Text);
+        }
+
+        private void ClearForm()
+        {
+            txtSupplierName.Clear();
+            cmbCategory.SelectedIndex = -1;
+            txtContactPerson.Clear();
+            txtPhone.Clear();
+            txtEmail.Clear();
+            txtAddress.Clear();
+            chkIsActive.Checked = true;
+            
+            for (int i = 0; i < clbSuppliedProducts.Items.Count; i++)
+            {
+                clbSuppliedProducts.SetItemChecked(i, false);
+            }
+
+            isEditMode = false;
+            currentEditId = 0;
+            lblFormTitle.Text = "Add New Supplier";
+        }
+
+        private void BtnClear_Click(object sender, EventArgs e)
+        {
+            ClearForm();
+        }
+
+        private void BtnAddSupplier_Click(object sender, EventArgs e)
+        {
+            ClearForm();
+            txtSupplierName.Focus();
+        }
+
+        private bool ValidateForm()
+        {
+            if (string.IsNullOrWhiteSpace(txtSupplierName.Text))
+            {
+                MessageBox.Show("Supplier Name is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtSupplierName.Focus();
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(txtContactPerson.Text))
+            {
+                MessageBox.Show("Contact Person is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtContactPerson.Focus();
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(txtPhone.Text))
+            {
+                MessageBox.Show("Phone number is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtPhone.Focus();
+                return false;
+            }
+            if (string.IsNullOrWhiteSpace(txtEmail.Text))
+            {
+                MessageBox.Show("Email address is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtEmail.Focus();
+                return false;
+            }
+
+            return true;
+        }
+
+        private void BtnSave_Click(object sender, EventArgs e)
+        {
+            if (!ValidateForm()) return;
+
+            var selectedProducts = new List<string>();
+            foreach (var item in clbSuppliedProducts.CheckedItems)
+            {
+                selectedProducts.Add(item.ToString());
+            }
+
+            if (isEditMode)
+            {
+                var supplier = MemoryStore.Suppliers.FirstOrDefault(s => s.Id == currentEditId);
+                if (supplier != null)
+                {
+                    supplier.Name = txtSupplierName.Text.Trim();
+                    supplier.Category = cmbCategory.SelectedItem?.ToString();
+                    supplier.ContactPerson = txtContactPerson.Text.Trim();
+                    supplier.Phone = txtPhone.Text.Trim();
+                    supplier.Email = txtEmail.Text.Trim();
+                    supplier.Address = txtAddress.Text.Trim();
+                    supplier.IsActive = chkIsActive.Checked;
+                    supplier.SuppliedProducts = selectedProducts;
+
+                    MemoryStore.LogAction("EDIT SUPPLIER", $"Supplier '{supplier.Name}' updated.");
+                    MessageBox.Show("Supplier updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            else
+            {
+                int newId = MemoryStore.Suppliers.Count > 0 ? MemoryStore.Suppliers.Max(s => s.Id) + 1 : 1;
+                
+                // Check if name already exists
+                if (MemoryStore.Suppliers.Any(s => s.Name.Equals(txtSupplierName.Text.Trim(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    MessageBox.Show("A supplier with this name already exists.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var newSupplier = new Supplier
+                {
+                    Id = newId,
+                    Name = txtSupplierName.Text.Trim(),
+                    Category = cmbCategory.SelectedItem?.ToString(),
+                    ContactPerson = txtContactPerson.Text.Trim(),
+                    Phone = txtPhone.Text.Trim(),
+                    Email = txtEmail.Text.Trim(),
+                    Address = txtAddress.Text.Trim(),
+                    IsActive = chkIsActive.Checked,
+                    SuppliedProducts = selectedProducts
+                };
+
+                MemoryStore.Suppliers.Add(newSupplier);
+                MemoryStore.LogAction("ADD SUPPLIER", $"Supplier '{newSupplier.Name}' added.");
+                MessageBox.Show("Supplier added successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            ClearForm();
+            LoadData(txtSearch.Text);
+        }
+
+        private void BtnEditSupplier_Click(object sender, EventArgs e)
+        {
+            if (dgvSuppliers.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a supplier from the list to edit.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            int id = (int)dgvSuppliers.SelectedRows[0].Tag;
+            var supplier = MemoryStore.Suppliers.FirstOrDefault(s => s.Id == id);
+            
+            if (supplier != null)
+            {
+                txtSupplierName.Text = supplier.Name;
+                cmbCategory.SelectedItem = supplier.Category;
+                txtContactPerson.Text = supplier.ContactPerson;
+                txtPhone.Text = supplier.Phone;
+                txtEmail.Text = supplier.Email;
+                txtAddress.Text = supplier.Address;
+                chkIsActive.Checked = supplier.IsActive;
+
+                for (int i = 0; i < clbSuppliedProducts.Items.Count; i++)
+                {
+                    string item = clbSuppliedProducts.Items[i].ToString();
+                    clbSuppliedProducts.SetItemChecked(i, supplier.SuppliedProducts != null && supplier.SuppliedProducts.Contains(item));
+                }
+
+                isEditMode = true;
+                currentEditId = id;
+                lblFormTitle.Text = "Edit Supplier";
+            }
+        }
+
+        private void BtnDeleteSupplier_Click(object sender, EventArgs e)
+        {
+            if (dgvSuppliers.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Please select a supplier from the list to delete.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            int id = (int)dgvSuppliers.SelectedRows[0].Tag;
+            
+            // Check if supplier is used in any products
+            bool isInUse = MemoryStore.Products.Any(p => p.SupplierId == id);
+            if (isInUse)
+            {
+                MessageBox.Show("Cannot delete this supplier because there are products associated with it.\n\nConsider changing the status to 'Inactive' instead.", "Delete Prevented", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var result = MessageBox.Show("Are you sure you want to delete this supplier?\nThis action cannot be undone.", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+            
+            if (result == DialogResult.Yes)
+            {
+                var supplier = MemoryStore.Suppliers.FirstOrDefault(s => s.Id == id);
+                if (supplier != null)
+                {
+                    MemoryStore.Suppliers.Remove(supplier);
+                    MemoryStore.LogAction("DELETE SUPPLIER", $"Supplier '{supplier.Name}' deleted.");
+                    
+                    LoadData(txtSearch.Text);
+                    ClearForm();
+                    
+                    MessageBox.Show("Supplier deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void BtnExport_Click(object sender, EventArgs e)
+        {
+            // For now, provide a message or implement simple CSV export
+            if (dgvSuppliers.Rows.Count == 0)
+            {
+                MessageBox.Show("No data to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            MessageBox.Show("Export feature is currently under development.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void DgvSuppliers_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)

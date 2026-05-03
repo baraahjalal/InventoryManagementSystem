@@ -29,6 +29,9 @@ namespace InventoryManagementSystem
         public string Phone { get; set; }
         public string Email { get; set; }
         public bool IsActive { get; set; }
+        public string Category { get; set; }
+        public string Address { get; set; }
+        public List<string> SuppliedProducts { get; set; } = new List<string>();
     }
 
     public class CategoryTemplate
@@ -221,8 +224,8 @@ namespace InventoryManagementSystem
             // Seed Suppliers
             Suppliers.AddRange(new[]
             {
-                new Supplier { Id = 1, Name = "TechSource Inc.", ContactPerson = "Arthur Morgan", Phone = "555-0101", Email = "arthur@techsource.com", IsActive = true },
-                new Supplier { Id = 2, Name = "Global Electronics", ContactPerson = "Harvey Specter", Phone = "555-0202", Email = "harvey@globalelec.com", IsActive = true }
+                new Supplier { Id = 1, Name = "TechSource Inc.", ContactPerson = "Arthur Morgan", Phone = "555-0101", Email = "arthur@techsource.com", IsActive = true, Category = "Distributor", Address = "123 Tech Lane", SuppliedProducts = new List<string> { "Laptops", "Accessories" } },
+                new Supplier { Id = 2, Name = "Global Electronics", ContactPerson = "Harvey Specter", Phone = "555-0202", Email = "harvey@globalelec.com", IsActive = true, Category = "Manufacturer", Address = "456 Global Blvd", SuppliedProducts = new List<string> { "Phones", "Monitors" } }
             });
 
             // Seed Products
