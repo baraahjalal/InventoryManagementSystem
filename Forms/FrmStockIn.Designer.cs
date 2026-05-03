@@ -56,6 +56,7 @@ namespace InventoryManagementSystem
             this.lblWarrantyInfo = new System.Windows.Forms.Label();
             this.txtWarrantyInfo = new System.Windows.Forms.TextBox();
             this.btnExecute = new System.Windows.Forms.Button();
+            this.pnlHeader.SuspendLayout();
             this.pnlMainCard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).BeginInit();
             this.SuspendLayout();
@@ -63,33 +64,35 @@ namespace InventoryManagementSystem
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.pnlHeader.Controls.Add(this.lblHeader);
+            this.pnlHeader.Controls.Add(this.lblSubHeader);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(1200, 88);
+            this.pnlHeader.Size = new System.Drawing.Size(1029, 120);
             this.pnlHeader.TabIndex = 0;
             // 
             // lblHeader
             // 
             this.lblHeader.AutoSize = true;
+            this.lblHeader.BackColor = System.Drawing.Color.Transparent;
             this.lblHeader.Font = new System.Drawing.Font("Segoe UI", 26F, System.Drawing.FontStyle.Bold);
-            this.lblHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.lblHeader.Location = new System.Drawing.Point(36, 100);
-            this.lblHeader.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblHeader.ForeColor = System.Drawing.Color.White;
+            this.lblHeader.Location = new System.Drawing.Point(47, 20);
             this.lblHeader.Name = "lblHeader";
-            this.lblHeader.Size = new System.Drawing.Size(289, 47);
+            this.lblHeader.Size = new System.Drawing.Size(286, 47);
             this.lblHeader.TabIndex = 1;
             this.lblHeader.Text = "Stock In Receipt";
             // 
             // lblSubHeader
             // 
             this.lblSubHeader.AutoSize = true;
+            this.lblSubHeader.BackColor = System.Drawing.Color.Transparent;
             this.lblSubHeader.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.lblSubHeader.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));
-            this.lblSubHeader.Location = new System.Drawing.Point(40, 142);
-            this.lblSubHeader.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblSubHeader.ForeColor = System.Drawing.Color.White;
+            this.lblSubHeader.Location = new System.Drawing.Point(51, 70);
             this.lblSubHeader.Name = "lblSubHeader";
-            this.lblSubHeader.Size = new System.Drawing.Size(594, 21);
+            this.lblSubHeader.Size = new System.Drawing.Size(489, 21);
             this.lblSubHeader.TabIndex = 2;
             this.lblSubHeader.Text = "Record incoming inventory, supplier details, and physical placements.";
             // 
@@ -111,10 +114,9 @@ namespace InventoryManagementSystem
             this.pnlMainCard.Controls.Add(this.lblWarrantyInfo);
             this.pnlMainCard.Controls.Add(this.txtWarrantyInfo);
             this.pnlMainCard.Controls.Add(this.btnExecute);
-            this.pnlMainCard.Location = new System.Drawing.Point(20, 181);
-            this.pnlMainCard.Margin = new System.Windows.Forms.Padding(4);
+            this.pnlMainCard.Location = new System.Drawing.Point(17, 157);
             this.pnlMainCard.Name = "pnlMainCard";
-            this.pnlMainCard.Size = new System.Drawing.Size(992, 615);
+            this.pnlMainCard.Size = new System.Drawing.Size(850, 533);
             this.pnlMainCard.TabIndex = 3;
             // 
             // lblSupplier
@@ -122,10 +124,9 @@ namespace InventoryManagementSystem
             this.lblSupplier.AutoSize = true;
             this.lblSupplier.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSupplier.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblSupplier.Location = new System.Drawing.Point(41, 37);
-            this.lblSupplier.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblSupplier.Location = new System.Drawing.Point(35, 32);
             this.lblSupplier.Name = "lblSupplier";
-            this.lblSupplier.Size = new System.Drawing.Size(58, 17);
+            this.lblSupplier.Size = new System.Drawing.Size(57, 17);
             this.lblSupplier.TabIndex = 3;
             this.lblSupplier.Text = "Supplier";
             // 
@@ -134,10 +135,9 @@ namespace InventoryManagementSystem
             this.cmbSupplier.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbSupplier.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbSupplier.FormattingEnabled = true;
-            this.cmbSupplier.Location = new System.Drawing.Point(44, 68);
-            this.cmbSupplier.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbSupplier.Location = new System.Drawing.Point(38, 59);
             this.cmbSupplier.Name = "cmbSupplier";
-            this.cmbSupplier.Size = new System.Drawing.Size(431, 28);
+            this.cmbSupplier.Size = new System.Drawing.Size(370, 28);
             this.cmbSupplier.TabIndex = 4;
             // 
             // lblOrderNumber
@@ -145,20 +145,18 @@ namespace InventoryManagementSystem
             this.lblOrderNumber.AutoSize = true;
             this.lblOrderNumber.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblOrderNumber.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblOrderNumber.Location = new System.Drawing.Point(510, 37);
-            this.lblOrderNumber.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblOrderNumber.Location = new System.Drawing.Point(437, 32);
             this.lblOrderNumber.Name = "lblOrderNumber";
-            this.lblOrderNumber.Size = new System.Drawing.Size(155, 17);
+            this.lblOrderNumber.Size = new System.Drawing.Size(156, 17);
             this.lblOrderNumber.TabIndex = 5;
             this.lblOrderNumber.Text = "Purchase Order Number";
             // 
             // txtOrderNumber
             // 
             this.txtOrderNumber.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOrderNumber.Location = new System.Drawing.Point(513, 68);
-            this.txtOrderNumber.Margin = new System.Windows.Forms.Padding(4);
+            this.txtOrderNumber.Location = new System.Drawing.Point(440, 59);
             this.txtOrderNumber.Name = "txtOrderNumber";
-            this.txtOrderNumber.Size = new System.Drawing.Size(431, 27);
+            this.txtOrderNumber.Size = new System.Drawing.Size(370, 27);
             this.txtOrderNumber.TabIndex = 6;
             // 
             // lblProduct
@@ -166,8 +164,7 @@ namespace InventoryManagementSystem
             this.lblProduct.AutoSize = true;
             this.lblProduct.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblProduct.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblProduct.Location = new System.Drawing.Point(41, 129);
-            this.lblProduct.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblProduct.Location = new System.Drawing.Point(35, 112);
             this.lblProduct.Name = "lblProduct";
             this.lblProduct.Size = new System.Drawing.Size(95, 17);
             this.lblProduct.TabIndex = 7;
@@ -178,10 +175,9 @@ namespace InventoryManagementSystem
             this.cmbProduct.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbProduct.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbProduct.FormattingEnabled = true;
-            this.cmbProduct.Location = new System.Drawing.Point(44, 160);
-            this.cmbProduct.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbProduct.Location = new System.Drawing.Point(38, 139);
             this.cmbProduct.Name = "cmbProduct";
-            this.cmbProduct.Size = new System.Drawing.Size(900, 28);
+            this.cmbProduct.Size = new System.Drawing.Size(772, 28);
             this.cmbProduct.TabIndex = 8;
             // 
             // lblQuantity
@@ -189,25 +185,23 @@ namespace InventoryManagementSystem
             this.lblQuantity.AutoSize = true;
             this.lblQuantity.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblQuantity.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblQuantity.Location = new System.Drawing.Point(41, 222);
-            this.lblQuantity.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblQuantity.Location = new System.Drawing.Point(35, 192);
             this.lblQuantity.Name = "lblQuantity";
-            this.lblQuantity.Size = new System.Drawing.Size(120, 17);
+            this.lblQuantity.Size = new System.Drawing.Size(118, 17);
             this.lblQuantity.TabIndex = 9;
             this.lblQuantity.Text = "Received Quantity";
             // 
             // numQuantity
             // 
             this.numQuantity.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.numQuantity.Location = new System.Drawing.Point(44, 252);
-            this.numQuantity.Margin = new System.Windows.Forms.Padding(4);
+            this.numQuantity.Location = new System.Drawing.Point(38, 218);
             this.numQuantity.Maximum = new decimal(new int[] {
             10000,
             0,
             0,
             0});
             this.numQuantity.Name = "numQuantity";
-            this.numQuantity.Size = new System.Drawing.Size(432, 27);
+            this.numQuantity.Size = new System.Drawing.Size(370, 27);
             this.numQuantity.TabIndex = 10;
             // 
             // lblStorageZone
@@ -215,10 +209,9 @@ namespace InventoryManagementSystem
             this.lblStorageZone.AutoSize = true;
             this.lblStorageZone.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblStorageZone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblStorageZone.Location = new System.Drawing.Point(510, 222);
-            this.lblStorageZone.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblStorageZone.Location = new System.Drawing.Point(437, 192);
             this.lblStorageZone.Name = "lblStorageZone";
-            this.lblStorageZone.Size = new System.Drawing.Size(160, 17);
+            this.lblStorageZone.Size = new System.Drawing.Size(163, 17);
             this.lblStorageZone.TabIndex = 11;
             this.lblStorageZone.Text = "Destination Storage Zone";
             // 
@@ -231,10 +224,9 @@ namespace InventoryManagementSystem
             "Aisle A-1: Laptops",
             "Aisle B-2: Phones",
             "Aisle C-3: Accessories"});
-            this.cmbStorageZone.Location = new System.Drawing.Point(513, 252);
-            this.cmbStorageZone.Margin = new System.Windows.Forms.Padding(4);
+            this.cmbStorageZone.Location = new System.Drawing.Point(440, 218);
             this.cmbStorageZone.Name = "cmbStorageZone";
-            this.cmbStorageZone.Size = new System.Drawing.Size(431, 28);
+            this.cmbStorageZone.Size = new System.Drawing.Size(370, 28);
             this.cmbStorageZone.TabIndex = 12;
             // 
             // lblSerialNumbers
@@ -242,22 +234,20 @@ namespace InventoryManagementSystem
             this.lblSerialNumbers.AutoSize = true;
             this.lblSerialNumbers.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSerialNumbers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblSerialNumbers.Location = new System.Drawing.Point(41, 314);
-            this.lblSerialNumbers.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblSerialNumbers.Location = new System.Drawing.Point(35, 272);
             this.lblSerialNumbers.Name = "lblSerialNumbers";
-            this.lblSerialNumbers.Size = new System.Drawing.Size(193, 17);
+            this.lblSerialNumbers.Size = new System.Drawing.Size(189, 17);
             this.lblSerialNumbers.TabIndex = 13;
             this.lblSerialNumbers.Text = "Serial Numbers (One per Line)";
             // 
             // txtSerialNumbers
             // 
             this.txtSerialNumbers.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSerialNumbers.Location = new System.Drawing.Point(44, 356);
-            this.txtSerialNumbers.Margin = new System.Windows.Forms.Padding(4);
+            this.txtSerialNumbers.Location = new System.Drawing.Point(38, 309);
             this.txtSerialNumbers.Multiline = true;
             this.txtSerialNumbers.Name = "txtSerialNumbers";
             this.txtSerialNumbers.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtSerialNumbers.Size = new System.Drawing.Size(432, 117);
+            this.txtSerialNumbers.Size = new System.Drawing.Size(371, 102);
             this.txtSerialNumbers.TabIndex = 14;
             // 
             // lblWarrantyInfo
@@ -265,20 +255,18 @@ namespace InventoryManagementSystem
             this.lblWarrantyInfo.AutoSize = true;
             this.lblWarrantyInfo.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblWarrantyInfo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblWarrantyInfo.Location = new System.Drawing.Point(510, 314);
-            this.lblWarrantyInfo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblWarrantyInfo.Location = new System.Drawing.Point(437, 272);
             this.lblWarrantyInfo.Name = "lblWarrantyInfo";
-            this.lblWarrantyInfo.Size = new System.Drawing.Size(248, 17);
+            this.lblWarrantyInfo.Size = new System.Drawing.Size(243, 17);
             this.lblWarrantyInfo.TabIndex = 15;
             this.lblWarrantyInfo.Text = "Warranty Information (e.g., 12 Months)";
             // 
             // txtWarrantyInfo
             // 
             this.txtWarrantyInfo.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtWarrantyInfo.Location = new System.Drawing.Point(513, 345);
-            this.txtWarrantyInfo.Margin = new System.Windows.Forms.Padding(4);
+            this.txtWarrantyInfo.Location = new System.Drawing.Point(440, 299);
             this.txtWarrantyInfo.Name = "txtWarrantyInfo";
-            this.txtWarrantyInfo.Size = new System.Drawing.Size(431, 27);
+            this.txtWarrantyInfo.Size = new System.Drawing.Size(370, 27);
             this.txtWarrantyInfo.TabIndex = 16;
             // 
             // btnExecute
@@ -290,33 +278,30 @@ namespace InventoryManagementSystem
             this.btnExecute.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExecute.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExecute.ForeColor = System.Drawing.Color.White;
-            this.btnExecute.Location = new System.Drawing.Point(44, 511);
-            this.btnExecute.Margin = new System.Windows.Forms.Padding(4);
+            this.btnExecute.Location = new System.Drawing.Point(38, 443);
             this.btnExecute.Name = "btnExecute";
-            this.btnExecute.Size = new System.Drawing.Size(901, 55);
+            this.btnExecute.Size = new System.Drawing.Size(772, 48);
             this.btnExecute.TabIndex = 17;
             this.btnExecute.Text = "Register Stock Entry";
             this.btnExecute.UseVisualStyleBackColor = false;
             // 
             // FrmStockIn
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1200, 850);
+            this.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.ClientSize = new System.Drawing.Size(1029, 683);
             this.Controls.Add(this.pnlHeader);
             this.Controls.Add(this.pnlMainCard);
-            this.Controls.Add(this.lblSubHeader);
-            this.Controls.Add(this.lblHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FrmStockIn";
             this.Text = "Stock In Operations";
+            this.pnlHeader.ResumeLayout(false);
+            this.pnlHeader.PerformLayout();
             this.pnlMainCard.ResumeLayout(false);
             this.pnlMainCard.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
     }
