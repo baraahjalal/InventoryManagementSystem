@@ -117,7 +117,7 @@ namespace InventoryManagementSystem
                     Text = filter.Key + ":",
                     AutoSize = true,
                     Font = new System.Drawing.Font("Segoe UI", 9.5F),
-                    ForeColor = System.Drawing.Color.FromArgb(100, 100, 100),
+                    ForeColor = System.Drawing.Color.White,
                     Margin = new Padding(0, 3, 6, 0)
                 };
 
@@ -145,7 +145,7 @@ namespace InventoryManagementSystem
 
         /// <summary>
         /// Retrieves the latest products from the MemoryStore and displays them.
-        /// </summary>
+        /// </summary
         private void RefreshData()
         {
             _allProducts = MemoryStore.Products.ToList();

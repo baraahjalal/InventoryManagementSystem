@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -71,8 +71,8 @@ namespace InventoryManagementSystem.Forms
 
                 var panel = new FlowLayoutPanel
                 {
-                    Width = flpDynamicSpecs.ClientSize.Width - 20,
-                    Height = 32,
+                    AutoSize = true,
+                    AutoSizeMode = AutoSizeMode.GrowAndShrink,
                     FlowDirection = FlowDirection.LeftToRight,
                     WrapContents = false,
                     Margin = new Padding(0, 0, 0, 8)
