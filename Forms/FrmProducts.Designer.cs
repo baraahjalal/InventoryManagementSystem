@@ -17,9 +17,9 @@
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colProductName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -27,7 +27,6 @@
             this.colPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlHeader = new System.Windows.Forms.Panel();
-            this.btnAddProduct = new System.Windows.Forms.Button();
             this.lblProcessor = new System.Windows.Forms.Label();
             this.cmbFilterProcessor = new System.Windows.Forms.ComboBox();
             this.lblRAM = new System.Windows.Forms.Label();
@@ -37,6 +36,8 @@
             this.btnAddCategory = new System.Windows.Forms.Button();
             this.cmbCategory = new System.Windows.Forms.ComboBox();
             this.lblCategory = new System.Windows.Forms.Label();
+            this.btnClearSelection = new System.Windows.Forms.Button();
+            this.btnAddProduct = new System.Windows.Forms.Button();
             this.pnlDetails = new System.Windows.Forms.Panel();
             this.lblProdSpec = new System.Windows.Forms.Label();
             this.lblProdPrice = new System.Windows.Forms.Label();
@@ -50,7 +51,6 @@
             this.dgvProducts = new System.Windows.Forms.DataGridView();
             this.lblMainTitle = new System.Windows.Forms.Label();
             this.lblSubTitle = new System.Windows.Forms.Label();
-            this.btnClearSelection = new System.Windows.Forms.Button();
             this.pnlHeader.SuspendLayout();
             this.pnlDetails.SuspendLayout();
             this.pnlGridContainer.SuspendLayout();
@@ -107,7 +107,7 @@
             // 
             // pnlHeader
             // 
-            this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(15,23,42);
+            this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.pnlHeader.Controls.Add(this.lblProcessor);
             this.pnlHeader.Controls.Add(this.cmbFilterProcessor);
             this.pnlHeader.Controls.Add(this.lblRAM);
@@ -121,24 +121,9 @@
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Padding = new System.Windows.Forms.Padding(24,18,24,0);
-            this.pnlHeader.Size = new System.Drawing.Size(1200,88);
+            this.pnlHeader.Padding = new System.Windows.Forms.Padding(24, 18, 24, 0);
+            this.pnlHeader.Size = new System.Drawing.Size(1200, 88);
             this.pnlHeader.TabIndex = 0;
-            // 
-            // btnAddProduct
-            // 
-            this.btnAddProduct.BackColor = System.Drawing.Color.FromArgb(15,23,42);
-            this.btnAddProduct.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAddProduct.FlatAppearance.BorderSize =0;
-            this.btnAddProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddProduct.Font = new System.Drawing.Font("Segoe UI",10F, System.Drawing.FontStyle.Bold);
-            this.btnAddProduct.ForeColor = System.Drawing.Color.White;
-            this.btnAddProduct.Location = new System.Drawing.Point(23, 559);
-            this.btnAddProduct.Name = "btnAddProduct";
-            this.btnAddProduct.Size = new System.Drawing.Size(272,40);
-            this.btnAddProduct.TabIndex = 12;
-            this.btnAddProduct.Text = "Add Product";
-            this.btnAddProduct.UseVisualStyleBackColor = false;
             // 
             // lblProcessor
             // 
@@ -225,32 +210,17 @@
             // btnAddCategory
             // 
             this.btnAddCategory.BackColor = System.Drawing.Color.White;
-            this.btnAddCategory.FlatAppearance.BorderSize =0;
+            this.btnAddCategory.FlatAppearance.BorderSize = 0;
             this.btnAddCategory.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAddCategory.Font = new System.Drawing.Font("Segoe UI",9F);
-            this.btnAddCategory.ForeColor = System.Drawing.Color.FromArgb(15,23,42);
+            this.btnAddCategory.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnAddCategory.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.btnAddCategory.Location = new System.Drawing.Point(271, 28);
             this.btnAddCategory.Name = "btnAddCategory";
-            this.btnAddCategory.Size = new System.Drawing.Size(60,28);
+            this.btnAddCategory.Size = new System.Drawing.Size(60, 28);
             this.btnAddCategory.TabIndex = 11;
             this.btnAddCategory.Text = "+ Add";
             this.btnAddCategory.UseVisualStyleBackColor = false;
             this.btnAddCategory.Click += new System.EventHandler(this.btnAddCategory_Click);
-            // 
-            // btnClearSelection
-            // 
-            this.btnClearSelection.BackColor = System.Drawing.Color.White;
-            this.btnClearSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClearSelection.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(15,23,42);
-            this.btnClearSelection.FlatAppearance.BorderSize =1;
-            this.btnClearSelection.Font = new System.Drawing.Font("Segoe UI",9.5F);
-            this.btnClearSelection.ForeColor = System.Drawing.Color.FromArgb(15,23,42);
-            this.btnClearSelection.Location = new System.Drawing.Point(320, 28);
-            this.btnClearSelection.Name = "btnClearSelection";
-            this.btnClearSelection.Size = new System.Drawing.Size(120,28);
-            this.btnClearSelection.TabIndex = 13;
-            this.btnClearSelection.Text = "Clear Selection";
-            this.btnClearSelection.UseVisualStyleBackColor = false;
             // 
             // cmbCategory
             // 
@@ -279,6 +249,35 @@
             this.lblCategory.TabIndex = 9;
             this.lblCategory.Text = "Category:";
             // 
+            // btnClearSelection
+            // 
+            this.btnClearSelection.BackColor = System.Drawing.Color.White;
+            this.btnClearSelection.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.btnClearSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClearSelection.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.btnClearSelection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.btnClearSelection.Location = new System.Drawing.Point(348, 25);
+            this.btnClearSelection.Name = "btnClearSelection";
+            this.btnClearSelection.Size = new System.Drawing.Size(120, 28);
+            this.btnClearSelection.TabIndex = 13;
+            this.btnClearSelection.Text = "Clear Selection";
+            this.btnClearSelection.UseVisualStyleBackColor = false;
+            // 
+            // btnAddProduct
+            // 
+            this.btnAddProduct.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.btnAddProduct.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAddProduct.FlatAppearance.BorderSize = 0;
+            this.btnAddProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAddProduct.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.btnAddProduct.ForeColor = System.Drawing.Color.White;
+            this.btnAddProduct.Location = new System.Drawing.Point(23, 559);
+            this.btnAddProduct.Name = "btnAddProduct";
+            this.btnAddProduct.Size = new System.Drawing.Size(272, 40);
+            this.btnAddProduct.TabIndex = 12;
+            this.btnAddProduct.Text = "Add Product";
+            this.btnAddProduct.UseVisualStyleBackColor = false;
+            // 
             // pnlDetails
             // 
             this.pnlDetails.BackColor = System.Drawing.Color.White;
@@ -293,10 +292,10 @@
             this.pnlDetails.Controls.Add(this.txtProdName);
             this.pnlDetails.Controls.Add(this.lblDetailsTitle);
             this.pnlDetails.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlDetails.Location = new System.Drawing.Point(880, 110);
+            this.pnlDetails.Location = new System.Drawing.Point(880, 88);
             this.pnlDetails.Name = "pnlDetails";
             this.pnlDetails.Padding = new System.Windows.Forms.Padding(30);
-            this.pnlDetails.Size = new System.Drawing.Size(320, 590);
+            this.pnlDetails.Size = new System.Drawing.Size(320, 612);
             this.pnlDetails.TabIndex = 1;
             // 
             // lblProdSpec
@@ -334,15 +333,15 @@
             // 
             // btnEdit
             // 
-            this.btnEdit.BackColor = System.Drawing.Color.FromArgb(15,23,42);
+            this.btnEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.btnEdit.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnEdit.FlatAppearance.BorderSize =0;
+            this.btnEdit.FlatAppearance.BorderSize = 0;
             this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEdit.Font = new System.Drawing.Font("Segoe UI Semibold",10F, System.Drawing.FontStyle.Bold);
+            this.btnEdit.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.btnEdit.ForeColor = System.Drawing.Color.White;
             this.btnEdit.Location = new System.Drawing.Point(23, 394);
             this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(274,40);
+            this.btnEdit.Size = new System.Drawing.Size(274, 40);
             this.btnEdit.TabIndex = 4;
             this.btnEdit.Text = "Save Changes";
             this.btnEdit.UseVisualStyleBackColor = false;
@@ -376,10 +375,10 @@
             // 
             this.lblDetailsTitle.AutoSize = true;
             this.lblDetailsTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 15F, System.Drawing.FontStyle.Bold);
-            this.lblDetailsTitle.ForeColor = System.Drawing.Color.FromArgb(15,23,42);
+            this.lblDetailsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.lblDetailsTitle.Location = new System.Drawing.Point(18, 25);
             this.lblDetailsTitle.Name = "lblDetailsTitle";
-            this.lblDetailsTitle.Size = new System.Drawing.Size(143, 25);
+            this.lblDetailsTitle.Size = new System.Drawing.Size(150, 28);
             this.lblDetailsTitle.TabIndex = 0;
             this.lblDetailsTitle.Text = "Product Details";
             // 
@@ -399,20 +398,20 @@
             this.dgvProducts.AllowUserToAddRows = false;
             this.dgvProducts.AllowUserToDeleteRows = false;
             this.dgvProducts.AllowUserToResizeRows = false;
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.FromArgb(249,250,251);
-            this.dgvProducts.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
+            this.dgvProducts.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvProducts.BackgroundColor = System.Drawing.Color.White;
             this.dgvProducts.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvProducts.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.dgvProducts.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(37,99,235);
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Segoe UI Semibold",11F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.Color.FromArgb(59,130,246);
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvProducts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvProducts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dgvProducts.ColumnHeadersHeight = 45;
             this.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvProducts.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -422,16 +421,16 @@
             this.colStock,
             this.colPrice,
             this.colStatus});
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(240)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvProducts.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 10F);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(232)))), ((int)(((byte)(240)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvProducts.DefaultCellStyle = dataGridViewCellStyle3;
             this.dgvProducts.EnableHeadersVisualStyles = false;
-            this.dgvProducts.GridColor = System.Drawing.Color.FromArgb(229,231,235);
+            this.dgvProducts.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(231)))), ((int)(((byte)(235)))));
             this.dgvProducts.Location = new System.Drawing.Point(20, 20);
             this.dgvProducts.MultiSelect = false;
             this.dgvProducts.Name = "dgvProducts";
@@ -445,22 +444,22 @@
             // lblMainTitle
             // 
             this.lblMainTitle.AutoSize = true;
-            this.lblMainTitle.Font = new System.Drawing.Font("Segoe UI",26F, System.Drawing.FontStyle.Bold);
-            this.lblMainTitle.ForeColor = System.Drawing.Color.FromArgb(15,23,42);
-            this.lblMainTitle.Location = new System.Drawing.Point(36,100);
+            this.lblMainTitle.Font = new System.Drawing.Font("Segoe UI", 26F, System.Drawing.FontStyle.Bold);
+            this.lblMainTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.lblMainTitle.Location = new System.Drawing.Point(36, 100);
             this.lblMainTitle.Name = "lblMainTitle";
-            this.lblMainTitle.Size = new System.Drawing.Size(153, 45);
+            this.lblMainTitle.Size = new System.Drawing.Size(166, 47);
             this.lblMainTitle.TabIndex = 2;
             this.lblMainTitle.Text = "Products";
             // 
             // lblSubTitle
             // 
             this.lblSubTitle.AutoSize = true;
-            this.lblSubTitle.Font = new System.Drawing.Font("Segoe UI",12F);
-            this.lblSubTitle.ForeColor = System.Drawing.Color.FromArgb(100,116,139);
-            this.lblSubTitle.Location = new System.Drawing.Point(40,142);
+            this.lblSubTitle.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.lblSubTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(116)))), ((int)(((byte)(139)))));
+            this.lblSubTitle.Location = new System.Drawing.Point(40, 142);
             this.lblSubTitle.Name = "lblSubTitle";
-            this.lblSubTitle.Size = new System.Drawing.Size(203, 20);
+            this.lblSubTitle.Size = new System.Drawing.Size(216, 21);
             this.lblSubTitle.TabIndex = 3;
             this.lblSubTitle.Text = "Overview of current products.";
             // 

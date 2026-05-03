@@ -1,10 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Drawing.Drawing2D;
 
 namespace InventoryManagementSystem
 {
@@ -22,28 +20,6 @@ namespace InventoryManagementSystem
         private const int DynamicFiltersHeight = 50;
         private const int DynamicFiltersGapFromSearch = 12;
 
-        // Theme colors local to this form (do not affect other forms)
-        private static class Theme
-        {
-            // Base primary (user requested)
-            public static readonly Color Base = Color.FromArgb(15, 23, 42); // #0F172A
-            // Header / Top Bar (vivid, attention-grabbing, complements base)
-            public static readonly Color Header = Color.FromArgb(37, 99, 235); // #2563EB
-            // Secondary / muted text
-            public static readonly Color Secondary = Color.FromArgb(100, 116, 139); // #64748B
-            // Page background
-            public static readonly Color PageBackground = Color.FromArgb(248, 250, 252); // #F8FAFC
-            // Card background
-            public static readonly Color CardBackground = Color.White;
-            // Borders / dividers
-            public static readonly Color Divider = Color.FromArgb(230, 234, 240); // #E6EAF0
-            // Success / Danger
-            public static readonly Color Success = Color.FromArgb(16, 185, 129); // #10B981
-            public static readonly Color Danger = Color.FromArgb(239, 68, 68); // #EF4444
-            // Grid header accent
-            public static readonly Color GridHeader = Color.FromArgb(30, 64, 175); // #1E40AF
-        }
-
         // Public flag to request the form show only low-stock items when opened
         public bool ShowLowStockFilter { get; set; } = false;
 
@@ -53,10 +29,23 @@ namespace InventoryManagementSystem
         public FrmProducts()
         {
             InitializeComponent();
-            SetupDynamicFilterContainer();
 
-            // Apply theme to controls in this form only
-            ApplyTheme();
+            // Initialize the FlowLayoutPanel for dynamic filters
+            _flpDynamicFilters = new FlowLayoutPanel
+            {
+                FlowDirection = FlowDirection.LeftToRight,
+                AutoSize = true,
+                WrapContents = false,
+                Location = new System.Drawing.Point(480, 25),
+                Height = DynamicFiltersHeight
+            };
+            pnlHeader.Controls.Add(_flpDynamicFilters);
+
+            // Hide old static filters to make room for the dynamic ones
+            lblProcessor.Visible = false;
+            cmbFilterProcessor.Visible = false;
+            lblRAM.Visible = false;
+            cmbFilterRAM.Visible = false;
 
             this.Load += FrmProducts_Load;
 
@@ -68,189 +57,7 @@ namespace InventoryManagementSystem
             btnAddProduct.Click += BtnAddProduct_Click;
             btnClearSelection.Click += BtnClearSelection_Click;
 
-            pnlHeader.Resize += (s, e) => LayoutHeader();
-
             EnableDoubleBuffered(dgvProducts);
-        }
-
-        private void ApplyTheme()
-        {
-            // Overall backgrounds
-            this.BackColor = Theme.PageBackground;
-
-            // Header
-            if (pnlHeader != null)
-            {
-                pnlHeader.BackColor = Theme.Header; // eye-catching header
-                try { pnlHeader.Padding = new Padding(24, 18, 24, 0); } catch { }
-            }
-
-            // Titles
-            if (lblMainTitle != null)
-            {
-                lblMainTitle.ForeColor = Theme.Base;
-                lblMainTitle.Font = new Font("Segoe UI", 26F, FontStyle.Bold);
-            }
-            if (lblSubTitle != null)
-            {
-                lblSubTitle.ForeColor = Theme.Secondary;
-                lblSubTitle.Font = new Font("Segoe UI", 12F, FontStyle.Regular);
-            }
-
-            // Buttons - square, consistent
-            if (btnAddProduct != null)
-            {
-                btnAddProduct.FlatStyle = FlatStyle.Flat;
-                btnAddProduct.FlatAppearance.BorderSize = 0;
-                btnAddProduct.BackColor = Theme.Base;
-                btnAddProduct.ForeColor = Color.White;
-                btnAddProduct.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-                btnAddProduct.Size = new Size(260, 40);
-            }
-
-            if (btnEdit != null)
-            {
-                btnEdit.FlatStyle = FlatStyle.Flat;
-                btnEdit.FlatAppearance.BorderSize = 0;
-                btnEdit.BackColor = Theme.Base;
-                btnEdit.ForeColor = Color.White;
-                btnEdit.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
-                btnEdit.Size = new Size(274, 40);
-            }
-
-            if (btnClearSelection != null)
-            {
-                btnClearSelection.FlatStyle = FlatStyle.Flat;
-                btnClearSelection.FlatAppearance.BorderSize = 1;
-                btnClearSelection.FlatAppearance.BorderColor = Theme.Base;
-                btnClearSelection.BackColor = Color.White;
-                btnClearSelection.ForeColor = Theme.Base;
-                btnClearSelection.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular);
-                btnClearSelection.Size = new Size(120, 28);
-            }
-
-            if (btnAddCategory != null)
-            {
-                btnAddCategory.FlatStyle = FlatStyle.Flat;
-                btnAddCategory.FlatAppearance.BorderSize = 1;
-                btnAddCategory.FlatAppearance.BorderColor = Theme.Divider;
-                btnAddCategory.BackColor = Color.White;
-                btnAddCategory.ForeColor = Theme.Base;
-                btnAddCategory.Size = new Size(60, 28);
-            }
-
-            // Category combo and search box styling
-            if (cmbCategory != null)
-            {
-                cmbCategory.BackColor = Color.White;
-                cmbCategory.ForeColor = Theme.Base;
-                cmbCategory.FlatStyle = FlatStyle.Flat;
-            }
-            if (txtSearch != null)
-            {
-                txtSearch.BackColor = Color.White;
-                txtSearch.ForeColor = Theme.Base;
-                txtSearch.BorderStyle = BorderStyle.FixedSingle;
-                txtSearch.Font = new Font("Segoe UI", 9.5F);
-            }
-            if (lblSearch != null) lblSearch.ForeColor = Color.FromArgb(255, 255, 255);
-
-            // Details panel
-            if (pnlDetails != null)
-            {
-                pnlDetails.BackColor = Theme.CardBackground;
-                pnlDetails.Padding = new Padding(20);
-                pnlDetails.BorderStyle = BorderStyle.FixedSingle;
-            }
-            if (lblDetailsTitle != null)
-            {
-                lblDetailsTitle.ForeColor = Theme.Base;
-                lblDetailsTitle.Font = new Font("Segoe UI Semibold", 15F, FontStyle.Bold);
-            }
-
-            // DataGridView styling
-            if (dgvProducts != null)
-            {
-                dgvProducts.EnableHeadersVisualStyles = false;
-                dgvProducts.ColumnHeadersDefaultCellStyle.BackColor = Theme.GridHeader;
-                dgvProducts.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-                dgvProducts.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
-                dgvProducts.DefaultCellStyle.BackColor = Color.White;
-                dgvProducts.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
-                dgvProducts.GridColor = Theme.Divider;
-                dgvProducts.DefaultCellStyle.SelectionBackColor = Theme.Header;
-                dgvProducts.DefaultCellStyle.SelectionForeColor = Color.White;
-                dgvProducts.RowTemplate.Height = 42;
-            }
-
-            // Labels and other text
-            foreach (Control c in this.Controls)
-            {
-                if (c is Label lbl)
-                {
-                    if (lbl == lblMainTitle || lbl == lblSubTitle || lbl == lblDetailsTitle) continue;
-                    lbl.ForeColor = Theme.Base;
-                }
-            }
-
-            // Dynamic filters container background should be transparent to show header
-            if (_flpDynamicFilters != null)
-            {
-                _flpDynamicFilters.BackColor = Color.Transparent;
-            }
-
-            try { dgvProducts.ClearSelection(); } catch { }
-        }
-
-        private void SetupDynamicFilterContainer()
-        {
-            // Hide the old hardcoded controls safely if they exist
-            if (lblProcessor != null) lblProcessor.Visible = false;
-            if (cmbFilterProcessor != null) cmbFilterProcessor.Visible = false;
-            if (lblRAM != null) lblRAM.Visible = false;
-            if (cmbFilterRAM != null) cmbFilterRAM.Visible = false;
-
-            // Create a FlowLayoutPanel to automatically arrange our new dynamic filters cleanly
-            _flpDynamicFilters = new FlowLayoutPanel
-            {
-                Location = new Point(0, DynamicFiltersTop),
-                Size = new Size(10, DynamicFiltersHeight),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                BackColor = Color.Transparent,
-                WrapContents = false,
-                AutoScroll = true
-            };
-            this.pnlHeader.Controls.Add(_flpDynamicFilters);
-
-            LayoutHeader();
-
-            // Make sure the action button always stays visible above dynamic controls
-            btnAddProduct.BringToFront();
-        }
-
-        private void LayoutHeader()
-        {
-            if (_flpDynamicFilters == null || pnlHeader == null || txtSearch == null) return;
-
-            // Reserve space for the search label + textbox, and keep filters to its left.
-            int rightEdge = txtSearch.Left - DynamicFiltersGapFromSearch;
-            int leftEdge = btnAddProduct.Right + 10;
-
-            int width = rightEdge - leftEdge;
-            if (width < 0) width = 0;
-
-            _flpDynamicFilters.SuspendLayout();
-            try
-            {
-                _flpDynamicFilters.Location = new Point(leftEdge, DynamicFiltersTop);
-                _flpDynamicFilters.Size = new Size(width, DynamicFiltersHeight);
-            }
-            finally
-            {
-                _flpDynamicFilters.ResumeLayout();
-            }
-
-            btnAddProduct.BringToFront();
         }
 
         private void BtnAddProduct_Click(object sender, EventArgs e)
@@ -311,20 +118,13 @@ namespace InventoryManagementSystem
                 // Create Label
                 Label lbl = new Label
                 {
-                    Text = filter.Key + ":",
-                    AutoSize = true,
-                    Font = new Font("Segoe UI", 9.5F),
-                    ForeColor = Color.FromArgb(100, 100, 100),
-                    Margin = new Padding(10, 8, 3, 0)
+                    Text = filter.Key + ":"
                 };
 
                 // Create ComboBox
                 ComboBox cmb = new ComboBox
                 {
-                    DropDownStyle = ComboBoxStyle.DropDownList,
-                    Font = new Font("Segoe UI", 9.5F),
-                    Width = 120,
-                    Margin = new Padding(3, 5, 10, 0)
+                    DropDownStyle = ComboBoxStyle.DropDownList
                 };
 
                 cmb.Items.Add("All");
@@ -435,30 +235,9 @@ namespace InventoryManagementSystem
                 );
             }
 
-            // Remove selection formatting issue
-            dgvProducts.CellFormatting -= DgvProducts_CellFormatting;
-            dgvProducts.CellFormatting += DgvProducts_CellFormatting;
-
             // Clear selection details if list is empty
             if (productsToDisplay.Count == 0)
                 ClearDetails();
-        }
-
-        private void DgvProducts_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (e.RowIndex >= 0 && e.Value != null && dgvProducts.Columns[e.ColumnIndex].Name == "colStatus")
-            {
-                string status = e.Value.ToString();
-
-                if (status == "Low Stock")
-                    e.CellStyle.ForeColor = Color.DarkOrange;
-                else if (status == "Out of Stock")
-                    e.CellStyle.ForeColor = Color.Red;
-                else
-                    e.CellStyle.ForeColor = Color.ForestGreen;
-
-                e.CellStyle.Font = new Font(dgvProducts.Font, FontStyle.Bold);
-            }
         }
 
         private void DgvProducts_SelectionChanged(object sender, EventArgs e)
@@ -591,20 +370,5 @@ namespace InventoryManagementSystem
             }
         }
 
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            // Add shadow to details panel for card effect
-            pnlDetails.Paint += (s, pe) =>
-            {
-                using (var shadow = new System.Drawing.Drawing2D.GraphicsPath())
-                {
-                    shadow.AddRectangle(new Rectangle(5, 5, pnlDetails.Width - 10, pnlDetails.Height - 10));
-                    pe.Graphics.FillPath(new SolidBrush(Color.FromArgb(30, 0, 0, 0)), shadow);
-                }
-            };
-            // Add icon to search box (optional, if you have resources)
-            // txtSearch.PlaceholderText = "Search by name or ID..."; // For .NET6+, otherwise skip
-        }
     }
 }
