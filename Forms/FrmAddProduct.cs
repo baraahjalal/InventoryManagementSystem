@@ -96,12 +96,7 @@ namespace InventoryManagementSystem.Forms
             if (!ValidateInputs(out var name, out var price, out var qty, out var serial, out var category))
                 return;
 
-            // Permission check (optional, based on CurrentUser)
-            if (MemoryStore.CurrentUser != null && !MemoryStore.CurrentUser.IsAdmin && !MemoryStore.CurrentUser.CanAddProducts)
-            {
-                MessageBox.Show("You do not have permission to add products.", "Permission Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+
 
             // Unique Serial check (if provided)
             if (!string.IsNullOrWhiteSpace(serial))

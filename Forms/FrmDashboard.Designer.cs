@@ -69,6 +69,7 @@
             this.pnlTotalProducts.Name = "pnlTotalProducts";
             this.pnlTotalProducts.Size = new System.Drawing.Size(320, 160);
             this.pnlTotalProducts.TabIndex = 2;
+            this.pnlTotalProducts.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlTotalProducts_Paint);
             // 
             // lblTotalDesc
             // 

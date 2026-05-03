@@ -15,6 +15,20 @@ namespace InventoryManagementSystem
 
             // Wire up the color formatting for the grid cells
             dgvRecentActions.CellFormatting += DgvRecentActions_CellFormatting;
+
+            // Make low-stock panel clickable
+            pnlLowStock.Cursor = Cursors.Hand;
+            pnlLowStock.Click += PnlLowStock_Click;
+            lblLowStockNum.Click += PnlLowStock_Click;
+            lblLowStockTitle.Click += PnlLowStock_Click;
+            lblLowStockDesc.Click += PnlLowStock_Click;
+
+            // Make total-products panel clickable (open products and show all)
+            pnlTotalProducts.Cursor = Cursors.Hand;
+            pnlTotalProducts.Click += PnlTotalProducts_Click;
+            lblTotalNum.Click += PnlTotalProducts_Click;
+            lblTotalTitle.Click += PnlTotalProducts_Click;
+            lblTotalDesc.Click += PnlTotalProducts_Click;
         }
 
         private void EnableDoubleBuffered(DataGridView dgv)
@@ -167,6 +181,112 @@ namespace InventoryManagementSystem
             {
                 e.CellStyle.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             }
+        }
+
+        private void PnlLowStock_Click(object sender, EventArgs e)
+        {
+            // Find the main form containing this dashboard
+            var mainForm = this.TopLevelControl as FrmMain ?? this.Parent as FrmMain;
+            if (mainForm == null)
+            {
+                // Traverse up the parent chain as a fallback
+                Control p = this.Parent;
+                while (p != null && !(p is FrmMain)) p = p.Parent;
+                mainForm = p as FrmMain;
+            }
+
+            if (mainForm == null)
+            {
+                // As a last resort, try Application.OpenForms
+                foreach (Form f in Application.OpenForms)
+                {
+                    if (f is FrmMain)
+                    {
+                        mainForm = (FrmMain)f;
+                        break;
+                    }
+                }
+            }
+
+            if (mainForm != null)
+            {
+                // Create products form and enable low-stock filter before showing
+                var productsForm = new FrmProducts();
+                // Use reflection to set internal flag if property exists
+                var prop = productsForm.GetType().GetProperty("ShowLowStockFilter");
+                if (prop != null && prop.CanWrite)
+                {
+                    prop.SetValue(productsForm, true);
+                }
+
+                // Open inside main
+                mainForm.OpenChildForm(productsForm);
+            }
+            else
+            {
+                // Fallback: open standalone
+                var productsForm = new FrmProducts();
+                var prop = productsForm.GetType().GetProperty("ShowLowStockFilter");
+                if (prop != null && prop.CanWrite) prop.SetValue(productsForm, true);
+                productsForm.Show();
+            }
+        }
+
+        private void PnlTotalProducts_Click(object sender, EventArgs e)
+        {
+            // Similar logic to open products but ensure all products are shown
+            var mainForm = this.TopLevelControl as FrmMain ?? this.Parent as FrmMain;
+            if (mainForm == null)
+            {
+                Control p = this.Parent;
+                while (p != null && !(p is FrmMain)) p = p.Parent;
+                mainForm = p as FrmMain;
+            }
+
+            if (mainForm == null)
+            {
+                foreach (Form f in Application.OpenForms)
+                {
+                    if (f is FrmMain)
+                    {
+                        mainForm = (FrmMain)f;
+                        break;
+                    }
+                }
+            }
+
+            if (mainForm != null)
+            {
+                var productsForm = new FrmProducts();
+                var propForce = productsForm.GetType().GetProperty("ForceShowAll");
+                if (propForce != null && propForce.CanWrite)
+                {
+                    propForce.SetValue(productsForm, true);
+                }
+
+                // Also ensure low-stock flag is not set
+                var propLow = productsForm.GetType().GetProperty("ShowLowStockFilter");
+                if (propLow != null && propLow.CanWrite)
+                {
+                    propLow.SetValue(productsForm, false);
+                }
+
+                mainForm.OpenChildForm(productsForm);
+            }
+            else
+            {
+                var productsForm = new FrmProducts();
+                var propForce = productsForm.GetType().GetProperty("ForceShowAll");
+                if (propForce != null && propForce.CanWrite) propForce.SetValue(productsForm, true);
+                var propLow = productsForm.GetType().GetProperty("ShowLowStockFilter");
+                if (propLow != null && propLow.CanWrite) propLow.SetValue(productsForm, false);
+                productsForm.Show();
+            }
+        }
+
+        private void pnlTotalProducts_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

@@ -25,7 +25,8 @@ namespace InventoryManagementSystem
         private const int MaxWidth = 235; // الحد الأقصى لعرض الشريط الجانبي (عندما يكون موسعاً)
         private const int AnimSpeed = 20; // سرعة حركة التوسع والانكماش
 
-        private void OpenChildForm(Form childForm)
+        // Changed from private to public so child forms can request navigation
+        public void OpenChildForm(Form childForm)
         {
             // إذا كان فيه فورم مفتوح مسبقاً داخل البانل، نقوم بإغلاقه
             if (pnlMainContent.Controls.Count > 0)
@@ -43,13 +44,13 @@ namespace InventoryManagementSystem
 
         private void btnDashboard_Click(object sender, EventArgs e)
         {
-            if (!CheckPermission(u => u.CanViewDashboard)) return;
+            // Dashboard is available to all logged in users
             OpenChildForm(new FrmDashboard());
         }
 
         private void btnProducts_Click(object sender, EventArgs e)
         {
-            if (!CheckPermission(u => u.CanViewProducts)) return;
+            // Products available to all employees
             OpenChildForm(new FrmProducts());
         }
 
@@ -85,37 +86,38 @@ namespace InventoryManagementSystem
 
         private void btnStockIn_Click(object sender, EventArgs e)
         {
-            if (!CheckPermission(u => u.CanDoStockIn)) return;
             OpenChildForm(new FrmStockIn());
         }
 
         private void btnStockOut_Click(object sender, EventArgs e)
         {
-            if (!CheckPermission(u => u.CanDoStockOut)) return;
             OpenChildForm(new FrmStockOut());
         }
 
         private void btnUserManagement_Click(object sender, EventArgs e)
         {
-            if (!CheckPermission(u => u.CanViewUsers || u.CanManageUsers)) return;
+            var user = MemoryStore.CurrentUser;
+            if (user == null || !user.IsAdmin)
+            {
+                MessageBox.Show("Access Denied: Only administrators can open User Management.", "Permission Restricted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             OpenChildForm(new FrmUsers());
         }
 
         private void btnSuppliersManagement_Click(object sender, EventArgs e)
         {
-            if (!CheckPermission(u => u.CanViewSuppliers || u.CanEditSuppliers || u.CanAddSuppliers)) return;
             OpenChildForm(new FrmSupplierManagement());
         }
 
         private void btnAuditLog_Click(object sender, EventArgs e)
         {
-            if (!CheckPermission(u => u.CanViewAuditLog)) return;
             OpenChildForm(new FrmAuditLog());
         }
 
         private void btnReports_Click(object sender, EventArgs e)
         {
-            if (!CheckPermission(u => u.CanViewReports)) return;
             OpenChildForm(new FrmReports());
         }
 
@@ -123,8 +125,8 @@ namespace InventoryManagementSystem
         {
             ApplyUserPermissions();
             
-            // Optionally open the Dashboard by default if they have permission
-            if (MemoryStore.CurrentUser != null && MemoryStore.CurrentUser.CanViewDashboard)
+            // Optionally open the Dashboard by default if a user is logged in
+            if (MemoryStore.CurrentUser != null)
             {
                 btnDashboard_Click(this, EventArgs.Empty);
             }
@@ -132,19 +134,8 @@ namespace InventoryManagementSystem
 
         private void ApplyUserPermissions()
         {
-            // We let all UI buttons remain fully visible to all users.
-            // Access restrictions are strictly enforced when they attempt to click the feature!
-        }
-
-        private bool CheckPermission(Func<User, bool> permission)
-        {
-            var user = MemoryStore.CurrentUser;
-            if (user != null && !user.IsAdmin && !permission(user))
-            {
-                MessageBox.Show("Access Denied: You do not have permission to access this module.\n\nExplanation: Your assigned role restricts you from using this feature. Please contact the administrator if you need access.", "Permission Restricted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return false;
-            }
-            return true;
+            // UI visibility changes are intentionally not applied here.
+            // Access is enforced at the action level (e.g., btnUserManagement click)
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)

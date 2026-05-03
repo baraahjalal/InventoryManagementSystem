@@ -15,32 +15,9 @@ namespace InventoryManagementSystem
 
         public bool IsAdmin { get; set; } // Super User override
 
-        // Dashboard Permissions
-        public bool CanViewDashboard { get; set; }
-
-        // Product Permissions
-        public bool CanViewProducts { get; set; }
-        public bool CanAddProducts { get; set; }
-        public bool CanEditProducts { get; set; }
-        public bool CanDeleteProducts { get; set; }
-
-        // Stock Movement Permissions
-        public bool CanDoStockIn { get; set; }
-        public bool CanDoStockOut { get; set; }
-
-        // Supplier Permissions
-        public bool CanViewSuppliers { get; set; }
-        public bool CanAddSuppliers { get; set; }
-        public bool CanEditSuppliers { get; set; }
-
-        // User & Security Permissions
-        public bool CanViewUsers { get; set; }
-        public bool CanManageUsers { get; set; } // Add, Edit, Change Permissions
-        public bool CanViewAuditLog { get; set; }
-
-        // Reports Permissions
-        public bool CanViewReports { get; set; }
-        public bool CanPrint { get; set; }
+        // NOTE: Permissions have been simplified. Only `IsAdmin` is used.
+        // Admin: can access Users management.
+        // Non-admin (Employee): cannot access Users management. All other features are available to employees.
     }
 
     public class Supplier
@@ -151,19 +128,7 @@ namespace InventoryManagementSystem
         /// </summary>
         public static bool PerformStockMovement(int productId, int quantityChange, string movementType, string notes = "")
         {
-            // Security check using permissions
-            if (CurrentUser != null && !CurrentUser.IsAdmin)
-            {
-                if ((movementType == "STOCK IN" || movementType == "RESTOCK") && !CurrentUser.CanDoStockIn)
-                {
-                    throw new UnauthorizedAccessException("You do not have permission to perform Stock In.");
-                }
-                if (movementType == "STOCK OUT" && !CurrentUser.CanDoStockOut)
-                {
-                    throw new UnauthorizedAccessException("You do not have permission to perform Stock Out.");
-                }
-            }
-
+            // Permission model simplified: stock operations are not restricted by granular booleans.
             var product = Products.FirstOrDefault(p => p.Id == productId);
             if (product == null) return false;
 
@@ -221,55 +186,34 @@ namespace InventoryManagementSystem
                 }
             });
 
-            // Seed Users with realistic, granular RBAC (Role-Based Access Control)
+            // Simplified RBAC: only System Administrator and Employee
+            // Seed Users with simplified roles (only IsAdmin and Role kept)
             Users.AddRange(new[]
             {
-                // 1. System Administrator: Has access to absolutely everything.
+                //1. System Administrator: Has access to Users management.
                 new User
                 {
                     Id = 1, Username = "admin.super", Password = "123", Role = "System Administrator",
-                    IsAdmin = true,
-                    CanViewDashboard = true, CanViewProducts = true, CanAddProducts = true, CanEditProducts = true, CanDeleteProducts = true,
-                    CanDoStockIn = true, CanDoStockOut = true,
-                    CanViewSuppliers = true, CanAddSuppliers = true, CanEditSuppliers = true,
-                    CanViewUsers = true, CanManageUsers = true, CanViewAuditLog = true,
-                    CanViewReports = true, CanPrint = true
+                    IsAdmin = true
                 },
                 
-                // 2. Stock Clerk: Can view products and dashboard, do stock in/out, view suppliers. CANNOT add products/suppliers.
+                //2. Employee examples (non-admin). Employees can use the system but cannot manage users.
                 new User
                 {
-                    Id = 2, Username = "ahmed.clerk", Password = "123", Role = "Stock Clerk",
-                    IsAdmin = false,
-                    CanViewDashboard = true, CanViewProducts = true, CanAddProducts = false, CanEditProducts = false, CanDeleteProducts = false,
-                    CanDoStockIn = true, CanDoStockOut = true,
-                    CanViewSuppliers = true, CanAddSuppliers = false, CanEditSuppliers = false,
-                    CanViewUsers = false, CanManageUsers = false, CanViewAuditLog = false,
-                    CanViewReports = false, CanPrint = false
+                    Id = 2, Username = "ahmed.clerk", Password = "123", Role = "Employee",
+                    IsAdmin = false
                 },
 
-                // 3. Reporting Officer / Viewer: Can view products, view reports and print. CANNOT change stock, manage users, or edit suppliers.
                 new User
                 {
-                    Id = 3, Username = "sara.reports", Password = "123", Role = "Reporting Officer",
-                    IsAdmin = false,
-                    CanViewDashboard = true, CanViewProducts = true, CanAddProducts = false, CanEditProducts = false, CanDeleteProducts = false,
-                    CanDoStockIn = false, CanDoStockOut = false,
-                    CanViewSuppliers = true, CanAddSuppliers = false, CanEditSuppliers = false,
-                    CanViewUsers = false, CanManageUsers = false, CanViewAuditLog = false,
-                    CanViewReports = true, CanPrint = true
+                    Id = 3, Username = "sara.reports", Password = "123", Role = "Employee",
+                    IsAdmin = false
                 },
 
-                // 4. Procurement Manager: Can view/add/edit suppliers, view products, print reports. CANNOT manage users or view Audit log.
                 new User
                 {
-                    Id = 4, Username = "omar.proc", Password = "123", Role = "Procurement Manager",
-                    IsAdmin = false,
-                    CanViewDashboard = true, CanViewProducts = true, CanAddProducts = false, CanEditProducts = false, CanDeleteProducts = false,
-                    CanDoStockIn = true, CanDoStockOut = false,
-                    CanViewSuppliers = true, CanAddSuppliers = true, CanEditSuppliers = true,
-                    CanViewUsers = false, CanManageUsers = false, CanViewAuditLog = false,
-                    CanViewReports = true, CanPrint = true
+                    Id = 4, Username = "omar.proc", Password = "123", Role = "Employee",
+                    IsAdmin = false
                 }
             });
 
