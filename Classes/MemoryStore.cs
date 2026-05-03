@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,6 +12,7 @@ namespace InventoryManagementSystem
         public string Username { get; set; }
         public string Password { get; set; }
         public string Role { get; set; }
+        public System.Drawing.Image ProfilePicture { get; set; }
 
         public bool IsAdmin { get; set; } // Super User override
 
