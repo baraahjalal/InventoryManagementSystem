@@ -117,7 +117,6 @@
             this.pnlHeader.Controls.Add(this.btnAddCategory);
             this.pnlHeader.Controls.Add(this.cmbCategory);
             this.pnlHeader.Controls.Add(this.lblCategory);
-            this.pnlHeader.Controls.Add(this.btnClearSelection);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlHeader.Name = "pnlHeader";
@@ -129,11 +128,11 @@
             // 
             this.lblProcessor.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblProcessor.AutoSize = true;
-            this.lblProcessor.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.lblProcessor.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblProcessor.Location = new System.Drawing.Point(485, 31);
+            this.lblProcessor.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblProcessor.ForeColor = System.Drawing.Color.White;
+            this.lblProcessor.Location = new System.Drawing.Point(440, 31);
             this.lblProcessor.Name = "lblProcessor";
-            this.lblProcessor.Size = new System.Drawing.Size(69, 17);
+            this.lblProcessor.Size = new System.Drawing.Size(72, 17);
             this.lblProcessor.TabIndex = 8;
             this.lblProcessor.Text = "Processor:";
             // 
@@ -152,7 +151,7 @@
             "Intel Core i5",
             "Snapdragon 8 Gen 3",
             "A17 Pro"});
-            this.cmbFilterProcessor.Location = new System.Drawing.Point(560, 28);
+            this.cmbFilterProcessor.Location = new System.Drawing.Point(515, 28);
             this.cmbFilterProcessor.Name = "cmbFilterProcessor";
             this.cmbFilterProcessor.Size = new System.Drawing.Size(140, 25);
             this.cmbFilterProcessor.TabIndex = 7;
@@ -161,11 +160,11 @@
             // 
             this.lblRAM.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblRAM.AutoSize = true;
-            this.lblRAM.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.lblRAM.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblRAM.Location = new System.Drawing.Point(725, 31);
+            this.lblRAM.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRAM.ForeColor = System.Drawing.Color.White;
+            this.lblRAM.Location = new System.Drawing.Point(680, 31);
             this.lblRAM.Name = "lblRAM";
-            this.lblRAM.Size = new System.Drawing.Size(39, 17);
+            this.lblRAM.Size = new System.Drawing.Size(41, 17);
             this.lblRAM.TabIndex = 6;
             this.lblRAM.Text = "RAM:";
             // 
@@ -181,7 +180,7 @@
             "16 GB",
             "32 GB",
             "64 GB"});
-            this.cmbFilterRAM.Location = new System.Drawing.Point(770, 28);
+            this.cmbFilterRAM.Location = new System.Drawing.Point(725, 28);
             this.cmbFilterRAM.Name = "cmbFilterRAM";
             this.cmbFilterRAM.Size = new System.Drawing.Size(100, 25);
             this.cmbFilterRAM.TabIndex = 5;
@@ -190,11 +189,11 @@
             // 
             this.lblSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblSearch.AutoSize = true;
-            this.lblSearch.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.lblSearch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.lblSearch.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSearch.ForeColor = System.Drawing.Color.White;
             this.lblSearch.Location = new System.Drawing.Point(890, 31);
             this.lblSearch.Name = "lblSearch";
-            this.lblSearch.Size = new System.Drawing.Size(50, 17);
+            this.lblSearch.Size = new System.Drawing.Size(52, 17);
             this.lblSearch.TabIndex = 4;
             this.lblSearch.Text = "Search:";
             // 
@@ -241,11 +240,11 @@
             // lblCategory
             // 
             this.lblCategory.AutoSize = true;
-            this.lblCategory.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.lblCategory.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.lblCategory.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCategory.ForeColor = System.Drawing.Color.White;
             this.lblCategory.Location = new System.Drawing.Point(20, 31);
             this.lblCategory.Name = "lblCategory";
-            this.lblCategory.Size = new System.Drawing.Size(64, 17);
+            this.lblCategory.Size = new System.Drawing.Size(68, 17);
             this.lblCategory.TabIndex = 9;
             this.lblCategory.Text = "Category:";
             // 
@@ -256,7 +255,7 @@
             this.btnClearSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClearSelection.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.btnClearSelection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.btnClearSelection.Location = new System.Drawing.Point(348, 25);
+            this.btnClearSelection.Location = new System.Drawing.Point(750, 147);
             this.btnClearSelection.Name = "btnClearSelection";
             this.btnClearSelection.Size = new System.Drawing.Size(120, 28);
             this.btnClearSelection.TabIndex = 13;
@@ -473,6 +472,7 @@
             this.Controls.Add(this.pnlDetails);
             this.Controls.Add(this.pnlHeader);
             this.Controls.Add(this.pnlGridContainer);
+            this.Controls.Add(this.btnClearSelection);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FrmProducts";
             this.Text = "Products";
