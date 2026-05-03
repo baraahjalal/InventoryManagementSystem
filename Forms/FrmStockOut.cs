@@ -59,8 +59,9 @@ namespace InventoryManagementSystem
             lblStockStatus.Text = "In Stock: 0";
             lblStockStatus.ForeColor = Color.FromArgb(220, 38, 38); // Red
             
-            numQty.Value = 0;
+            numQty.Minimum = 0; // Set Minimum first to avoid ArgumentOutOfRangeException
             numQty.Maximum = 0;
+            numQty.Value = 0;
             numQty.Enabled = false;
             
             clbSerialNumbers.Items.Clear();
