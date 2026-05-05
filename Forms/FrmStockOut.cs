@@ -7,11 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using InventoryManagementSystem.Classes;
 
 namespace InventoryManagementSystem
 {
     public partial class FrmStockOut : Form
     {
+        private readonly ErrorProvider _errorProvider = new ErrorProvider();
         public FrmStockOut()
         {
             InitializeComponent();
@@ -101,7 +103,21 @@ namespace InventoryManagementSystem
                 clbSerialNumbers.Items.Add(item.ItemSerialNumber);
             }
             
-            lblWarrantyInfo.Text = $"Product Serial: {product.SerialNumber} | Warranty: {DateTime.Now.AddYears(1):dd/MM/yyyy}";
+            // Get Warranty Duration from last STOCK IN movement
+            var lastStockIn = MemoryStore.StockMovements
+                .Where(m => m.ProductId == product.Id && m.Type == "STOCK IN" && m.WarrantyDurationMonths.HasValue)
+                .OrderByDescending(m => m.Timestamp)
+                .FirstOrDefault();
+
+            string warrantyText = "--/--/----";
+            if (lastStockIn != null)
+            {
+                DateTime endDate = DateTime.Now.AddMonths(lastStockIn.WarrantyDurationMonths.Value);
+                warrantyText = endDate.ToString("dd/MM/yyyy");
+                txtWarrantyStatus.Text = $"{lastStockIn.WarrantyDurationMonths.Value} Months";
+            }
+            
+            lblWarrantyInfo.Text = $"Product Serial: {product.SerialNumber} | Warranty Expires: {warrantyText}";
         }
 
         /// <summary>
@@ -123,22 +139,33 @@ namespace InventoryManagementSystem
 
         private void BtnExecuteStockOut_Click(object sender, EventArgs e)
         {
-            // 1. Validation
+            _errorProvider.Clear();
+            bool isValid = true;
+            string errorMsg;
+
+            // Product
             if (cmbProduct.SelectedValue == null)
-            {
-                MessageBox.Show("Please select a product.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            { _errorProvider.SetError(cmbProduct, "Please select a product."); isValid = false; }
+            else
+              _errorProvider.SetError(cmbProduct, string.Empty);
 
+            // Reason
             if (cmbOutReason.SelectedItem == null)
-            {
-                MessageBox.Show("Please select a transaction type.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            { _errorProvider.SetError(cmbOutReason, "Please select a transaction type."); isValid = false; }
+            else
+              _errorProvider.SetError(cmbOutReason, string.Empty);
 
-            if (string.IsNullOrWhiteSpace(txtRecipient.Text))
+            // Recipient
+            if (!ValidationHelper.IsRequired(txtRecipient.Text, out errorMsg))
+            { _errorProvider.SetError(txtRecipient, errorMsg); isValid = false; }
+            else if (!ValidationHelper.IsValidLength(txtRecipient.Text.Trim(), 2, 100, out errorMsg))
+            { _errorProvider.SetError(txtRecipient, errorMsg); isValid = false; }
+            else
+              _errorProvider.SetError(txtRecipient, string.Empty);
+
+            if (!isValid)
             {
-                MessageBox.Show("Please enter the recipient or customer name.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please correct the highlighted errors before proceeding.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -146,18 +173,8 @@ namespace InventoryManagementSystem
 
             // Get selected serial numbers (items to dispatch)
             var selectedSerials = clbSerialNumbers.CheckedItems.Cast<string>().ToList();
-            
-            int quantity;
-            if (selectedSerials.Count > 0)
-            {
-                // Use the count of selected serials as the quantity
-                quantity = selectedSerials.Count;
-            }
-            else
-            {
-                // If no specific serials selected, use the numeric value (FIFO auto-selection)
-                quantity = (int)numQty.Value;
-            }
+
+            int quantity = selectedSerials.Count > 0 ? selectedSerials.Count : (int)numQty.Value;
 
             if (quantity <= 0)
             {

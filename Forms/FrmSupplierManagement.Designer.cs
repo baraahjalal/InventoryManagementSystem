@@ -27,16 +27,12 @@ namespace InventoryManagementSystem
             this.lblFormTitle = new System.Windows.Forms.Label();
             this.lblSupplierName = new System.Windows.Forms.Label();
             this.txtSupplierName = new System.Windows.Forms.TextBox();
-            this.lblCategory = new System.Windows.Forms.Label();
-            this.cmbCategory = new System.Windows.Forms.ComboBox();
             this.lblContactPerson = new System.Windows.Forms.Label();
             this.txtContactPerson = new System.Windows.Forms.TextBox();
             this.lblPhone = new System.Windows.Forms.Label();
             this.txtPhone = new System.Windows.Forms.TextBox();
             this.lblEmail = new System.Windows.Forms.Label();
             this.txtEmail = new System.Windows.Forms.TextBox();
-            //this.lblAddress = new System.Windows.Forms.Label();
-            //this.txtAddress = new System.Windows.Forms.TextBox();
             this.lblSuppliedProducts = new System.Windows.Forms.Label();
             this.clbSuppliedProducts = new System.Windows.Forms.CheckedListBox();
             this.chkIsActive = new System.Windows.Forms.CheckBox();
@@ -44,19 +40,18 @@ namespace InventoryManagementSystem
             this.btnClear = new System.Windows.Forms.Button();
             this.pnlGridContainer = new System.Windows.Forms.Panel();
             this.dgvSuppliers = new System.Windows.Forms.DataGridView();
-            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colContact = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colPhone = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colEmail = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colActiveProducts = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlActionButtons = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnDeleteSupplier = new System.Windows.Forms.Button();
             this.btnEditSupplier = new System.Windows.Forms.Button();
             this.btnAddSupplier = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
+            this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colContact = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colPhone = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colEmail = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colActiveProducts = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlHeader.SuspendLayout();
             this.pnlRight.SuspendLayout();
             this.pnlGridContainer.SuspendLayout();
@@ -104,8 +99,6 @@ namespace InventoryManagementSystem
             this.pnlRight.Controls.Add(this.lblFormTitle);
             this.pnlRight.Controls.Add(this.lblSupplierName);
             this.pnlRight.Controls.Add(this.txtSupplierName);
-            this.pnlRight.Controls.Add(this.lblCategory);
-            this.pnlRight.Controls.Add(this.cmbCategory);
             this.pnlRight.Controls.Add(this.lblContactPerson);
             this.pnlRight.Controls.Add(this.txtContactPerson);
             this.pnlRight.Controls.Add(this.lblPhone);
@@ -153,97 +146,80 @@ namespace InventoryManagementSystem
             this.txtSupplierName.Size = new System.Drawing.Size(274, 27);
             this.txtSupplierName.TabIndex = 2;
             // 
-            // lblCategory
-            // 
-            this.lblCategory.AutoSize = true;
-            this.lblCategory.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.lblCategory.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblCategory.Location = new System.Drawing.Point(19, 120);
-            this.lblCategory.Name = "lblCategory";
-            this.lblCategory.Size = new System.Drawing.Size(55, 15);
-            this.lblCategory.TabIndex = 3;
-            this.lblCategory.Text = "Category";
-            // 
-            // cmbCategory
-            // 
-            this.cmbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbCategory.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.cmbCategory.FormattingEnabled = true;
-            this.cmbCategory.Items.AddRange(new object[] {
-            "Manufacturer",
-            "Distributor"});
-            this.cmbCategory.Location = new System.Drawing.Point(22, 140);
-            this.cmbCategory.Name = "cmbCategory";
-            this.cmbCategory.Size = new System.Drawing.Size(274, 28);
-            this.cmbCategory.TabIndex = 4;
-            // 
             // lblContactPerson
             // 
             this.lblContactPerson.AutoSize = true;
             this.lblContactPerson.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblContactPerson.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblContactPerson.Location = new System.Drawing.Point(19, 176);
+            this.lblContactPerson.Location = new System.Drawing.Point(19, 116);
             this.lblContactPerson.Name = "lblContactPerson";
             this.lblContactPerson.Size = new System.Drawing.Size(88, 15);
             this.lblContactPerson.TabIndex = 5;
             this.lblContactPerson.Text = "Contact Person";
+            this.lblContactPerson.Click += new System.EventHandler(this.lblContactPerson_Click);
             // 
             // txtContactPerson
             // 
             this.txtContactPerson.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.txtContactPerson.Location = new System.Drawing.Point(22, 196);
+            this.txtContactPerson.Location = new System.Drawing.Point(22, 136);
             this.txtContactPerson.Name = "txtContactPerson";
             this.txtContactPerson.Size = new System.Drawing.Size(274, 27);
             this.txtContactPerson.TabIndex = 6;
+            this.txtContactPerson.TextChanged += new System.EventHandler(this.txtContactPerson_TextChanged);
             // 
             // lblPhone
             // 
             this.lblPhone.AutoSize = true;
             this.lblPhone.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblPhone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblPhone.Location = new System.Drawing.Point(19, 231);
+            this.lblPhone.Location = new System.Drawing.Point(19, 171);
             this.lblPhone.Name = "lblPhone";
             this.lblPhone.Size = new System.Drawing.Size(41, 15);
             this.lblPhone.TabIndex = 7;
             this.lblPhone.Text = "Phone";
+            this.lblPhone.Click += new System.EventHandler(this.lblPhone_Click);
             // 
             // txtPhone
             // 
             this.txtPhone.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.txtPhone.Location = new System.Drawing.Point(22, 251);
+            this.txtPhone.Location = new System.Drawing.Point(22, 191);
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.Size = new System.Drawing.Size(274, 27);
             this.txtPhone.TabIndex = 8;
+            this.txtPhone.TextChanged += new System.EventHandler(this.txtPhone_TextChanged);
             // 
             // lblEmail
             // 
             this.lblEmail.AutoSize = true;
             this.lblEmail.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblEmail.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblEmail.Location = new System.Drawing.Point(19, 286);
+            this.lblEmail.Location = new System.Drawing.Point(19, 226);
             this.lblEmail.Name = "lblEmail";
             this.lblEmail.Size = new System.Drawing.Size(36, 15);
             this.lblEmail.TabIndex = 9;
             this.lblEmail.Text = "Email";
+            this.lblEmail.Click += new System.EventHandler(this.lblEmail_Click);
             // 
             // txtEmail
             // 
             this.txtEmail.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.txtEmail.Location = new System.Drawing.Point(22, 306);
+            this.txtEmail.Location = new System.Drawing.Point(22, 246);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(274, 27);
             this.txtEmail.TabIndex = 10;
+            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
             // 
             // lblSuppliedProducts
             // 
             this.lblSuppliedProducts.AutoSize = true;
             this.lblSuppliedProducts.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblSuppliedProducts.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblSuppliedProducts.Location = new System.Drawing.Point(19, 341);
+            this.lblSuppliedProducts.Location = new System.Drawing.Point(19, 281);
             this.lblSuppliedProducts.Name = "lblSuppliedProducts";
             this.lblSuppliedProducts.Size = new System.Drawing.Size(103, 15);
             this.lblSuppliedProducts.TabIndex = 13;
             this.lblSuppliedProducts.Text = "Supplied Products";
+            this.lblSuppliedProducts.Click += new System.EventHandler(this.lblSuppliedProducts_Click);
             // 
             // clbSuppliedProducts
             // 
@@ -252,17 +228,11 @@ namespace InventoryManagementSystem
             this.clbSuppliedProducts.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.clbSuppliedProducts.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.clbSuppliedProducts.FormattingEnabled = true;
-            this.clbSuppliedProducts.Items.AddRange(new object[] {
-            "Phones",
-            "Laptops",
-            "Printers",
-            "Accessories",
-            "Networking Devices",
-            "Monitors"});
-            this.clbSuppliedProducts.Location = new System.Drawing.Point(22, 361);
+            this.clbSuppliedProducts.Location = new System.Drawing.Point(22, 301);
             this.clbSuppliedProducts.Name = "clbSuppliedProducts";
             this.clbSuppliedProducts.Size = new System.Drawing.Size(274, 92);
             this.clbSuppliedProducts.TabIndex = 14;
+            this.clbSuppliedProducts.SelectedIndexChanged += new System.EventHandler(this.clbSuppliedProducts_SelectedIndexChanged);
             // 
             // chkIsActive
             // 
@@ -271,12 +241,13 @@ namespace InventoryManagementSystem
             this.chkIsActive.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkIsActive.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.chkIsActive.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            this.chkIsActive.Location = new System.Drawing.Point(22, 460);
+            this.chkIsActive.Location = new System.Drawing.Point(22, 400);
             this.chkIsActive.Name = "chkIsActive";
             this.chkIsActive.Size = new System.Drawing.Size(79, 23);
             this.chkIsActive.TabIndex = 15;
             this.chkIsActive.Text = "Is Active";
             this.chkIsActive.UseVisualStyleBackColor = true;
+            this.chkIsActive.CheckedChanged += new System.EventHandler(this.chkIsActive_CheckedChanged);
             // 
             // btnSave
             // 
@@ -286,12 +257,13 @@ namespace InventoryManagementSystem
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSave.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.btnSave.ForeColor = System.Drawing.Color.White;
-            this.btnSave.Location = new System.Drawing.Point(22, 491);
+            this.btnSave.Location = new System.Drawing.Point(22, 431);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(180, 34);
             this.btnSave.TabIndex = 16;
             this.btnSave.Text = "Save Supplier";
             this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click_1);
             // 
             // btnClear
             // 
@@ -301,12 +273,13 @@ namespace InventoryManagementSystem
             this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClear.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.btnClear.ForeColor = System.Drawing.Color.Black;
-            this.btnClear.Location = new System.Drawing.Point(212, 491);
+            this.btnClear.Location = new System.Drawing.Point(212, 431);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(84, 34);
             this.btnClear.TabIndex = 17;
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = false;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click_1);
             // 
             // pnlGridContainer
             // 
@@ -346,7 +319,6 @@ namespace InventoryManagementSystem
             this.dgvSuppliers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvSuppliers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colName,
-            this.colCategory,
             this.colContact,
             this.colPhone,
             this.colEmail,
@@ -373,55 +345,6 @@ namespace InventoryManagementSystem
             this.dgvSuppliers.Size = new System.Drawing.Size(840, 409);
             this.dgvSuppliers.TabIndex = 0;
             this.dgvSuppliers.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSuppliers_CellContentClick);
-            // 
-            // colName
-            // 
-            this.colName.FillWeight = 150F;
-            this.colName.HeaderText = "Supplier Name";
-            this.colName.Name = "colName";
-            this.colName.ReadOnly = true;
-            // 
-            // colCategory
-            // 
-            this.colCategory.FillWeight = 90F;
-            this.colCategory.HeaderText = "Category";
-            this.colCategory.Name = "colCategory";
-            this.colCategory.ReadOnly = true;
-            // 
-            // colContact
-            // 
-            this.colContact.FillWeight = 120F;
-            this.colContact.HeaderText = "Contact Person";
-            this.colContact.Name = "colContact";
-            this.colContact.ReadOnly = true;
-            // 
-            // colPhone
-            // 
-            this.colPhone.FillWeight = 95F;
-            this.colPhone.HeaderText = "Phone";
-            this.colPhone.Name = "colPhone";
-            this.colPhone.ReadOnly = true;
-            // 
-            // colEmail
-            // 
-            this.colEmail.FillWeight = 135F;
-            this.colEmail.HeaderText = "Email";
-            this.colEmail.Name = "colEmail";
-            this.colEmail.ReadOnly = true;
-            // 
-            // colActiveProducts
-            // 
-            this.colActiveProducts.FillWeight = 90F;
-            this.colActiveProducts.HeaderText = "Products";
-            this.colActiveProducts.Name = "colActiveProducts";
-            this.colActiveProducts.ReadOnly = true;
-            // 
-            // colStatus
-            // 
-            this.colStatus.FillWeight = 75F;
-            this.colStatus.HeaderText = "Status";
-            this.colStatus.Name = "colStatus";
-            this.colStatus.ReadOnly = true;
             // 
             // pnlActionButtons
             // 
@@ -509,6 +432,48 @@ namespace InventoryManagementSystem
             this.btnExport.Text = "Export";
             this.btnExport.UseVisualStyleBackColor = false;
             // 
+            // colName
+            // 
+            this.colName.FillWeight = 150F;
+            this.colName.HeaderText = "Supplier Name";
+            this.colName.Name = "colName";
+            this.colName.ReadOnly = true;
+            // 
+            // colContact
+            // 
+            this.colContact.FillWeight = 120F;
+            this.colContact.HeaderText = "Contact Person";
+            this.colContact.Name = "colContact";
+            this.colContact.ReadOnly = true;
+            // 
+            // colPhone
+            // 
+            this.colPhone.FillWeight = 95F;
+            this.colPhone.HeaderText = "Phone";
+            this.colPhone.Name = "colPhone";
+            this.colPhone.ReadOnly = true;
+            // 
+            // colEmail
+            // 
+            this.colEmail.FillWeight = 135F;
+            this.colEmail.HeaderText = "Email";
+            this.colEmail.Name = "colEmail";
+            this.colEmail.ReadOnly = true;
+            // 
+            // colActiveProducts
+            // 
+            this.colActiveProducts.FillWeight = 90F;
+            this.colActiveProducts.HeaderText = "Products";
+            this.colActiveProducts.Name = "colActiveProducts";
+            this.colActiveProducts.ReadOnly = true;
+            // 
+            // colStatus
+            // 
+            this.colStatus.FillWeight = 75F;
+            this.colStatus.HeaderText = "Status";
+            this.colStatus.Name = "colStatus";
+            this.colStatus.ReadOnly = true;
+            // 
             // FrmSupplierManagement
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -543,8 +508,6 @@ namespace InventoryManagementSystem
         private System.Windows.Forms.Label lblFormTitle;
         private System.Windows.Forms.Label lblSupplierName;
         private System.Windows.Forms.TextBox txtSupplierName;
-        private System.Windows.Forms.Label lblCategory;
-        private System.Windows.Forms.ComboBox cmbCategory;
         private System.Windows.Forms.Label lblContactPerson;
         private System.Windows.Forms.TextBox txtContactPerson;
         private System.Windows.Forms.Label lblPhone;
@@ -565,7 +528,6 @@ namespace InventoryManagementSystem
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colCategory;
         private System.Windows.Forms.DataGridViewTextBoxColumn colContact;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPhone;
         private System.Windows.Forms.DataGridViewTextBoxColumn colEmail;

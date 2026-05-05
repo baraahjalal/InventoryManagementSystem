@@ -7,11 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using InventoryManagementSystem.Classes;
 
 namespace InventoryManagementSystem
 {
     public partial class FrmStockIn : Form
     {
+        private readonly ErrorProvider _errorProvider = new ErrorProvider();
         public FrmStockIn()
         {
             InitializeComponent();
@@ -28,33 +30,23 @@ namespace InventoryManagementSystem
 
         public void RefreshData()
         {
-            LoadSuppliers();
             LoadProducts();
             
             if (cmbStorageZone.Items.Count > 0)
                 cmbStorageZone.SelectedIndex = 0;
         }
 
-        private void LoadSuppliers()
-        {
-            var suppliers = MemoryStore.Suppliers.Where(s => s.IsActive).ToList();
-            
-            cmbSupplier.DataSource = null;
-            cmbSupplier.DisplayMember = "Name";
-            cmbSupplier.ValueMember = "Id";
-            cmbSupplier.DataSource = suppliers;
-            cmbSupplier.SelectedIndex = -1;
-        }
-
         private void LoadProducts()
         {
-            var products = MemoryStore.Products.ToList();
+            var productList = MemoryStore.Products.ToList();
             
+            cmbProduct.SelectedIndexChanged -= CmbProduct_SelectedIndexChanged;
             cmbProduct.DataSource = null;
             cmbProduct.DisplayMember = "Name";
             cmbProduct.ValueMember = "Id";
-            cmbProduct.DataSource = products;
+            cmbProduct.DataSource = productList;
             cmbProduct.SelectedIndex = -1;
+            cmbProduct.SelectedIndexChanged += CmbProduct_SelectedIndexChanged;
         }
 
         /// <summary>
@@ -63,6 +55,35 @@ namespace InventoryManagementSystem
         private void CmbProduct_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateSerialPreview();
+            
+            // Reload Storage Zones based on selected product category
+            cmbStorageZone.DataSource = null;
+            if (cmbProduct.SelectedItem is Product product)
+            {
+                var zones = MemoryStore.StorageZones.Where(z => z.TargetCategoryId == product.CategoryId).ToList();
+                cmbStorageZone.DataSource = zones;
+                cmbStorageZone.DisplayMember = "Name";
+                cmbStorageZone.ValueMember = "Id";
+                if (zones.Count > 0)
+                    cmbStorageZone.SelectedIndex = 0;
+
+                LoadSuppliersForProduct(product.Id);
+            }
+        }
+
+        private void LoadSuppliersForProduct(int productId)
+        {
+            var supplierIds = MemoryStore.ProductSuppliers.Where(ps => ps.ProductId == productId).Select(ps => ps.SupplierId).ToList();
+            var suppliers = MemoryStore.Suppliers.Where(s => supplierIds.Contains(s.Id) && s.IsActive).ToList();
+
+            cmbSupplier.DataSource = null;
+            cmbSupplier.DisplayMember = "Name";
+            cmbSupplier.ValueMember = "Id";
+            cmbSupplier.DataSource = suppliers;
+            if (suppliers.Count > 0)
+                cmbSupplier.SelectedIndex = 0;
+            else
+                cmbSupplier.SelectedIndex = -1;
         }
 
         /// <summary>
@@ -109,40 +130,63 @@ namespace InventoryManagementSystem
 
         private void BtnExecute_Click(object sender, EventArgs e)
         {
-            // 1. Validation
+            _errorProvider.Clear();
+            bool isValid = true;
+            string errorMsg;
+
+            // Supplier
             if (cmbSupplier.SelectedValue == null)
-            {
-                MessageBox.Show("Please select a supplier.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            { _errorProvider.SetError(cmbSupplier, "Please select a supplier."); isValid = false; }
+            else
+              _errorProvider.SetError(cmbSupplier, string.Empty);
 
+            // Product
             if (cmbProduct.SelectedValue == null)
-            {
-                MessageBox.Show("Please select a product.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            { _errorProvider.SetError(cmbProduct, "Please select a product."); isValid = false; }
+            else
+              _errorProvider.SetError(cmbProduct, string.Empty);
 
+            // Quantity
             int quantity = (int)numQuantity.Value;
             if (quantity <= 0)
-            {
-                MessageBox.Show("Quantity must be greater than zero.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            { _errorProvider.SetError(numQuantity, "Quantity must be greater than zero."); isValid = false; }
+            else
+              _errorProvider.SetError(numQuantity, string.Empty);
 
-            if (string.IsNullOrWhiteSpace(txtOrderNumber.Text))
+            // Order Number
+            if (!ValidationHelper.IsRequired(txtOrderNumber.Text, out errorMsg))
+            { _errorProvider.SetError(txtOrderNumber, errorMsg); isValid = false; }
+            else if (!ValidationHelper.IsValidLength(txtOrderNumber.Text.Trim(), 2, 50, out errorMsg))
+            { _errorProvider.SetError(txtOrderNumber, errorMsg); isValid = false; }
+            else
+              _errorProvider.SetError(txtOrderNumber, string.Empty);
+
+            // Storage Zone
+            if (cmbStorageZone.SelectedValue == null)
+            { _errorProvider.SetError(cmbStorageZone, "Please resolve missing Storage Zone."); isValid = false; }
+            else
+              _errorProvider.SetError(cmbStorageZone, string.Empty);
+
+            if (!isValid)
             {
-                MessageBox.Show("Please enter a Purchase Order Number.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please correct the highlighted errors before proceeding.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             // 2. Prepare Data
             int productId = (int)cmbProduct.SelectedValue;
-            var product = MemoryStore.Products.FirstOrDefault(p => p.Id == productId);
-            
-            string notes = $"PO: {txtOrderNumber.Text.Trim()} | Zone: {cmbStorageZone.SelectedItem} | Warranty: {txtWarrantyInfo.Text.Trim()}";
+            var product   = MemoryStore.Products.FirstOrDefault(p => p.Id == productId);
+
+            string notes = $"PO: {txtOrderNumber.Text.Trim()} | Zone: {((StorageZone)cmbStorageZone.SelectedItem).Name} | Warranty: {txtWarrantyInfo.Text.Trim()}";
+
+            int? warrantyDuration = null;
+            if (int.TryParse(txtWarrantyInfo.Text.Trim(), out int duration))
+            {
+                warrantyDuration = duration;
+            }
 
             // 3. Execute Business Logic (serial numbers are auto-generated in PerformStockMovement)
-            bool success = MemoryStore.PerformStockMovement(productId, quantity, "STOCK IN", notes);
+            bool success = MemoryStore.PerformStockMovement(productId, quantity, "STOCK IN", notes, null, warrantyDuration);
 
             // 4. Handle Result
             if (success)
@@ -174,7 +218,7 @@ namespace InventoryManagementSystem
             cmbProduct.SelectedIndex = -1;
             txtOrderNumber.Clear();
             numQuantity.Value = 0;
-            if (cmbStorageZone.Items.Count > 0) cmbStorageZone.SelectedIndex = 0;
+            cmbStorageZone.DataSource = null;
             txtSerialNumbers.Clear();
             txtWarrantyInfo.Clear();
         }

@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+using InventoryManagementSystem.Classes;
 
 namespace InventoryManagementSystem.Forms
 {
@@ -12,6 +14,8 @@ namespace InventoryManagementSystem.Forms
 
         // Dictionary to store "Filter Name" -> "List of Filter Values"
         public Dictionary<string, List<string>> CreatedFilters { get; private set; }
+
+        private readonly ErrorProvider _errorProvider = new ErrorProvider();
 
         public FrmAddCategory()
         {
@@ -60,11 +64,22 @@ namespace InventoryManagementSystem.Forms
 
         private void btnAddFilter_Click(object sender, EventArgs e)
         {
-            string fName = txtFilterName.Text.Trim();
+            _errorProvider.Clear();
+            string fName   = txtFilterName.Text.Trim();
             string fValues = txtFilterValues.Text.Trim();
+            bool hasError  = false;
 
-            if (string.IsNullOrWhiteSpace(fName) || fName == "e.g. RAM" ||
-                string.IsNullOrWhiteSpace(fValues) || fValues == "e.g. 8GB, 16GB, 32GB")
+            if (string.IsNullOrWhiteSpace(fName) || fName == "e.g. RAM")
+            { _errorProvider.SetError(txtFilterName, "Filter name is required."); hasError = true; }
+            else
+              _errorProvider.SetError(txtFilterName, string.Empty);
+
+            if (string.IsNullOrWhiteSpace(fValues) || fValues == "e.g. 8GB, 16GB, 32GB")
+            { _errorProvider.SetError(txtFilterValues, "Filter values are required (comma-separated)."); hasError = true; }
+            else
+              _errorProvider.SetError(txtFilterValues, string.Empty);
+
+            if (hasError)
             {
                 MessageBox.Show("Please enter both a valid Filter Name and valid Values.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -75,6 +90,7 @@ namespace InventoryManagementSystem.Forms
             {
                 if (row.Cells["colFilterName"].Value.ToString().Equals(fName, StringComparison.OrdinalIgnoreCase))
                 {
+                    _errorProvider.SetError(txtFilterName, "This filter name is already added.");
                     MessageBox.Show("This filter name is already added.", "Duplicate", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
@@ -84,7 +100,7 @@ namespace InventoryManagementSystem.Forms
             dgvFilters.Rows.Add(fName, fValues);
 
             // Reset Fields
-            txtFilterName.Text = "";
+            txtFilterName.Text  = "";
             txtFilterValues.Text = "";
             SetPlaceholderName(txtFilterName, null);
             SetPlaceholderValues(txtFilterValues, null);
@@ -101,14 +117,29 @@ namespace InventoryManagementSystem.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtCategoryName.Text))
+            _errorProvider.Clear();
+            bool isValid = true;
+            string errorMsg;
+
+            string catName = txtCategoryName.Text.Trim();
+
+            if (!ValidationHelper.IsRequired(catName, out errorMsg))
+            { _errorProvider.SetError(txtCategoryName, errorMsg); isValid = false; }
+            else if (!ValidationHelper.IsValidLength(catName, 2, 50, out errorMsg))
+            { _errorProvider.SetError(txtCategoryName, errorMsg); isValid = false; }
+            ////else if (MemoryStore.CategoryTemplates.Any(t => t.CategoryId.Equals(catName, StringComparison.OrdinalIgnoreCase)))
+            //{ _errorProvider.SetError(txtCategoryName, "A category with this name already exists."); isValid = false; }
+            else
+              _errorProvider.SetError(txtCategoryName, string.Empty);
+
+            if (!isValid)
             {
-                MessageBox.Show("Please enter a category name.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please correct the highlighted errors before saving.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             // Save the data to properties
-            CreatedCategoryName = txtCategoryName.Text.Trim();
+            CreatedCategoryName = catName;
             CreatedFilters.Clear();
 
             foreach (DataGridViewRow row in dgvFilters.Rows)
@@ -118,9 +149,7 @@ namespace InventoryManagementSystem.Forms
 
                 List<string> fValuesList = new List<string>();
                 foreach (var val in fValuesArray)
-                {
                     fValuesList.Add(val.Trim());
-                }
 
                 CreatedFilters.Add(fName, fValuesList);
             }

@@ -99,7 +99,7 @@ namespace InventoryManagementSystem
             var user = MemoryStore.CurrentUser;
             if (user == null || !user.IsAdmin)
             {
-                MessageBox.Show("Access Denied: Only administrators can open User Management.", "Permission Restricted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You do not have permission to access this feature.", "Permission Restricted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -116,7 +116,7 @@ namespace InventoryManagementSystem
             var user = MemoryStore.CurrentUser;
             if (user == null || !user.IsAdmin)
             {
-                MessageBox.Show("Access Denied: Only administrators can view the Audit Log.", "Permission Restricted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You do not have permission to access this feature.", "Permission Restricted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -141,14 +141,7 @@ namespace InventoryManagementSystem
 
         private void ApplyUserPermissions()
         {
-            var user = MemoryStore.CurrentUser;
-            bool isAdmin = user != null && user.IsAdmin;
-
-            // Hide Admin-only sidebar buttons for non-admin users
-            btnUserManagement.Visible = isAdmin;
-            picUserManagement.Visible = isAdmin;
-            btnAuditLog.Visible = isAdmin;
-            picAuditLog.Visible = isAdmin;
+            // All buttons remain visible, authorization check is done on click
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)

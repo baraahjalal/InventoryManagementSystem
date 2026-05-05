@@ -220,10 +220,6 @@ namespace InventoryManagementSystem
             this.cmbStorageZone.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbStorageZone.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbStorageZone.FormattingEnabled = true;
-            this.cmbStorageZone.Items.AddRange(new object[] {
-            "Aisle A-1: Laptops",
-            "Aisle B-2: Phones",
-            "Aisle C-3: Accessories"});
             this.cmbStorageZone.Location = new System.Drawing.Point(440, 218);
             this.cmbStorageZone.Name = "cmbStorageZone";
             this.cmbStorageZone.Size = new System.Drawing.Size(370, 28);

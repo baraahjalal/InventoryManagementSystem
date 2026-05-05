@@ -6,6 +6,12 @@ namespace InventoryManagementSystem
 {
     #region Models
 
+    public class Category
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
     public class User
     {
         public int Id { get; set; }
@@ -26,15 +32,32 @@ namespace InventoryManagementSystem
         public string Phone { get; set; }
         public string Email { get; set; }
         public bool IsActive { get; set; }
-        public string Category { get; set; }
-        public List<string> SuppliedProducts { get; set; } = new List<string>();
+    }
+
+    public class SupplierCategory
+    {
+        public int SupplierId { get; set; }
+        public int CategoryId { get; set; }
+    }
+
+    public class ProductSupplier
+    {
+        public int ProductId { get; set; }
+        public int SupplierId { get; set; }
     }
 
     public class CategoryTemplate
     {
-        public string CategoryName { get; set; }
+        public int CategoryId { get; set; }
         // Key: Filter Name (e.g., "RAM"), Value: Available Options (e.g., ["8GB", "16GB", "32GB"])
         public Dictionary<string, List<string>> AvailableFilters { get; set; } = new Dictionary<string, List<string>>();
+    }
+
+    public class StorageZone
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public int TargetCategoryId { get; set; } // Which category this zone is for
     }
 
     /// <summary>
@@ -54,11 +77,10 @@ namespace InventoryManagementSystem
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Category { get; set; }
+        public int CategoryId { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
         public string SerialNumber { get; set; } // Product-level serial (Primary Serial)
-        public int? SupplierId { get; set; } // Nullable foreign key
 
         // Dynamic specifications to hold varied data (Key = Processor, Value = Apple M3)
         public Dictionary<string, string> Specifications { get; set; } = new Dictionary<string, string>();
@@ -85,6 +107,7 @@ namespace InventoryManagementSystem
         public int? UserId { get; set; }    // Foreign Key
         public string Notes { get; set; }
         public List<string> AffectedItemSerials { get; set; } = new List<string>(); // Track which items were involved
+        public int? WarrantyDurationMonths { get; set; } // Deferred Warranty Activation
     }
 
     public class SystemLog
@@ -105,11 +128,15 @@ namespace InventoryManagementSystem
 
         // Data Tables (Lists)
         public static List<User> Users { get; private set; } = new List<User>();
+        public static List<Category> Categories { get; private set; } = new List<Category>();
         public static List<Supplier> Suppliers { get; private set; } = new List<Supplier>();
         public static List<Product> Products { get; private set; } = new List<Product>();
         public static List<ProductItem> ProductItems { get; private set; } = new List<ProductItem>();
         public static List<StockMovement> StockMovements { get; private set; } = new List<StockMovement>();
         public static List<SystemLog> AuditLogs { get; private set; } = new List<SystemLog>();
+        public static List<StorageZone> StorageZones { get; private set; } = new List<StorageZone>();
+        public static List<ProductSupplier> ProductSuppliers { get; private set; } = new List<ProductSupplier>();
+        public static List<SupplierCategory> SupplierCategories { get; private set; } = new List<SupplierCategory>();
 
         // Store Category Templates
         public static List<CategoryTemplate> CategoryTemplates { get; private set; } = new List<CategoryTemplate>();
@@ -188,7 +215,7 @@ namespace InventoryManagementSystem
         /// For STOCK IN: automatically generates item-level serial numbers.
         /// For STOCK OUT: marks specified items as dispatched.
         /// </summary>
-        public static bool PerformStockMovement(int productId, int quantityChange, string movementType, string notes = "", List<string> selectedItemSerials = null)
+        public static bool PerformStockMovement(int productId, int quantityChange, string movementType, string notes = "", List<string> selectedItemSerials = null, int? warrantyDurationMonths = null)
         {
             var product = Products.FirstOrDefault(p => p.Id == productId);
             if (product == null) return false;
@@ -272,7 +299,8 @@ namespace InventoryManagementSystem
                 Timestamp = DateTime.Now,
                 UserId = CurrentUser?.Id,
                 Notes = notes,
-                AffectedItemSerials = affectedSerials
+                AffectedItemSerials = affectedSerials,
+                WarrantyDurationMonths = warrantyDurationMonths
             });
 
             LogAction(movementType, $"Product '{product.Name}' {(quantityChange > 0 ? "increased" : "decreased")} by {Math.Abs(quantityChange)}. Items: [{string.Join(", ", affectedSerials.Take(5))}{(affectedSerials.Count > 5 ? "..." : "")}]");
@@ -284,39 +312,59 @@ namespace InventoryManagementSystem
         #region Seed Initial Data
         private static void SeedData()
         {
+            // Seed Categories
+            Categories.AddRange(new[]
+            {
+                new Category { Id = 1, Name = "Laptops" },
+                new Category { Id = 2, Name = "Phones" },
+                new Category { Id = 3, Name = "Printers" },
+                new Category { Id = 4, Name = "Monitors" },
+                new Category { Id = 5, Name = "Accessories" }
+            });
+
+            // Seed Storage Zones
+            StorageZones.AddRange(new[]
+            {
+                new StorageZone { Id = 1, Name = "Aisle A-1: Laptops", TargetCategoryId = 1 }, // Laptops
+                new StorageZone { Id = 2, Name = "Aisle B-2: Phones", TargetCategoryId = 2 }, // Phones
+                new StorageZone { Id = 3, Name = "Aisle C-3: Accessories", TargetCategoryId = 5 }, // Accessories
+                new StorageZone { Id = 4, Name = "Aisle D-4: Printers", TargetCategoryId = 3 }, // Printers
+                new StorageZone { Id = 5, Name = "Aisle E-5: Monitors", TargetCategoryId = 4 }  // Monitors
+            });
+
             // Seed Templates
             CategoryTemplates.AddRange(new[]
             {
                 new CategoryTemplate {
-                    CategoryName = "Laptops",
+                    CategoryId = 1, // Laptops
                     AvailableFilters = new Dictionary<string, List<string>> {
                         { "Processor", new List<string> { "Apple M3", "Apple M2", "Intel Core i7", "Intel Core i9", "AMD Ryzen 7", "AMD Ryzen 9" } },
                         { "RAM", new List<string> { "8GB", "16GB", "32GB", "64GB" } }
                     }
                 },
                 new CategoryTemplate {
-                    CategoryName = "Phones",
+                    CategoryId = 2, // Phones
                     AvailableFilters = new Dictionary<string, List<string>> {
                         { "Storage", new List<string> { "128GB", "256GB", "512GB", "1TB" } },
                         { "Color", new List<string> { "Space Black", "Titanium", "Silver", "Phantom Black", "Cream" } }
                     }
                 },
                 new CategoryTemplate {
-                    CategoryName = "Printers",
+                    CategoryId = 3, // Printers
                     AvailableFilters = new Dictionary<string, List<string>> {
                         { "Type", new List<string> { "Laser", "Inkjet", "Thermal" } },
                         { "Color Support", new List<string> { "Monochrome", "Color" } }
                     }
                 },
                 new CategoryTemplate {
-                    CategoryName = "Monitors",
+                    CategoryId = 4, // Monitors
                     AvailableFilters = new Dictionary<string, List<string>> {
                         { "Resolution", new List<string> { "1080p", "1440p", "4K", "8K" } },
                         { "Panel Type", new List<string> { "IPS", "VA", "OLED", "TN" } }
                     }
                 },
                 new CategoryTemplate {
-                    CategoryName = "Accessories",
+                    CategoryId = 5, // Accessories
                     AvailableFilters = new Dictionary<string, List<string>> {
                         { "Type", new List<string> { "Mouse", "Keyboard", "Headset", "Webcam" } },
                         { "Connection", new List<string> { "Wireless", "Wired", "Bluetooth" } }
@@ -338,27 +386,63 @@ namespace InventoryManagementSystem
             // Seed Suppliers (Address removed)
             Suppliers.AddRange(new[]
             {
-                new Supplier { Id = 1, Name = "TechSource Inc.", ContactPerson = "Arthur Morgan", Phone = "555-0101", Email = "arthur@techsource.com", IsActive = true, Category = "Distributor", SuppliedProducts = new List<string> { "Laptops", "Accessories" } },
-                new Supplier { Id = 2, Name = "Global Electronics", ContactPerson = "Harvey Specter", Phone = "555-0202", Email = "harvey@globalelec.com", IsActive = true, Category = "Manufacturer", SuppliedProducts = new List<string> { "Phones", "Monitors" } },
+                new Supplier { Id = 1, Name = "TechSource Inc.", ContactPerson = "Arthur Morgan", Phone = "555-0101", Email = "arthur@techsource.com", IsActive = true },
+                new Supplier { Id = 2, Name = "Global Electronics", ContactPerson = "Harvey Specter", Phone = "555-0202", Email = "harvey@globalelec.com", IsActive = true },
+                new Supplier { Id = 3, Name = "Office Depot", ContactPerson = "Michael Scott", Phone = "555-0303", Email = "michael@officedepot.com", IsActive = true },
+                new Supplier { Id = 4, Name = "Mega Traders", ContactPerson = "Dwight Schrute", Phone = "555-0404", Email = "dwight@megatraders.com", IsActive = true },
+                new Supplier { Id = 5, Name = "Samsung Electronics", ContactPerson = "John Doe", Phone = "555-0505", Email = "john@samsung.com", IsActive = true },
+            });
+
+            SupplierCategories.AddRange(new[]
+            {
+                new SupplierCategory { SupplierId = 1, CategoryId = 1 }, // Laptops
+                new SupplierCategory { SupplierId = 1, CategoryId = 5 }, // Accessories
+                new SupplierCategory { SupplierId = 2, CategoryId = 2 }, // Phones
+                new SupplierCategory { SupplierId = 2, CategoryId = 4 }, // Monitors
+                new SupplierCategory { SupplierId = 3, CategoryId = 3 }, // Printers
+                new SupplierCategory { SupplierId = 3, CategoryId = 4 }, // Monitors
+                new SupplierCategory { SupplierId = 5, CategoryId = 2 }, // Phones
+                new SupplierCategory { SupplierId = 5, CategoryId = 4 }  // Monitors
             });
 
             // Seed Products
             Products.AddRange(new[]
             {
-                new Product { Id = 101, Name = "MacBook Pro 14\" M3", Category = "Laptops", Quantity = 24, Price = 1999m, SerialNumber = "APP-MBP-2023", SupplierId = 1, Specifications = new Dictionary<string, string> { { "Processor", "Apple M3" }, { "RAM", "16GB" } } },
-                new Product { Id = 102, Name = "iPhone 15 Pro Max", Category = "Phones", Quantity = 8, Price = 1199m, SerialNumber = "APP-IPH-2023", SupplierId = 2, Specifications = new Dictionary<string, string> { { "Storage", "256GB" }, { "Color", "Titanium" } } },
-                new Product { Id = 103, Name = "Samsung Galaxy S24 Ultra", Category = "Phones", Quantity = 15, Price = 1299m, SerialNumber = "SAM-S24U-001", SupplierId = 5, Specifications = new Dictionary<string, string> { { "Storage", "512GB" }, { "Color", "Phantom Black" } } },
-                new Product { Id = 104, Name = "HP LaserJet Pro", Category = "Printers", Quantity = 0, Price = 450m, SerialNumber = "PRN-HP-2024", SupplierId = 1, Specifications = new Dictionary<string, string> { { "Type", "Laser" }, { "Color Support", "Monochrome" } } },
-                new Product { Id = 105, Name = "Dell XPS 15", Category = "Laptops", Quantity = 12, Price = 1750m, SerialNumber = "DEL-XPS-1590", SupplierId = 5, Specifications = new Dictionary<string, string> { { "Processor", "Intel Core i7" }, { "RAM", "32GB" } } },
-                new Product { Id = 106, Name = "Lenovo ThinkPad X1 Carbon", Category = "Laptops", Quantity = 5, Price = 1600m, SerialNumber = "LEN-TPX1-G10", SupplierId = 1, Specifications = new Dictionary<string, string> { { "Processor", "Intel Core i7" }, { "RAM", "16GB" } } },
-                new Product { Id = 107, Name = "LG UltraGear 27\"", Category = "Monitors", Quantity = 30, Price = 350m, SerialNumber = "MON-LG-27GN", SupplierId = 3, Specifications = new Dictionary<string, string> { { "Resolution", "1440p" }, { "Panel Type", "IPS" } } },
-                new Product { Id = 108, Name = "Dell UltraSharp 32\"", Category = "Monitors", Quantity = 10, Price = 750m, SerialNumber = "MON-DEL-U32", SupplierId = 5, Specifications = new Dictionary<string, string> { { "Resolution", "4K" }, { "Panel Type", "IPS" } } },
-                new Product { Id = 109, Name = "Logitech MX Master 3S", Category = "Accessories", Quantity = 50, Price = 99m, SerialNumber = "ACC-LOG-MX3S", SupplierId = 1, Specifications = new Dictionary<string, string> { { "Type", "Mouse" }, { "Connection", "Wireless" } } },
-                new Product { Id = 110, Name = "Keychron K8 Pro", Category = "Accessories", Quantity = 20, Price = 110m, SerialNumber = "ACC-KEY-K8P", SupplierId = 1, Specifications = new Dictionary<string, string> { { "Type", "Keyboard" }, { "Connection", "Bluetooth" } } },
-                new Product { Id = 111, Name = "Epson EcoTank L3250", Category = "Printers", Quantity = 18, Price = 220m, SerialNumber = "PRN-EPS-L3250", SupplierId = 3, Specifications = new Dictionary<string, string> { { "Type", "Inkjet" }, { "Color Support", "Color" } } },
-                new Product { Id = 112, Name = "Google Pixel 8 Pro", Category = "Phones", Quantity = 7, Price = 999m, SerialNumber = "GOO-PIX8-PRO", SupplierId = 2, Specifications = new Dictionary<string, string> { { "Storage", "256GB" }, { "Color", "Silver" } } },
-                new Product { Id = 113, Name = "MacBook Air M2", Category = "Laptops", Quantity = 40, Price = 1099m, SerialNumber = "APP-MBA-2022", SupplierId = 1, Specifications = new Dictionary<string, string> { { "Processor", "Apple M2" }, { "RAM", "8GB" } } },
-                new Product { Id = 114, Name = "Samsung Odyssey G9 49\"", Category = "Monitors", Quantity = 2, Price = 1499m, SerialNumber = "MON-SAM-G9", SupplierId = 2, Specifications = new Dictionary<string, string> { { "Resolution", "1440p" }, { "Panel Type", "OLED" } } }
+                new Product { Id = 101, Name = "MacBook Pro 14\" M3", CategoryId = 1, Quantity = 24, Price = 1999m, SerialNumber = "APP-MBP-2023", Specifications = new Dictionary<string, string> { { "Processor", "Apple M3" }, { "RAM", "16GB" } } },
+                new Product { Id = 102, Name = "iPhone 15 Pro Max", CategoryId = 2, Quantity = 8, Price = 1199m, SerialNumber = "APP-IPH-2023", Specifications = new Dictionary<string, string> { { "Storage", "256GB" }, { "Color", "Titanium" } } },
+                new Product { Id = 103, Name = "Samsung Galaxy S24 Ultra", CategoryId = 2, Quantity = 15, Price = 1299m, SerialNumber = "SAM-S24U-001", Specifications = new Dictionary<string, string> { { "Storage", "512GB" }, { "Color", "Phantom Black" } } },
+                new Product { Id = 104, Name = "HP LaserJet Pro", CategoryId = 3, Quantity = 0, Price = 450m, SerialNumber = "PRN-HP-2024", Specifications = new Dictionary<string, string> { { "Type", "Laser" }, { "Color Support", "Monochrome" } } },
+                new Product { Id = 105, Name = "Dell XPS 15", CategoryId = 1, Quantity = 12, Price = 1750m, SerialNumber = "DEL-XPS-1590", Specifications = new Dictionary<string, string> { { "Processor", "Intel Core i7" }, { "RAM", "32GB" } } },
+                new Product { Id = 106, Name = "Lenovo ThinkPad X1 Carbon", CategoryId = 1, Quantity = 5, Price = 1600m, SerialNumber = "LEN-TPX1-G10", Specifications = new Dictionary<string, string> { { "Processor", "Intel Core i7" }, { "RAM", "16GB" } } },
+                new Product { Id = 107, Name = "LG UltraGear 27\"", CategoryId = 4, Quantity = 30, Price = 350m, SerialNumber = "MON-LG-27GN", Specifications = new Dictionary<string, string> { { "Resolution", "1440p" }, { "Panel Type", "IPS" } } },
+                new Product { Id = 108, Name = "Dell UltraSharp 32\"", CategoryId = 4, Quantity = 10, Price = 750m, SerialNumber = "MON-DEL-U32", Specifications = new Dictionary<string, string> { { "Resolution", "4K" }, { "Panel Type", "IPS" } } },
+                new Product { Id = 109, Name = "Logitech MX Master 3S", CategoryId = 5, Quantity = 50, Price = 99m, SerialNumber = "ACC-LOG-MX3S", Specifications = new Dictionary<string, string> { { "Type", "Mouse" }, { "Connection", "Wireless" } } },
+                new Product { Id = 110, Name = "Keychron K8 Pro", CategoryId = 5, Quantity = 20, Price = 110m, SerialNumber = "ACC-KEY-K8P", Specifications = new Dictionary<string, string> { { "Type", "Keyboard" }, { "Connection", "Bluetooth" } } },
+                new Product { Id = 111, Name = "Epson EcoTank L3250", CategoryId = 3, Quantity = 18, Price = 220m, SerialNumber = "PRN-EPS-L3250", Specifications = new Dictionary<string, string> { { "Type", "Inkjet" }, { "Color Support", "Color" } } },
+                new Product { Id = 112, Name = "Google Pixel 8 Pro", CategoryId = 2, Quantity = 7, Price = 999m, SerialNumber = "GOO-PIX8-PRO", Specifications = new Dictionary<string, string> { { "Storage", "256GB" }, { "Color", "Silver" } } },
+                new Product { Id = 113, Name = "MacBook Air M2", CategoryId = 1, Quantity = 40, Price = 1099m, SerialNumber = "APP-MBA-2022", Specifications = new Dictionary<string, string> { { "Processor", "Apple M2" }, { "RAM", "8GB" } } },
+                new Product { Id = 114, Name = "Samsung Odyssey G9 49\"", CategoryId = 4, Quantity = 2, Price = 1499m, SerialNumber = "MON-SAM-G9", Specifications = new Dictionary<string, string> { { "Resolution", "1440p" }, { "Panel Type", "OLED" } } }
+            });
+
+            ProductSuppliers.AddRange(new[]
+            {
+                new ProductSupplier { ProductId = 101, SupplierId = 1 },
+                new ProductSupplier { ProductId = 102, SupplierId = 2 },
+                new ProductSupplier { ProductId = 103, SupplierId = 5 },
+                new ProductSupplier { ProductId = 104, SupplierId = 1 },
+                new ProductSupplier { ProductId = 104, SupplierId = 3 },
+                new ProductSupplier { ProductId = 105, SupplierId = 1 },
+                new ProductSupplier { ProductId = 105, SupplierId = 5 },
+                new ProductSupplier { ProductId = 106, SupplierId = 1 },
+                new ProductSupplier { ProductId = 107, SupplierId = 3 },
+                new ProductSupplier { ProductId = 108, SupplierId = 5 },
+                new ProductSupplier { ProductId = 109, SupplierId = 1 },
+                new ProductSupplier { ProductId = 110, SupplierId = 1 },
+                new ProductSupplier { ProductId = 111, SupplierId = 3 },
+                new ProductSupplier { ProductId = 112, SupplierId = 2 },
+                new ProductSupplier { ProductId = 113, SupplierId = 1 },
+                new ProductSupplier { ProductId = 114, SupplierId = 2 },
+                new ProductSupplier { ProductId = 114, SupplierId = 5 }
             });
 
             // Seed Product Items (item-level serial numbers for existing stock)

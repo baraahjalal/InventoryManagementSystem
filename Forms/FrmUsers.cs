@@ -2,12 +2,14 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using InventoryManagementSystem.Classes;
 
 namespace InventoryManagementSystem
 {
     public partial class FrmUsers : Form
     {
         private int _selectedUserId = -1;
+        private readonly ErrorProvider _errorProvider = new ErrorProvider();
 
         public FrmUsers()
         {
@@ -251,28 +253,36 @@ namespace InventoryManagementSystem
 
         private bool ValidateInputs()
         {
-            if (string.IsNullOrWhiteSpace(txtUserName.Text))
-            {
-                MessageBox.Show("Username cannot be empty.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtUserName.Focus();
-                return false;
-            }
+            _errorProvider.Clear();
+            bool isValid = true;
+            string errorMsg;
 
-            if (string.IsNullOrWhiteSpace(txtUserPassword.Text))
-            {
-                MessageBox.Show("Password cannot be empty.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtUserPassword.Focus();
-                return false;
-            }
+            // Username: required + length 3–30
+            if (!ValidationHelper.IsRequired(txtUserName.Text, out errorMsg))
+            { _errorProvider.SetError(txtUserName, errorMsg); isValid = false; }
+            else if (!ValidationHelper.IsValidLength(txtUserName.Text.Trim(), 3, 30, out errorMsg))
+            { _errorProvider.SetError(txtUserName, errorMsg); isValid = false; }
+            else
+              _errorProvider.SetError(txtUserName, string.Empty);
 
+            // Password: required + length 6–50
+            if (!ValidationHelper.IsRequired(txtUserPassword.Text, out errorMsg))
+            { _errorProvider.SetError(txtUserPassword, errorMsg); isValid = false; }
+            else if (!ValidationHelper.IsValidLength(txtUserPassword.Text, 6, 50, out errorMsg))
+            { _errorProvider.SetError(txtUserPassword, errorMsg); isValid = false; }
+            else
+              _errorProvider.SetError(txtUserPassword, string.Empty);
+
+            // Role
             if (cmbRole.SelectedIndex == -1)
-            {
-                MessageBox.Show("Please select a system role.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cmbRole.Focus();
-                return false;
-            }
+            { _errorProvider.SetError(cmbRole, "Please select a system role."); isValid = false; }
+            else
+              _errorProvider.SetError(cmbRole, string.Empty);
 
-            return true;
+            if (!isValid)
+                MessageBox.Show("Please correct the highlighted errors before saving.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            return isValid;
         }
     }
 }

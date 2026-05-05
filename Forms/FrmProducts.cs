@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using InventoryManagementSystem.Classes;
 
 namespace InventoryManagementSystem
 {
@@ -10,6 +11,7 @@ namespace InventoryManagementSystem
     {
         private List<Product> _allProducts;
         private Product _selectedProduct;
+        private readonly ErrorProvider _errorProvider = new ErrorProvider();
 
         // Holds our newly created dynamic combos mapped to their filter name
         private Dictionary<string, ComboBox> _dynamicFilters = new Dictionary<string, ComboBox>();
@@ -80,31 +82,40 @@ namespace InventoryManagementSystem
         private void FrmProducts_Load(object sender, EventArgs e)
         {
             // Load Dynamic Categories
-            cmbCategory.Items.Clear();
-            cmbCategory.Items.Add("All Categories");
-            foreach (var template in MemoryStore.CategoryTemplates)
-            {
-                cmbCategory.Items.Add(template.CategoryName);
-            }
+            var categories = new List<Category>();
+            categories.Add(new Category { Id = 0, Name = "All Categories" });
+            categories.AddRange(MemoryStore.Categories);
+            
+            cmbCategory.DataSource = categories;
+            cmbCategory.DisplayMember = "Name";
+            cmbCategory.ValueMember = "Id";
 
             if (cmbCategory.Items.Count > 0)
                 cmbCategory.SelectedIndex = 0; // Default to "All Categories"
+
+            // KeyPress restriction on price edit field
+            txtProdPrice.KeyPress += ValidationHelper.AllowOnlyDecimals;
 
             RefreshData();
         }
 
         private void CmbCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GenerateDynamicFilters(cmbCategory.SelectedItem?.ToString());
-            ApplyFilters();
+            if (cmbCategory.SelectedItem is Category selectedCat)
+            {
+                GenerateDynamicFilters(selectedCat.Id);
+                ApplyFilters();
+            }
         }
 
-        private void GenerateDynamicFilters(string selectedCategory)
+        private void GenerateDynamicFilters(int categoryId)
         {
             _flpDynamicFilters.Controls.Clear();
             _dynamicFilters.Clear();
 
-            var template = MemoryStore.CategoryTemplates.FirstOrDefault(t => t.CategoryName == selectedCategory);
+            if (categoryId == 0) return; // "All Categories" or category without filters
+
+            var template = MemoryStore.CategoryTemplates.FirstOrDefault(t => t.CategoryId == categoryId);
 
             if (template == null) return; // "All Categories" or category without filters
 
@@ -156,7 +167,7 @@ namespace InventoryManagementSystem
                 // Reset flag so subsequent refreshes behave normally
                 ShowLowStockFilter = false;
                 cmbCategory.SelectedIndex = 0; // set category to All to avoid hiding items
-                GenerateDynamicFilters(null);
+                GenerateDynamicFilters(0);
             }
 
             // If this form was requested to force showing all products, ignore other filters
@@ -165,7 +176,7 @@ namespace InventoryManagementSystem
                 // Ensure category is set to All and dynamic filters cleared so all products are visible
                 ForceShowAll = false; // reset immediately
                 if (cmbCategory.Items.Count > 0) cmbCategory.SelectedIndex = 0;
-                GenerateDynamicFilters(null);
+                GenerateDynamicFilters(0);
                 // _allProducts already contains full list from MemoryStore
             }
 
@@ -187,10 +198,13 @@ namespace InventoryManagementSystem
             var filteredList = _allProducts.AsEnumerable();
 
             // 1. Static Category Filter
-            string selectedCategory = cmbCategory.SelectedItem?.ToString();
-            if (!string.IsNullOrEmpty(selectedCategory) && selectedCategory != "All Categories")
+            int selectedCategoryId = 0;
+            if (cmbCategory.SelectedItem is Category cat)
+                selectedCategoryId = cat.Id;
+
+            if (selectedCategoryId != 0)
             {
-                filteredList = filteredList.Where(p => p.Category.Equals(selectedCategory, StringComparison.OrdinalIgnoreCase));
+                filteredList = filteredList.Where(p => p.CategoryId == selectedCategoryId);
             }
 
             // 2. Dynamic Attribute Filters
@@ -230,7 +244,7 @@ namespace InventoryManagementSystem
                 dgvProducts.Rows.Add(
                     product.Id.ToString(),
                     product.Name,
-                    product.Category,
+                    MemoryStore.Categories.FirstOrDefault(c => c.Id == product.CategoryId)?.Name ?? "Unknown",
                     product.Quantity.ToString(),
                     $"${product.Price:0.00}",
                     product.Status
@@ -275,9 +289,12 @@ namespace InventoryManagementSystem
                 var allItems = MemoryStore.ProductItems.Where(pi => pi.ProductId == _selectedProduct.Id).ToList();
 
                 var sb = new System.Text.StringBuilder();
-                sb.AppendLine($"Category: {_selectedProduct.Category}");
+                var categoryName = MemoryStore.Categories.FirstOrDefault(c => c.Id == _selectedProduct.CategoryId)?.Name ?? "Unknown";
+                sb.AppendLine($"Category: {categoryName}");
                 sb.AppendLine($"Product Serial: {_selectedProduct.SerialNumber}");
-                sb.AppendLine($"Supplier ID: {_selectedProduct.SupplierId}");
+                var supplierIds = MemoryStore.ProductSuppliers.Where(ps => ps.ProductId == _selectedProduct.Id).Select(ps => ps.SupplierId).ToList();
+                var suppliers = MemoryStore.Suppliers.Where(s => supplierIds.Contains(s.Id)).Select(s => s.Name).ToList();
+                sb.AppendLine($"Suppliers: {(suppliers.Count > 0 ? string.Join(", ", suppliers) : "None")}");
                 sb.AppendLine();
                 sb.AppendLine(specDisplay);
                 sb.AppendLine();
@@ -317,21 +334,35 @@ namespace InventoryManagementSystem
         {
             if (_selectedProduct == null) return;
 
-            // Simple validation
-            if (string.IsNullOrWhiteSpace(txtProdName.Text))
-            {
-                MessageBox.Show("Product Name cannot be empty.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            _errorProvider.Clear();
+            bool isValid = true;
+            string errorMsg;
 
-            if (!decimal.TryParse(txtProdPrice.Text, out decimal newPrice))
+            string nameText = txtProdName.Text.Trim();
+            if (!ValidationHelper.IsRequired(nameText, out errorMsg))
+            { _errorProvider.SetError(txtProdName, errorMsg); isValid = false; }
+            else if (!ValidationHelper.IsValidLength(nameText, 2, 100, out errorMsg))
+            { _errorProvider.SetError(txtProdName, errorMsg); isValid = false; }
+            else
+              _errorProvider.SetError(txtProdName, string.Empty);
+
+            decimal newPrice = 0;
+            string priceText = txtProdPrice.Text.Trim();
+            if (!ValidationHelper.IsRequired(priceText, out errorMsg))
+            { _errorProvider.SetError(txtProdPrice, errorMsg); isValid = false; }
+            else if (!ValidationHelper.IsValidDecimal(priceText, out errorMsg))
+            { _errorProvider.SetError(txtProdPrice, errorMsg); isValid = false; }
+            else
+            { newPrice = decimal.Parse(priceText); _errorProvider.SetError(txtProdPrice, string.Empty); }
+
+            if (!isValid)
             {
-                MessageBox.Show("Please enter a valid price.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please correct the highlighted errors before saving.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             // Update in MemoryStore
-            _selectedProduct.Name = txtProdName.Text.Trim();
+            _selectedProduct.Name  = nameText;
             _selectedProduct.Price = newPrice;
 
             MemoryStore.LogAction("PRODUCT UPDATED", $"Details updated for Product ID {_selectedProduct.Id} - {_selectedProduct.Name}.");
@@ -356,20 +387,23 @@ namespace InventoryManagementSystem
                     string newCategory = frmAdd.CreatedCategoryName;
                     var newFilters = frmAdd.CreatedFilters;
 
-                    // Add template to memory store if it doesn't exist
-                    if (!MemoryStore.CategoryTemplates.Any(t => t.CategoryName.Equals(newCategory, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        MemoryStore.CategoryTemplates.Add(new CategoryTemplate
-                        {
-                            CategoryName = newCategory,
-                            AvailableFilters = newFilters
-                        });
-                    }
+                    // Add to Categories
+                    var catId = MemoryStore.Categories.Count > 0 ? MemoryStore.Categories.Max(c => c.Id) + 1 : 1;
+                    var cat = new Category { Id = catId, Name = newCategory };
+                    MemoryStore.Categories.Add(cat);
 
-                    if (!cmbCategory.Items.Contains(newCategory))
+                    // Add template to memory store
+                    MemoryStore.CategoryTemplates.Add(new CategoryTemplate
                     {
-                        cmbCategory.Items.Add(newCategory);
-                    }
+                        CategoryId = catId,
+                        AvailableFilters = newFilters
+                    });
+
+                    // Refresh binding
+                    var categories = new List<Category>();
+                    categories.Add(new Category { Id = 0, Name = "All Categories" });
+                    categories.AddRange(MemoryStore.Categories);
+                    cmbCategory.DataSource = categories;
 
                     MessageBox.Show($"Category '{newCategory}' with {newFilters.Count} filters added successfully.", "Add Category", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

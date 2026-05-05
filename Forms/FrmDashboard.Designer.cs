@@ -32,9 +32,13 @@
             this.Timestamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Operator = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblRecentMovements = new System.Windows.Forms.Label();
+            this.pnlHeader = new System.Windows.Forms.Panel();
+            this.lblTitle = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.pnlTotalProducts.SuspendLayout();
             this.pnlLowStock.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecentActions)).BeginInit();
+            this.pnlHeader.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblMainTitle
@@ -44,7 +48,7 @@
             this.lblMainTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.lblMainTitle.Location = new System.Drawing.Point(40, 30);
             this.lblMainTitle.Name = "lblMainTitle";
-            this.lblMainTitle.Size = new System.Drawing.Size(229, 54);
+            this.lblMainTitle.Size = new System.Drawing.Size(184, 45);
             this.lblMainTitle.TabIndex = 0;
             this.lblMainTitle.Text = "Dashboard";
             // 
@@ -55,7 +59,7 @@
             this.lblSubTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblSubTitle.Location = new System.Drawing.Point(44, 78);
             this.lblSubTitle.Name = "lblSubTitle";
-            this.lblSubTitle.Size = new System.Drawing.Size(324, 25);
+            this.lblSubTitle.Size = new System.Drawing.Size(251, 20);
             this.lblSubTitle.TabIndex = 1;
             this.lblSubTitle.Text = "Overview of current inventory health.";
             // 
@@ -65,7 +69,7 @@
             this.pnlTotalProducts.Controls.Add(this.lblTotalDesc);
             this.pnlTotalProducts.Controls.Add(this.lblTotalNum);
             this.pnlTotalProducts.Controls.Add(this.lblTotalTitle);
-            this.pnlTotalProducts.Location = new System.Drawing.Point(48, 120);
+            this.pnlTotalProducts.Location = new System.Drawing.Point(48, 135);
             this.pnlTotalProducts.Name = "pnlTotalProducts";
             this.pnlTotalProducts.Size = new System.Drawing.Size(320, 160);
             this.pnlTotalProducts.TabIndex = 2;
@@ -78,7 +82,7 @@
             this.lblTotalDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(120)))), ((int)(((byte)(120)))), ((int)(((byte)(120)))));
             this.lblTotalDesc.Location = new System.Drawing.Point(22, 115);
             this.lblTotalDesc.Name = "lblTotalDesc";
-            this.lblTotalDesc.Size = new System.Drawing.Size(165, 23);
+            this.lblTotalDesc.Size = new System.Drawing.Size(125, 17);
             this.lblTotalDesc.TabIndex = 2;
             this.lblTotalDesc.Text = "Active items in stock";
             // 
@@ -89,7 +93,7 @@
             this.lblTotalNum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.lblTotalNum.Location = new System.Drawing.Point(13, 45);
             this.lblTotalNum.Name = "lblTotalNum";
-            this.lblTotalNum.Size = new System.Drawing.Size(191, 81);
+            this.lblTotalNum.Size = new System.Drawing.Size(153, 65);
             this.lblTotalNum.TabIndex = 0;
             this.lblTotalNum.Text = "1,284";
             // 
@@ -100,7 +104,7 @@
             this.lblTotalTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.lblTotalTitle.Location = new System.Drawing.Point(20, 20);
             this.lblTotalTitle.Name = "lblTotalTitle";
-            this.lblTotalTitle.Size = new System.Drawing.Size(141, 28);
+            this.lblTotalTitle.Size = new System.Drawing.Size(114, 21);
             this.lblTotalTitle.TabIndex = 1;
             this.lblTotalTitle.Text = "Total Products";
             // 
@@ -110,7 +114,7 @@
             this.pnlLowStock.Controls.Add(this.lblLowStockDesc);
             this.pnlLowStock.Controls.Add(this.lblLowStockNum);
             this.pnlLowStock.Controls.Add(this.lblLowStockTitle);
-            this.pnlLowStock.Location = new System.Drawing.Point(398, 120);
+            this.pnlLowStock.Location = new System.Drawing.Point(398, 135);
             this.pnlLowStock.Name = "pnlLowStock";
             this.pnlLowStock.Size = new System.Drawing.Size(320, 160);
             this.pnlLowStock.TabIndex = 3;
@@ -122,7 +126,7 @@
             this.lblLowStockDesc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(180)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
             this.lblLowStockDesc.Location = new System.Drawing.Point(22, 115);
             this.lblLowStockDesc.Name = "lblLowStockDesc";
-            this.lblLowStockDesc.Size = new System.Drawing.Size(198, 23);
+            this.lblLowStockDesc.Size = new System.Drawing.Size(153, 17);
             this.lblLowStockDesc.TabIndex = 2;
             this.lblLowStockDesc.Text = "Requires immediate refill";
             // 
@@ -133,7 +137,7 @@
             this.lblLowStockNum.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.lblLowStockNum.Location = new System.Drawing.Point(13, 45);
             this.lblLowStockNum.Name = "lblLowStockNum";
-            this.lblLowStockNum.Size = new System.Drawing.Size(105, 81);
+            this.lblLowStockNum.Size = new System.Drawing.Size(84, 65);
             this.lblLowStockNum.TabIndex = 0;
             this.lblLowStockNum.Text = "18";
             // 
@@ -144,7 +148,7 @@
             this.lblLowStockTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.lblLowStockTitle.Location = new System.Drawing.Point(20, 20);
             this.lblLowStockTitle.Name = "lblLowStockTitle";
-            this.lblLowStockTitle.Size = new System.Drawing.Size(165, 28);
+            this.lblLowStockTitle.Size = new System.Drawing.Size(134, 21);
             this.lblLowStockTitle.TabIndex = 1;
             this.lblLowStockTitle.Text = "Low-Stock Alerts";
             // 
@@ -259,14 +263,48 @@
             this.lblRecentMovements.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
             this.lblRecentMovements.Location = new System.Drawing.Point(43, 310);
             this.lblRecentMovements.Name = "lblRecentMovements";
-            this.lblRecentMovements.Size = new System.Drawing.Size(289, 32);
+            this.lblRecentMovements.Size = new System.Drawing.Size(228, 25);
             this.lblRecentMovements.TabIndex = 4;
             this.lblRecentMovements.Text = "Recent Stock Movements";
+            // 
+            // pnlHeader
+            // 
+            this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.pnlHeader.Controls.Add(this.lblTitle);
+            this.pnlHeader.Controls.Add(this.label1);
+            this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlHeader.Location = new System.Drawing.Point(0, 0);
+            this.pnlHeader.Name = "pnlHeader";
+            this.pnlHeader.Size = new System.Drawing.Size(1100, 120);
+            this.pnlHeader.TabIndex = 6;
+            // 
+            // lblTitle
+            // 
+            this.lblTitle.AutoSize = true;
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 26F, System.Drawing.FontStyle.Bold);
+            this.lblTitle.ForeColor = System.Drawing.Color.White;
+            this.lblTitle.Location = new System.Drawing.Point(12, 21);
+            this.lblTitle.Name = "lblTitle";
+            this.lblTitle.Size = new System.Drawing.Size(199, 47);
+            this.lblTitle.TabIndex = 1;
+            this.lblTitle.Text = "Dashboard";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(16, 75);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(331, 21);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Dashboard details and recent stock movement";
             // 
             // FrmDashboard
             // 
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(245)))), ((int)(((byte)(246)))), ((int)(((byte)(248)))));
             this.ClientSize = new System.Drawing.Size(1100, 700);
+            this.Controls.Add(this.pnlHeader);
             this.Controls.Add(this.lblMainTitle);
             this.Controls.Add(this.lblSubTitle);
             this.Controls.Add(this.pnlTotalProducts);
@@ -282,6 +320,8 @@
             this.pnlLowStock.ResumeLayout(false);
             this.pnlLowStock.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecentActions)).EndInit();
+            this.pnlHeader.ResumeLayout(false);
+            this.pnlHeader.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -309,5 +349,8 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Quantity;
         private System.Windows.Forms.DataGridViewTextBoxColumn Timestamp;
         private System.Windows.Forms.DataGridViewTextBoxColumn Operator;
+        private System.Windows.Forms.Panel pnlHeader;
+        private System.Windows.Forms.Label lblTitle;
+        private System.Windows.Forms.Label label1;
     }
 }

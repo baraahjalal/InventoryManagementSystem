@@ -1,4 +1,4 @@
-﻿namespace InventoryManagementSystem.Forms
+namespace InventoryManagementSystem.Forms
 {
     partial class FrmAddProduct
     {
@@ -43,6 +43,8 @@
             this.txtSerialNumber = new System.Windows.Forms.TextBox();
             this.lblCategory = new System.Windows.Forms.Label();
             this.cmbCategory = new System.Windows.Forms.ComboBox();
+            this.lblSuppliers = new System.Windows.Forms.Label();
+            this.clbSuppliers = new System.Windows.Forms.CheckedListBox();
             this.lblSpecs = new System.Windows.Forms.Label();
             this.flpDynamicSpecs = new System.Windows.Forms.FlowLayoutPanel();
             this.pnlFooter = new System.Windows.Forms.Panel();
@@ -114,19 +116,22 @@
             this.tblForm.Controls.Add(this.txtSerialNumber, 1, 3);
             this.tblForm.Controls.Add(this.lblCategory, 0, 4);
             this.tblForm.Controls.Add(this.cmbCategory, 1, 4);
-            this.tblForm.Controls.Add(this.lblSpecs, 0, 5);
-            this.tblForm.Controls.Add(this.flpDynamicSpecs, 1, 5);
+            this.tblForm.Controls.Add(this.lblSuppliers, 0, 5);
+            this.tblForm.Controls.Add(this.clbSuppliers, 1, 5);
+            this.tblForm.Controls.Add(this.lblSpecs, 0, 6);
+            this.tblForm.Controls.Add(this.flpDynamicSpecs, 1, 6);
             this.tblForm.Dock = System.Windows.Forms.DockStyle.Top;
             this.tblForm.Location = new System.Drawing.Point(24, 12);
             this.tblForm.Name = "tblForm";
-            this.tblForm.RowCount = 6;
+            this.tblForm.RowCount = 7;
             this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
             this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
             this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
             this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
             this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
+            this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 190F));
-            this.tblForm.Size = new System.Drawing.Size(472, 410);
+            this.tblForm.Size = new System.Drawing.Size(472, 510);
             this.tblForm.TabIndex = 0;
             // 
             // lblName
@@ -235,10 +240,35 @@
             this.cmbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCategory.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cmbCategory.FormattingEnabled = true;
-            this.cmbCategory.Location = new System.Drawing.Point(153, 185);
+            this.cmbCategory.Location = new System.Drawing.Point(153, 184);
             this.cmbCategory.Name = "cmbCategory";
             this.cmbCategory.Size = new System.Drawing.Size(316, 25);
             this.cmbCategory.TabIndex = 9;
+            // 
+            // lblSuppliers
+            // 
+            this.lblSuppliers.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.lblSuppliers.AutoSize = true;
+            this.lblSuppliers.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            this.lblSuppliers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.lblSuppliers.Location = new System.Drawing.Point(3, 233);
+            this.lblSuppliers.Name = "lblSuppliers";
+            this.lblSuppliers.Size = new System.Drawing.Size(63, 17);
+            this.lblSuppliers.TabIndex = 10;
+            this.lblSuppliers.Text = "Suppliers";
+            // 
+            // clbSuppliers
+            // 
+            this.clbSuppliers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.clbSuppliers.CheckOnClick = true;
+            this.clbSuppliers.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.clbSuppliers.FormattingEnabled = true;
+            this.clbSuppliers.Location = new System.Drawing.Point(153, 223);
+            this.clbSuppliers.Name = "clbSuppliers";
+            this.clbSuppliers.Size = new System.Drawing.Size(316, 94);
+            this.clbSuppliers.TabIndex = 11;
             // 
             // lblSpecs
             // 
@@ -246,10 +276,10 @@
             this.lblSpecs.AutoSize = true;
             this.lblSpecs.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.lblSpecs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblSpecs.Location = new System.Drawing.Point(3, 306);
+            this.lblSpecs.Location = new System.Drawing.Point(3, 406);
             this.lblSpecs.Name = "lblSpecs";
             this.lblSpecs.Size = new System.Drawing.Size(87, 17);
-            this.lblSpecs.TabIndex = 10;
+            this.lblSpecs.TabIndex = 12;
             this.lblSpecs.Text = "Specifications";
             // 
             // flpDynamicSpecs
@@ -259,11 +289,11 @@
             this.flpDynamicSpecs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.flpDynamicSpecs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flpDynamicSpecs.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpDynamicSpecs.Location = new System.Drawing.Point(153, 223);
+            this.flpDynamicSpecs.Location = new System.Drawing.Point(153, 323);
             this.flpDynamicSpecs.Name = "flpDynamicSpecs";
             this.flpDynamicSpecs.Padding = new System.Windows.Forms.Padding(8);
             this.flpDynamicSpecs.Size = new System.Drawing.Size(316, 184);
-            this.flpDynamicSpecs.TabIndex = 11;
+            this.flpDynamicSpecs.TabIndex = 13;
             this.flpDynamicSpecs.WrapContents = false;
             // 
             // pnlFooter
@@ -315,7 +345,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(520, 620);
+            this.ClientSize = new System.Drawing.Size(520, 720);
             this.Controls.Add(this.pnlBody);
             this.Controls.Add(this.pnlFooter);
             this.Controls.Add(this.pnlHeader);
@@ -353,6 +383,8 @@
         private System.Windows.Forms.TextBox txtSerialNumber;
         private System.Windows.Forms.Label lblCategory;
         private System.Windows.Forms.ComboBox cmbCategory;
+        private System.Windows.Forms.Label lblSuppliers;
+        private System.Windows.Forms.CheckedListBox clbSuppliers;
         private System.Windows.Forms.Label lblSpecs;
         private System.Windows.Forms.FlowLayoutPanel flpDynamicSpecs;
         private System.Windows.Forms.Panel pnlFooter;

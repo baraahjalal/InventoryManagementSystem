@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using InventoryManagementSystem.Classes;
 
 namespace InventoryManagementSystem
 {
@@ -12,6 +13,8 @@ namespace InventoryManagementSystem
 
         // Variable to track the countdown
         private int lockoutSecondsRemaining = 0;
+
+        private readonly ErrorProvider _errorProvider = new ErrorProvider();
 
         public FrmLogin()
         {
@@ -36,6 +39,21 @@ namespace InventoryManagementSystem
 
         private void btnAuthenticate_Click(object sender, EventArgs e)
         {
+            _errorProvider.Clear();
+            bool isValid = true;
+
+            if (string.IsNullOrWhiteSpace(cmbUserName.Text))
+            { _errorProvider.SetError(cmbUserName, "Please select or enter a username."); isValid = false; }
+            else
+              _errorProvider.SetError(cmbUserName, string.Empty);
+
+            if (string.IsNullOrWhiteSpace(txtPassword.Text))
+            { _errorProvider.SetError(txtPassword, "Password cannot be empty."); isValid = false; }
+            else
+              _errorProvider.SetError(txtPassword, string.Empty);
+
+            if (!isValid) return;
+
             string enteredUsername = cmbUserName.Text.Trim();
             string enteredPassword = txtPassword.Text.Trim();
 

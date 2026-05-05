@@ -58,8 +58,20 @@ namespace InventoryManagementSystem
             // UI Feedback: Restrict phone to numbers
             txtPhone.KeyPress += InventoryManagementSystem.Classes.ValidationHelper.AllowOnlyDigits;
 
+            LoadCategories();
             ClearForm();
             LoadData();
+        }
+        
+        private void LoadCategories()
+        {
+            clbSuppliedProducts.Items.Clear();
+            foreach (var cat in MemoryStore.Categories)
+            {
+                clbSuppliedProducts.Items.Add(cat);
+            }
+            clbSuppliedProducts.DisplayMember = "Name";
+            clbSuppliedProducts.ValueMember = "Id";
         }
 
         private void LoadData(string searchTerm = "")
@@ -74,16 +86,17 @@ namespace InventoryManagementSystem
                     s.Name.ToLower().Contains(searchTerm) || 
                     s.ContactPerson.ToLower().Contains(searchTerm) ||
                     s.Email.ToLower().Contains(searchTerm) ||
-                    (s.Category != null && s.Category.ToLower().Contains(searchTerm)) ||
                     (s.Phone != null && s.Phone.ToLower().Contains(searchTerm))
                 );
             }
 
             foreach (var sup in query)
             {
-                string products = sup.SuppliedProducts != null ? string.Join(", ", sup.SuppliedProducts) : "";
+                var categoryIds = MemoryStore.SupplierCategories.Where(sc => sc.SupplierId == sup.Id).Select(sc => sc.CategoryId).ToList();
+                var categories = MemoryStore.Categories.Where(c => categoryIds.Contains(c.Id)).Select(c => c.Name).ToList();
+                string products = categories != null ? string.Join(", ", categories) : "";
                 string status = sup.IsActive ? "Active" : "Inactive";
-                dgvSuppliers.Rows.Add(sup.Name, sup.Category ?? "", sup.ContactPerson, sup.Phone, sup.Email, products, status);
+                dgvSuppliers.Rows.Add(sup.Name, "", sup.ContactPerson, sup.Phone, sup.Email, products, status);
                 
                 // Store the ID in the row's Tag property for easy access
                 dgvSuppliers.Rows[dgvSuppliers.Rows.Count - 1].Tag = sup.Id;
@@ -116,7 +129,7 @@ namespace InventoryManagementSystem
         private void ClearForm()
         {
             txtSupplierName.Clear();
-            cmbCategory.SelectedIndex = -1;
+          //  cmbCategory.SelectedIndex = -1;
             txtContactPerson.Clear();
             txtPhone.Clear();
             txtEmail.Clear();
@@ -154,6 +167,11 @@ namespace InventoryManagementSystem
                 errorProvider.SetError(txtSupplierName, errorMsg);
                 isValid = false;
             }
+            else if (!InventoryManagementSystem.Classes.ValidationHelper.IsValidLength(txtSupplierName.Text.Trim(), 2, 100, out errorMsg))
+            {
+                errorProvider.SetError(txtSupplierName, errorMsg);
+                isValid = false;
+            }
             else if (!isEditMode && MemoryStore.Suppliers.Any(s => s.Name.Equals(txtSupplierName.Text.Trim(), StringComparison.OrdinalIgnoreCase)))
             {
                 // Unique Check enforced using Data Source (Business Rule)
@@ -162,6 +180,11 @@ namespace InventoryManagementSystem
             }
 
             if (!InventoryManagementSystem.Classes.ValidationHelper.IsRequired(txtContactPerson.Text, out errorMsg))
+            {
+                errorProvider.SetError(txtContactPerson, errorMsg);
+                isValid = false;
+            }
+            else if (!InventoryManagementSystem.Classes.ValidationHelper.IsValidLength(txtContactPerson.Text.Trim(), 2, 80, out errorMsg))
             {
                 errorProvider.SetError(txtContactPerson, errorMsg);
                 isValid = false;
@@ -191,10 +214,10 @@ namespace InventoryManagementSystem
         {
             if (!ValidateForm()) return;
 
-            var selectedProducts = new List<string>();
+            var selectedCategories = new List<int>();
             foreach (var item in clbSuppliedProducts.CheckedItems)
             {
-                selectedProducts.Add(item.ToString());
+                if (item is Category cat) selectedCategories.Add(cat.Id);
             }
 
             if (isEditMode)
@@ -203,12 +226,17 @@ namespace InventoryManagementSystem
                 if (supplier != null)
                 {
                     supplier.Name = txtSupplierName.Text.Trim();
-                    supplier.Category = cmbCategory.SelectedItem?.ToString();
+               //     supplier.Category = cmbCategory.SelectedItem?.ToString();
                     supplier.ContactPerson = txtContactPerson.Text.Trim();
                     supplier.Phone = txtPhone.Text.Trim();
                     supplier.Email = txtEmail.Text.Trim();
                     supplier.IsActive = chkIsActive.Checked;
-                    supplier.SuppliedProducts = selectedProducts;
+                    
+                    MemoryStore.SupplierCategories.RemoveAll(sc => sc.SupplierId == supplier.Id);
+                    foreach (var categoryId in selectedCategories)
+                    {
+                        MemoryStore.SupplierCategories.Add(new SupplierCategory { SupplierId = supplier.Id, CategoryId = categoryId });
+                    }
 
                     MemoryStore.LogAction("EDIT SUPPLIER", $"Supplier '{supplier.Name}' updated.");
                     MessageBox.Show("Supplier updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -222,15 +250,20 @@ namespace InventoryManagementSystem
                 {
                     Id = newId,
                     Name = txtSupplierName.Text.Trim(),
-                    Category = cmbCategory.SelectedItem?.ToString(),
+                 //   Category = cmbCategory.SelectedItem?.ToString(),
                     ContactPerson = txtContactPerson.Text.Trim(),
                     Phone = txtPhone.Text.Trim(),
                     Email = txtEmail.Text.Trim(),
-                    IsActive = chkIsActive.Checked,
-                    SuppliedProducts = selectedProducts
+                    IsActive = chkIsActive.Checked
                 };
 
                 MemoryStore.Suppliers.Add(newSupplier);
+                
+                foreach (var categoryId in selectedCategories)
+                {
+                    MemoryStore.SupplierCategories.Add(new SupplierCategory { SupplierId = newSupplier.Id, CategoryId = categoryId });
+                }
+
                 MemoryStore.LogAction("ADD SUPPLIER", $"Supplier '{newSupplier.Name}' added.");
                 MessageBox.Show("Supplier added successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -249,11 +282,12 @@ namespace InventoryManagementSystem
 
             int id = (int)dgvSuppliers.SelectedRows[0].Tag;
             var supplier = MemoryStore.Suppliers.FirstOrDefault(s => s.Id == id);
-            
+            var categoryIds = MemoryStore.SupplierCategories.Where(sc => sc.SupplierId == id).Select(sc => sc.CategoryId).ToList();
+
             if (supplier != null)
             {
                 txtSupplierName.Text = supplier.Name;
-                cmbCategory.SelectedItem = supplier.Category;
+               // cmbCategory.SelectedItem = supplier.Category;
                 txtContactPerson.Text = supplier.ContactPerson;
                 txtPhone.Text = supplier.Phone;
                 txtEmail.Text = supplier.Email;
@@ -261,8 +295,10 @@ namespace InventoryManagementSystem
 
                 for (int i = 0; i < clbSuppliedProducts.Items.Count; i++)
                 {
-                    string item = clbSuppliedProducts.Items[i].ToString();
-                    clbSuppliedProducts.SetItemChecked(i, supplier.SuppliedProducts != null && supplier.SuppliedProducts.Contains(item));
+                    if (clbSuppliedProducts.Items[i] is Category cat)
+                    {
+                        clbSuppliedProducts.SetItemChecked(i, categoryIds != null && categoryIds.Contains(cat.Id));
+                    }
                 }
 
                 isEditMode = true;
@@ -282,7 +318,7 @@ namespace InventoryManagementSystem
             int id = (int)dgvSuppliers.SelectedRows[0].Tag;
             
             // Check if supplier is used in any products
-            bool isInUse = MemoryStore.Products.Any(p => p.SupplierId == id);
+            bool isInUse = MemoryStore.ProductSuppliers.Any(ps => ps.SupplierId == id);
             if (isInUse)
             {
                 MessageBox.Show("Cannot delete this supplier because there are products associated with it.\n\nConsider changing the status to 'Inactive' instead.", "Delete Prevented", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -297,6 +333,7 @@ namespace InventoryManagementSystem
                 if (supplier != null)
                 {
                     MemoryStore.Suppliers.Remove(supplier);
+                    MemoryStore.SupplierCategories.RemoveAll(sc => sc.SupplierId == id);
                     MemoryStore.LogAction("DELETE SUPPLIER", $"Supplier '{supplier.Name}' deleted.");
                     
                     LoadData(txtSearch.Text);
@@ -341,6 +378,61 @@ namespace InventoryManagementSystem
         }
 
         private void dgvSuppliers_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void lblContactPerson_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtContactPerson_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblPhone_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtPhone_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblEmail_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtEmail_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblSuppliedProducts_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void clbSuppliedProducts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chkIsActive_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSave_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnClear_Click_1(object sender, EventArgs e)
         {
 
         }
