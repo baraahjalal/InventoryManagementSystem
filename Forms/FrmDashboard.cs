@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -93,7 +93,7 @@ namespace InventoryManagementSystem
                     ? $"+{movement.QuantityChanged}"
                     : movement.QuantityChanged.ToString();
 
-                if (movement.Type == "LOW STOCK" && product != null)
+                if (movement.Type == StockMovementType.Restock && product != null)
                 {
                     formattedQuantity = product.Quantity.ToString(); // Just show the current quantity
                 }

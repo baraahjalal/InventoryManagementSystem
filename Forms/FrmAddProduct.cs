@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using InventoryManagementSystem.Classes;
+
 
 namespace InventoryManagementSystem.Forms
 {
@@ -152,19 +152,9 @@ namespace InventoryManagementSystem.Forms
             }
 
             // Apply initial quantity through stock movement (so audit trail is consistent)
-            try
+            if (qty > 0 && selectedSuppliers.Count > 0)
             {
-                if (qty > 0)
-                    MemoryStore.PerformStockMovement(newProd.Id, qty, "STOCK IN", "Initial stock");
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                // Rollback product add if movement not allowed
-                MemoryStore.Products.Remove(newProd);
-                // Also remove ProductSuppliers
-                MemoryStore.ProductSuppliers.RemoveAll(ps => ps.ProductId == newProd.Id);
-                MessageBox.Show(ex.Message, "Permission Denied", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
+                MemoryStore.PerformStockMovement(newProd.Id, qty, StockMovementType.StockIn, "Initial stock", null, null, selectedSuppliers.FirstOrDefault());
             }
 
             MemoryStore.LogAction("PRODUCT CREATED", $"New product created: ID {newProd.Id} - '{newProd.Name}' (Category ID: {newProd.CategoryId}).");

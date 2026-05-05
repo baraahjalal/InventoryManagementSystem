@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using InventoryManagementSystem.Classes;
+
 
 namespace InventoryManagementSystem
 {
@@ -105,7 +105,7 @@ namespace InventoryManagementSystem
             
             // Get Warranty Duration from last STOCK IN movement
             var lastStockIn = MemoryStore.StockMovements
-                .Where(m => m.ProductId == product.Id && m.Type == "STOCK IN" && m.WarrantyDurationMonths.HasValue)
+                .Where(m => m.ProductId == product.Id && m.Type == StockMovementType.StockIn && m.WarrantyDurationMonths.HasValue)
                 .OrderByDescending(m => m.Timestamp)
                 .FirstOrDefault();
 
@@ -204,9 +204,11 @@ namespace InventoryManagementSystem
             bool success = MemoryStore.PerformStockMovement(
                 productId, 
                 -quantity, 
-                "STOCK OUT", 
+                StockMovementType.StockOut, 
                 notes, 
-                selectedSerials.Count > 0 ? selectedSerials : null
+                selectedSerials.Count > 0 ? selectedSerials : null,
+                null,
+                null
             );
 
             // 4. Handle Result

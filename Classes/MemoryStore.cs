@@ -97,17 +97,26 @@ namespace InventoryManagementSystem
         }
     }
 
+    public enum StockMovementType
+    {
+        StockIn,
+        StockOut,
+        Restock,
+        ReturnToSupplier
+    }
+
     public class StockMovement
     {
         public int Id { get; set; }
         public int ProductId { get; set; }  // Foreign Key
-        public string Type { get; set; }    // "STOCK IN", "STOCK OUT", "RESTOCK"
+        public StockMovementType Type { get; set; }    // StockIn, StockOut, Restock, ReturnToSupplier
         public int QuantityChanged { get; set; }
         public DateTime Timestamp { get; set; }
         public int? UserId { get; set; }    // Foreign Key
         public string Notes { get; set; }
         public List<string> AffectedItemSerials { get; set; } = new List<string>(); // Track which items were involved
         public int? WarrantyDurationMonths { get; set; } // Deferred Warranty Activation
+        public int? SupplierId { get; set; }
     }
 
     public class SystemLog
@@ -215,8 +224,13 @@ namespace InventoryManagementSystem
         /// For STOCK IN: automatically generates item-level serial numbers.
         /// For STOCK OUT: marks specified items as dispatched.
         /// </summary>
-        public static bool PerformStockMovement(int productId, int quantityChange, string movementType, string notes = "", List<string> selectedItemSerials = null, int? warrantyDurationMonths = null)
+        public static bool PerformStockMovement(int productId, int quantityChange, StockMovementType movementType, string notes = "", List<string> selectedItemSerials = null, int? warrantyDurationMonths = null, int? supplierId = null)
         {
+            // Business Rules: Only STOCK IN and RETURN TO SUPPLIER require supplier info
+            if (movementType == StockMovementType.StockIn && supplierId == null) return false;
+            if (movementType == StockMovementType.ReturnToSupplier && supplierId == null) return false;
+            // STOCK OUT doesn't require supplierId (it's optional for notes tracking only)
+
             var product = Products.FirstOrDefault(p => p.Id == productId);
             if (product == null) return false;
 
@@ -227,7 +241,6 @@ namespace InventoryManagementSystem
 
             if (quantityChange > 0) // STOCK IN
             {
-                // Generate item-level serial numbers for the incoming quantity
                 int startIndex = GetNextItemIndex(productId);
                 var newSerials = GenerateItemSerials(product.SerialNumber, startIndex, quantityChange);
 
@@ -252,7 +265,6 @@ namespace InventoryManagementSystem
 
                 if (selectedItemSerials != null && selectedItemSerials.Count > 0)
                 {
-                    // Dispatch specific selected items
                     foreach (var serial in selectedItemSerials)
                     {
                         var item = ProductItems.FirstOrDefault(pi =>
@@ -269,7 +281,6 @@ namespace InventoryManagementSystem
                 }
                 else
                 {
-                    // Auto-select oldest available items (FIFO)
                     var availableItems = ProductItems
                         .Where(pi => pi.ProductId == productId && pi.IsInStock)
                         .OrderBy(pi => pi.DateAdded)
@@ -300,10 +311,11 @@ namespace InventoryManagementSystem
                 UserId = CurrentUser?.Id,
                 Notes = notes,
                 AffectedItemSerials = affectedSerials,
-                WarrantyDurationMonths = warrantyDurationMonths
+                WarrantyDurationMonths = warrantyDurationMonths,
+                SupplierId = supplierId
             });
 
-            LogAction(movementType, $"Product '{product.Name}' {(quantityChange > 0 ? "increased" : "decreased")} by {Math.Abs(quantityChange)}. Items: [{string.Join(", ", affectedSerials.Take(5))}{(affectedSerials.Count > 5 ? "..." : "")}]");
+            LogAction(movementType.ToString(), $"Product '{product.Name}' {(quantityChange > 0 ? "increased" : "decreased")} by {Math.Abs(quantityChange)}. Items: [{string.Join(", ", affectedSerials.Take(5))}{(affectedSerials.Count > 5 ? "..." : "")}]");
             return true;
         }
 
@@ -451,16 +463,16 @@ namespace InventoryManagementSystem
             // Seed initial movements
             StockMovements.AddRange(new[]
             {
-                new StockMovement { Id = 1, ProductId = 101, Type = "STOCK IN", QuantityChanged = 30, Timestamp = DateTime.Now.AddDays(-10), UserId = 2, Notes = "Initial batch from TechSource" },
-                new StockMovement { Id = 2, ProductId = 101, Type = "STOCK OUT", QuantityChanged = -6, Timestamp = DateTime.Now.AddDays(-2), UserId = 6, Notes = "Sold to corporate client" },
-                new StockMovement { Id = 3, ProductId = 102, Type = "STOCK IN", QuantityChanged = 12, Timestamp = DateTime.Now.AddDays(-7), UserId = 2, Notes = "New iPhone release shipment" },
-                new StockMovement { Id = 4, ProductId = 102, Type = "STOCK OUT", QuantityChanged = -4, Timestamp = DateTime.Now.AddDays(-1), UserId = 3, Notes = "Retail sales" },
-                new StockMovement { Id = 5, ProductId = 109, Type = "STOCK IN", QuantityChanged = 60, Timestamp = DateTime.Now.AddDays(-15), UserId = 4, Notes = "Bulk accessory order" },
-                new StockMovement { Id = 6, ProductId = 109, Type = "STOCK OUT", QuantityChanged = -10, Timestamp = DateTime.Now.AddDays(-5), UserId = 6, Notes = "Store display and sales" },
-                new StockMovement { Id = 7, ProductId = 104, Type = "STOCK IN", QuantityChanged = 5, Timestamp = DateTime.Now.AddDays(-20), UserId = 2, Notes = "Printers restock" },
-                new StockMovement { Id = 8, ProductId = 104, Type = "STOCK OUT", QuantityChanged = -5, Timestamp = DateTime.Now.AddDays(-3), UserId = 6, Notes = "All printers sold out" },
-                new StockMovement { Id = 9, ProductId = 114, Type = "STOCK IN", QuantityChanged = 2, Timestamp = DateTime.Now.AddDays(-1), UserId = 4, Notes = "Special order for VIP" },
-                new StockMovement { Id = 10, ProductId = 105, Type = "STOCK IN", QuantityChanged = 12, Timestamp = DateTime.Now.AddDays(-8), UserId = 2, Notes = "Dell shipment arrived" }
+                new StockMovement { Id = 1, ProductId = 101, Type = StockMovementType.StockIn, QuantityChanged = 30, Timestamp = DateTime.Now.AddDays(-10), UserId = 2, Notes = "Initial batch from TechSource", SupplierId = 1 },
+                new StockMovement { Id = 2, ProductId = 101, Type = StockMovementType.StockOut, QuantityChanged = -6, Timestamp = DateTime.Now.AddDays(-2), UserId = 6, Notes = "Sold to corporate client" },
+                new StockMovement { Id = 3, ProductId = 102, Type = StockMovementType.StockIn, QuantityChanged = 12, Timestamp = DateTime.Now.AddDays(-7), UserId = 2, Notes = "New iPhone release shipment", SupplierId = 2 },
+                new StockMovement { Id = 4, ProductId = 102, Type = StockMovementType.StockOut, QuantityChanged = -4, Timestamp = DateTime.Now.AddDays(-1), UserId = 3, Notes = "Retail sales" },
+                new StockMovement { Id = 5, ProductId = 109, Type = StockMovementType.StockIn, QuantityChanged = 60, Timestamp = DateTime.Now.AddDays(-15), UserId = 4, Notes = "Bulk accessory order", SupplierId = 1 },
+                new StockMovement { Id = 6, ProductId = 109, Type = StockMovementType.StockOut, QuantityChanged = -10, Timestamp = DateTime.Now.AddDays(-5), UserId = 6, Notes = "Store display and sales" },
+                new StockMovement { Id = 7, ProductId = 104, Type = StockMovementType.StockIn, QuantityChanged = 5, Timestamp = DateTime.Now.AddDays(-20), UserId = 2, Notes = "Printers restock", SupplierId = 1 },
+                new StockMovement { Id = 8, ProductId = 104, Type = StockMovementType.StockOut, QuantityChanged = -5, Timestamp = DateTime.Now.AddDays(-3), UserId = 6, Notes = "All printers sold out" },
+                new StockMovement { Id = 9, ProductId = 114, Type = StockMovementType.StockIn, QuantityChanged = 2, Timestamp = DateTime.Now.AddDays(-1), UserId = 4, Notes = "Special order for VIP", SupplierId = 2 },
+                new StockMovement { Id = 10, ProductId = 105, Type = StockMovementType.StockIn, QuantityChanged = 12, Timestamp = DateTime.Now.AddDays(-8), UserId = 2, Notes = "Dell shipment arrived", SupplierId = 1 }
             });
 
             // Seed Initial Logs

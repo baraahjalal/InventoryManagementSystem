@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using InventoryManagementSystem.Classes;
+
 
 namespace InventoryManagementSystem
 {
@@ -73,8 +73,25 @@ namespace InventoryManagementSystem
 
         private void LoadSuppliersForProduct(int productId)
         {
-            var supplierIds = MemoryStore.ProductSuppliers.Where(ps => ps.ProductId == productId).Select(ps => ps.SupplierId).ToList();
-            var suppliers = MemoryStore.Suppliers.Where(s => supplierIds.Contains(s.Id) && s.IsActive).ToList();
+            // Get the product to find its category
+            var product = MemoryStore.Products.FirstOrDefault(p => p.Id == productId);
+            if (product == null)
+            {
+                cmbSupplier.DataSource = null;
+                cmbSupplier.SelectedIndex = -1;
+                return;
+            }
+
+            // Find all suppliers that supply this product's category
+            var supplierIds = MemoryStore.SupplierCategories
+                .Where(sc => sc.CategoryId == product.CategoryId)
+                .Select(sc => sc.SupplierId)
+                .ToList();
+
+            // Get active suppliers only
+            var suppliers = MemoryStore.Suppliers
+                .Where(s => supplierIds.Contains(s.Id) && s.IsActive)
+                .ToList();
 
             cmbSupplier.DataSource = null;
             cmbSupplier.DisplayMember = "Name";
@@ -184,9 +201,19 @@ namespace InventoryManagementSystem
             {
                 warrantyDuration = duration;
             }
+            
+            int? supplierId = (int?)cmbSupplier.SelectedValue;
 
             // 3. Execute Business Logic (serial numbers are auto-generated in PerformStockMovement)
-            bool success = MemoryStore.PerformStockMovement(productId, quantity, "STOCK IN", notes, null, warrantyDuration);
+            bool success = MemoryStore.PerformStockMovement(
+                productId,
+                quantity,
+                StockMovementType.StockIn,
+                notes,
+                null,
+                warrantyDuration,
+                supplierId
+            );
 
             // 4. Handle Result
             if (success)

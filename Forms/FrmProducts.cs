@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using InventoryManagementSystem.Classes;
+
 
 namespace InventoryManagementSystem
 {
@@ -82,13 +82,12 @@ namespace InventoryManagementSystem
         private void FrmProducts_Load(object sender, EventArgs e)
         {
             // Load Dynamic Categories
-            var categories = new List<Category>();
-            categories.Add(new Category { Id = 0, Name = "All Categories" });
-            categories.AddRange(MemoryStore.Categories);
-            
-            cmbCategory.DataSource = categories;
-            cmbCategory.DisplayMember = "Name";
-            cmbCategory.ValueMember = "Id";
+            cmbCategory.Items.Clear();
+            cmbCategory.Items.Add("All Categories");
+            foreach (var template in MemoryStore.CategoryTemplates)
+            {
+                cmbCategory.Items.Add(MemoryStore.Categories.FirstOrDefault(c => c.Id == template.CategoryId)?.Name ?? "");
+            }
 
             if (cmbCategory.Items.Count > 0)
                 cmbCategory.SelectedIndex = 0; // Default to "All Categories"
@@ -101,21 +100,16 @@ namespace InventoryManagementSystem
 
         private void CmbCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (cmbCategory.SelectedItem is Category selectedCat)
-            {
-                GenerateDynamicFilters(selectedCat.Id);
-                ApplyFilters();
-            }
+            GenerateDynamicFilters(cmbCategory.SelectedItem?.ToString());
+            ApplyFilters();
         }
 
-        private void GenerateDynamicFilters(int categoryId)
+        private void GenerateDynamicFilters(string selectedCategory)
         {
             _flpDynamicFilters.Controls.Clear();
             _dynamicFilters.Clear();
 
-            if (categoryId == 0) return; // "All Categories" or category without filters
-
-            var template = MemoryStore.CategoryTemplates.FirstOrDefault(t => t.CategoryId == categoryId);
+            var template = MemoryStore.CategoryTemplates.FirstOrDefault(t => MemoryStore.Categories.FirstOrDefault(c => c.Id == t.CategoryId)?.Name == selectedCategory);
 
             if (template == null) return; // "All Categories" or category without filters
 
@@ -167,7 +161,7 @@ namespace InventoryManagementSystem
                 // Reset flag so subsequent refreshes behave normally
                 ShowLowStockFilter = false;
                 cmbCategory.SelectedIndex = 0; // set category to All to avoid hiding items
-                GenerateDynamicFilters(0);
+                GenerateDynamicFilters(null);
             }
 
             // If this form was requested to force showing all products, ignore other filters
@@ -176,7 +170,7 @@ namespace InventoryManagementSystem
                 // Ensure category is set to All and dynamic filters cleared so all products are visible
                 ForceShowAll = false; // reset immediately
                 if (cmbCategory.Items.Count > 0) cmbCategory.SelectedIndex = 0;
-                GenerateDynamicFilters(0);
+                GenerateDynamicFilters(null);
                 // _allProducts already contains full list from MemoryStore
             }
 
@@ -198,13 +192,14 @@ namespace InventoryManagementSystem
             var filteredList = _allProducts.AsEnumerable();
 
             // 1. Static Category Filter
-            int selectedCategoryId = 0;
-            if (cmbCategory.SelectedItem is Category cat)
-                selectedCategoryId = cat.Id;
-
-            if (selectedCategoryId != 0)
+            string selectedCategory = cmbCategory.SelectedItem?.ToString();
+            if (!string.IsNullOrEmpty(selectedCategory) && selectedCategory != "All Categories")
             {
-                filteredList = filteredList.Where(p => p.CategoryId == selectedCategoryId);
+                var catId = MemoryStore.Categories.FirstOrDefault(c => c.Name.Equals(selectedCategory, StringComparison.OrdinalIgnoreCase))?.Id;
+                if (catId.HasValue)
+                {
+                    filteredList = filteredList.Where(p => p.CategoryId == catId.Value);
+                }
             }
 
             // 2. Dynamic Attribute Filters
@@ -244,7 +239,7 @@ namespace InventoryManagementSystem
                 dgvProducts.Rows.Add(
                     product.Id.ToString(),
                     product.Name,
-                    MemoryStore.Categories.FirstOrDefault(c => c.Id == product.CategoryId)?.Name ?? "Unknown",
+                    MemoryStore.Categories.FirstOrDefault(c => c.Id == product.CategoryId)?.Name ?? "",
                     product.Quantity.ToString(),
                     $"${product.Price:0.00}",
                     product.Status
@@ -289,12 +284,9 @@ namespace InventoryManagementSystem
                 var allItems = MemoryStore.ProductItems.Where(pi => pi.ProductId == _selectedProduct.Id).ToList();
 
                 var sb = new System.Text.StringBuilder();
-                var categoryName = MemoryStore.Categories.FirstOrDefault(c => c.Id == _selectedProduct.CategoryId)?.Name ?? "Unknown";
-                sb.AppendLine($"Category: {categoryName}");
+                sb.AppendLine($"Category: {MemoryStore.Categories.FirstOrDefault(c => c.Id == _selectedProduct.CategoryId)?.Name ?? ""}");
                 sb.AppendLine($"Product Serial: {_selectedProduct.SerialNumber}");
-                var supplierIds = MemoryStore.ProductSuppliers.Where(ps => ps.ProductId == _selectedProduct.Id).Select(ps => ps.SupplierId).ToList();
-                var suppliers = MemoryStore.Suppliers.Where(s => supplierIds.Contains(s.Id)).Select(s => s.Name).ToList();
-                sb.AppendLine($"Suppliers: {(suppliers.Count > 0 ? string.Join(", ", suppliers) : "None")}");
+                sb.AppendLine($"Supplier ID: {string.Join(", ", MemoryStore.ProductSuppliers.Where(ps => ps.ProductId == _selectedProduct.Id).Select(ps => ps.SupplierId))}");
                 sb.AppendLine();
                 sb.AppendLine(specDisplay);
                 sb.AppendLine();
@@ -387,23 +379,28 @@ namespace InventoryManagementSystem
                     string newCategory = frmAdd.CreatedCategoryName;
                     var newFilters = frmAdd.CreatedFilters;
 
-                    // Add to Categories
-                    var catId = MemoryStore.Categories.Count > 0 ? MemoryStore.Categories.Max(c => c.Id) + 1 : 1;
-                    var cat = new Category { Id = catId, Name = newCategory };
-                    MemoryStore.Categories.Add(cat);
-
-                    // Add template to memory store
-                    MemoryStore.CategoryTemplates.Add(new CategoryTemplate
+                    // Add template to memory store if it doesn't exist
+                    var catId = MemoryStore.Categories.FirstOrDefault(c => c.Name.Equals(newCategory, StringComparison.OrdinalIgnoreCase))?.Id;
+                    if (catId == null)
                     {
-                        CategoryId = catId,
-                        AvailableFilters = newFilters
-                    });
+                        int newCatId = MemoryStore.Categories.Count > 0 ? MemoryStore.Categories.Max(c => c.Id) + 1 : 1;
+                        MemoryStore.Categories.Add(new Category { Id = newCatId, Name = newCategory });
+                        catId = newCatId;
+                    }
 
-                    // Refresh binding
-                    var categories = new List<Category>();
-                    categories.Add(new Category { Id = 0, Name = "All Categories" });
-                    categories.AddRange(MemoryStore.Categories);
-                    cmbCategory.DataSource = categories;
+                    if (!MemoryStore.CategoryTemplates.Any(t => t.CategoryId == catId.Value))
+                    {
+                        MemoryStore.CategoryTemplates.Add(new CategoryTemplate
+                        {
+                            CategoryId = catId.Value,
+                            AvailableFilters = newFilters
+                        });
+                    }
+
+                    if (!cmbCategory.Items.Contains(newCategory))
+                    {
+                        cmbCategory.Items.Add(newCategory);
+                    }
 
                     MessageBox.Show($"Category '{newCategory}' with {newFilters.Count} filters added successfully.", "Add Category", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }

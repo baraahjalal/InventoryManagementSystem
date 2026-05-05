@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Linq;
 
-namespace InventoryManagementSystem.Classes
+namespace InventoryManagementSystem
 {
     public static class ValidationHelper
     {

@@ -1,4 +1,4 @@
-﻿namespace InventoryManagementSystem.Forms
+namespace InventoryManagementSystem.Forms
 {
     partial class FrmAddCategory
     {

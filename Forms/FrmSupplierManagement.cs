@@ -56,7 +56,7 @@ namespace InventoryManagementSystem
         private void FrmSupplierManagement_Load(object sender, EventArgs e)
         {
             // UI Feedback: Restrict phone to numbers
-            txtPhone.KeyPress += InventoryManagementSystem.Classes.ValidationHelper.AllowOnlyDigits;
+            txtPhone.KeyPress += InventoryManagementSystem.ValidationHelper.AllowOnlyDigits;
 
             LoadCategories();
             ClearForm();
@@ -96,7 +96,7 @@ namespace InventoryManagementSystem
                 var categories = MemoryStore.Categories.Where(c => categoryIds.Contains(c.Id)).Select(c => c.Name).ToList();
                 string products = categories != null ? string.Join(", ", categories) : "";
                 string status = sup.IsActive ? "Active" : "Inactive";
-                dgvSuppliers.Rows.Add(sup.Name, "", sup.ContactPerson, sup.Phone, sup.Email, products, status);
+                dgvSuppliers.Rows.Add(sup.Name, sup.ContactPerson, sup.Phone, sup.Email, products, status);
                 
                 // Store the ID in the row's Tag property for easy access
                 dgvSuppliers.Rows[dgvSuppliers.Rows.Count - 1].Tag = sup.Id;
@@ -162,12 +162,12 @@ namespace InventoryManagementSystem
             bool isValid = true;
             string errorMsg;
 
-            if (!InventoryManagementSystem.Classes.ValidationHelper.IsRequired(txtSupplierName.Text, out errorMsg))
+            if (!InventoryManagementSystem.ValidationHelper.IsRequired(txtSupplierName.Text, out errorMsg))
             {
                 errorProvider.SetError(txtSupplierName, errorMsg);
                 isValid = false;
             }
-            else if (!InventoryManagementSystem.Classes.ValidationHelper.IsValidLength(txtSupplierName.Text.Trim(), 2, 100, out errorMsg))
+            else if (!InventoryManagementSystem.ValidationHelper.IsValidLength(txtSupplierName.Text.Trim(), 2, 100, out errorMsg))
             {
                 errorProvider.SetError(txtSupplierName, errorMsg);
                 isValid = false;
@@ -179,24 +179,24 @@ namespace InventoryManagementSystem
                 isValid = false;
             }
 
-            if (!InventoryManagementSystem.Classes.ValidationHelper.IsRequired(txtContactPerson.Text, out errorMsg))
+            if (!InventoryManagementSystem.ValidationHelper.IsRequired(txtContactPerson.Text, out errorMsg))
             {
                 errorProvider.SetError(txtContactPerson, errorMsg);
                 isValid = false;
             }
-            else if (!InventoryManagementSystem.Classes.ValidationHelper.IsValidLength(txtContactPerson.Text.Trim(), 2, 80, out errorMsg))
+            else if (!InventoryManagementSystem.ValidationHelper.IsValidLength(txtContactPerson.Text.Trim(), 2, 80, out errorMsg))
             {
                 errorProvider.SetError(txtContactPerson, errorMsg);
                 isValid = false;
             }
 
-            if (!InventoryManagementSystem.Classes.ValidationHelper.IsValidPhone(txtPhone.Text, out errorMsg))
+            if (!InventoryManagementSystem.ValidationHelper.IsValidPhone(txtPhone.Text, out errorMsg))
             {
                 errorProvider.SetError(txtPhone, errorMsg);
                 isValid = false;
             }
 
-            if (!InventoryManagementSystem.Classes.ValidationHelper.IsValidEmail(txtEmail.Text, out errorMsg))
+            if (!InventoryManagementSystem.ValidationHelper.IsValidEmail(txtEmail.Text, out errorMsg))
             {
                 errorProvider.SetError(txtEmail, errorMsg);
                 isValid = false;
