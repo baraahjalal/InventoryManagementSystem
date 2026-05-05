@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -113,6 +113,13 @@ namespace InventoryManagementSystem
 
         private void btnAuditLog_Click(object sender, EventArgs e)
         {
+            var user = MemoryStore.CurrentUser;
+            if (user == null || !user.IsAdmin)
+            {
+                MessageBox.Show("Access Denied: Only administrators can view the Audit Log.", "Permission Restricted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             OpenChildForm(new FrmAuditLog());
         }
 
@@ -134,8 +141,14 @@ namespace InventoryManagementSystem
 
         private void ApplyUserPermissions()
         {
-            // UI visibility changes are intentionally not applied here.
-            // Access is enforced at the action level (e.g., btnUserManagement click)
+            var user = MemoryStore.CurrentUser;
+            bool isAdmin = user != null && user.IsAdmin;
+
+            // Hide Admin-only sidebar buttons for non-admin users
+            btnUserManagement.Visible = isAdmin;
+            picUserManagement.Visible = isAdmin;
+            btnAuditLog.Visible = isAdmin;
+            picAuditLog.Visible = isAdmin;
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)

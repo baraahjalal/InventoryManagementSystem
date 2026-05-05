@@ -269,7 +269,36 @@ namespace InventoryManagementSystem
 
                 // Generate specs list
                 var specDisplay = string.Join("\r\n", _selectedProduct.Specifications.Select(x => $"{x.Key}: {x.Value}"));
-                txtProdSpec.Text = $"Category: {_selectedProduct.Category}\r\nSerial No: {_selectedProduct.SerialNumber}\r\nSupplier ID: {_selectedProduct.SupplierId}\r\n\r\n{specDisplay}";
+
+                // Get item-level serial numbers from ProductItems store
+                var availableItems = MemoryStore.GetAvailableItems(_selectedProduct.Id);
+                var allItems = MemoryStore.ProductItems.Where(pi => pi.ProductId == _selectedProduct.Id).ToList();
+
+                var sb = new System.Text.StringBuilder();
+                sb.AppendLine($"Category: {_selectedProduct.Category}");
+                sb.AppendLine($"Product Serial: {_selectedProduct.SerialNumber}");
+                sb.AppendLine($"Supplier ID: {_selectedProduct.SupplierId}");
+                sb.AppendLine();
+                sb.AppendLine(specDisplay);
+                sb.AppendLine();
+                sb.AppendLine($"── Item Tracking ──");
+                sb.AppendLine($"Total Items: {allItems.Count} | In Stock: {availableItems.Count} | Dispatched: {allItems.Count - availableItems.Count}");
+                
+                if (availableItems.Count > 0)
+                {
+                    sb.AppendLine();
+                    sb.AppendLine("Available Items:");
+                    foreach (var item in availableItems.Take(15).OrderBy(i => i.ItemSerialNumber))
+                    {
+                        sb.AppendLine($"  ► {item.ItemSerialNumber}");
+                    }
+                    if (availableItems.Count > 15)
+                    {
+                        sb.AppendLine($"  ... and {availableItems.Count - 15} more");
+                    }
+                }
+
+                txtProdSpec.Text = sb.ToString();
 
                 btnEdit.Enabled = true;
             }

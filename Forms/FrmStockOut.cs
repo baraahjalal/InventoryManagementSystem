@@ -68,6 +68,10 @@ namespace InventoryManagementSystem
             lblWarrantyInfo.Text = "Warranty Expires: --/--/----";
         }
 
+        /// <summary>
+        /// When a product is selected, load its actual available item-level serial numbers
+        /// from the ProductItems store (only items that are IsInStock = true).
+        /// </summary>
         private void CmbProduct_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cmbProduct.SelectedIndex == -1 || cmbProduct.SelectedItem == null)
@@ -78,24 +82,32 @@ namespace InventoryManagementSystem
 
             var product = (Product)cmbProduct.SelectedItem;
             
-            lblStockStatus.Text = $"In Stock: {product.Quantity}";
-            lblStockStatus.ForeColor = product.Quantity > 10 ? Color.Green : Color.FromArgb(220, 38, 38);
-            
-            numQty.Enabled = true;
-            numQty.Maximum = product.Quantity;
-            numQty.Minimum = 1;
-            numQty.Value = 1;
+            // Get actual available items from the ProductItems store
+            var availableItems = MemoryStore.GetAvailableItems(product.Id);
+            int availableCount = availableItems.Count;
 
-            // Mocking Serial Numbers based on quantity and actual product serial number prefix
+            lblStockStatus.Text = $"In Stock: {availableCount} items";
+            lblStockStatus.ForeColor = availableCount > 10 ? Color.Green : Color.FromArgb(220, 38, 38);
+            
+            numQty.Enabled = availableCount > 0;
+            numQty.Maximum = availableCount;
+            numQty.Minimum = availableCount > 0 ? 1 : 0;
+            numQty.Value = availableCount > 0 ? 1 : 0;
+
+            // Load real item-level serial numbers into the CheckedListBox
             clbSerialNumbers.Items.Clear();
-            for (int i = 1; i <= Math.Min(product.Quantity, 50); i++) // Max 50 for UI performance
+            foreach (var item in availableItems.OrderBy(pi => pi.ItemSerialNumber))
             {
-                clbSerialNumbers.Items.Add($"{product.SerialNumber}-{(product.Quantity - i + 1):D3}");
+                clbSerialNumbers.Items.Add(item.ItemSerialNumber);
             }
             
-            lblWarrantyInfo.Text = $"Warranty Expires: {DateTime.Now.AddYears(1):dd/MM/yyyy}";
+            lblWarrantyInfo.Text = $"Product Serial: {product.SerialNumber} | Warranty: {DateTime.Now.AddYears(1):dd/MM/yyyy}";
         }
 
+        /// <summary>
+        /// Sync the quantity spinner with the number of checked serial numbers.
+        /// Users select individual items (serial numbers) they want to dispatch.
+        /// </summary>
         private void ClbSerialNumbers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             // Calculate how many items will be checked after this event
@@ -130,12 +142,33 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            int quantity = (int)numQty.Value;
             var product = (Product)cmbProduct.SelectedItem;
 
-            if (quantity <= 0 || quantity > product.Quantity)
+            // Get selected serial numbers (items to dispatch)
+            var selectedSerials = clbSerialNumbers.CheckedItems.Cast<string>().ToList();
+            
+            int quantity;
+            if (selectedSerials.Count > 0)
             {
-                MessageBox.Show($"Quantity must be between 1 and {product.Quantity}.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                // Use the count of selected serials as the quantity
+                quantity = selectedSerials.Count;
+            }
+            else
+            {
+                // If no specific serials selected, use the numeric value (FIFO auto-selection)
+                quantity = (int)numQty.Value;
+            }
+
+            if (quantity <= 0)
+            {
+                MessageBox.Show("Please select at least one item to dispatch.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var availableItems = MemoryStore.GetAvailableItems(product.Id);
+            if (quantity > availableItems.Count)
+            {
+                MessageBox.Show($"Cannot dispatch {quantity} items. Only {availableItems.Count} available.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -150,22 +183,26 @@ namespace InventoryManagementSystem
                 notes += $" | Warranty Info: {txtWarrantyStatus.Text.Trim()}";
             }
 
-            var checkedSerials = clbSerialNumbers.CheckedItems.Cast<string>().ToList();
-            if (checkedSerials.Any())
-            {
-                notes += $" | Serials: {string.Join(", ", checkedSerials)}";
-            }
-
-            // 3. Execute Business Logic
-            // Stock out decreases quantity, so pass negative quantity
-            bool success = MemoryStore.PerformStockMovement(productId, -quantity, "STOCK OUT", notes);
+            // 3. Execute Business Logic (pass selected serials for item-level tracking)
+            bool success = MemoryStore.PerformStockMovement(
+                productId, 
+                -quantity, 
+                "STOCK OUT", 
+                notes, 
+                selectedSerials.Count > 0 ? selectedSerials : null
+            );
 
             // 4. Handle Result
             if (success)
             {
-                MessageBox.Show("Stock Out operation recorded successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Build dispatch confirmation with dispatched serial details
+                string serialDetails = selectedSerials.Count > 0
+                    ? $"\n\nDispatched Items:\n{string.Join("\n", selectedSerials.Take(10))}{(selectedSerials.Count > 10 ? $"\n... and {selectedSerials.Count - 10} more" : "")}"
+                    : $"\n\n{quantity} item(s) dispatched via FIFO auto-selection.";
+
+                MessageBox.Show($"Stock Out operation recorded successfully.{serialDetails}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 
-                // If product quantity becomes 0, we might need to log a low stock warning or it's handled by system
+                // Check low stock warning
                 if (product.Quantity <= 10)
                 {
                     MemoryStore.LogAction("LOW STOCK ALERT", $"Product '{product.Name}' is running low (Current: {product.Quantity}).");

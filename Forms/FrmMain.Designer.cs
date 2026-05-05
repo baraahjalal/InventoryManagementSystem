@@ -123,6 +123,7 @@
             this.picReports.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picReports.TabIndex = 19;
             this.picReports.TabStop = false;
+            this.picReports.Click += new System.EventHandler(this.btnReports_Click);
             // 
             // btnSuppliersManagement
             // 
@@ -152,6 +153,7 @@
             this.picSupplierManagement.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picSupplierManagement.TabIndex = 17;
             this.picSupplierManagement.TabStop = false;
+            this.picSupplierManagement.Click += new System.EventHandler(this.btnSuppliersManagement_Click);
             // 
             // btnAuditLog
             // 
@@ -181,6 +183,7 @@
             this.picAuditLog.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picAuditLog.TabIndex = 15;
             this.picAuditLog.TabStop = false;
+            this.picAuditLog.Click += new System.EventHandler(this.btnAuditLog_Click);
             // 
             // btnUserManagement
             // 
@@ -210,6 +213,7 @@
             this.picUserManagement.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picUserManagement.TabIndex = 13;
             this.picUserManagement.TabStop = false;
+            this.picUserManagement.Click += new System.EventHandler(this.btnUserManagement_Click);
             // 
             // btnStockOut
             // 
@@ -239,6 +243,7 @@
             this.picStockOut.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picStockOut.TabIndex = 11;
             this.picStockOut.TabStop = false;
+            this.picStockOut.Click += new System.EventHandler(this.btnStockOut_Click);
             // 
             // btnStockIn
             // 
@@ -268,6 +273,7 @@
             this.picStockIn.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picStockIn.TabIndex = 9;
             this.picStockIn.TabStop = false;
+            this.picStockIn.Click += new System.EventHandler(this.btnStockIn_Click);
             // 
             // btnProducts
             // 
@@ -297,6 +303,7 @@
             this.picProducts.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picProducts.TabIndex = 7;
             this.picProducts.TabStop = false;
+            this.picProducts.Click += new System.EventHandler(this.btnProducts_Click);
             // 
             // picNav
             // 
@@ -339,6 +346,7 @@
             this.picDashboard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picDashboard.TabIndex = 1;
             this.picDashboard.TabStop = false;
+            this.picDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
             // 
             // pnlMainContent
             // 

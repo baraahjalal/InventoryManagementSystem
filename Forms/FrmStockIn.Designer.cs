@@ -238,7 +238,7 @@ namespace InventoryManagementSystem
             this.lblSerialNumbers.Name = "lblSerialNumbers";
             this.lblSerialNumbers.Size = new System.Drawing.Size(189, 17);
             this.lblSerialNumbers.TabIndex = 13;
-            this.lblSerialNumbers.Text = "Serial Numbers (One per Line)";
+            this.lblSerialNumbers.Text = "Auto-Generated Item Serials (Preview)";
             // 
             // txtSerialNumbers
             // 
@@ -246,6 +246,7 @@ namespace InventoryManagementSystem
             this.txtSerialNumbers.Location = new System.Drawing.Point(38, 309);
             this.txtSerialNumbers.Multiline = true;
             this.txtSerialNumbers.Name = "txtSerialNumbers";
+            this.txtSerialNumbers.ReadOnly = true;
             this.txtSerialNumbers.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtSerialNumbers.Size = new System.Drawing.Size(371, 102);
             this.txtSerialNumbers.TabIndex = 14;

@@ -17,6 +17,8 @@ namespace InventoryManagementSystem
             InitializeComponent();
             this.Load += FrmStockIn_Load;
             btnExecute.Click += BtnExecute_Click;
+            cmbProduct.SelectedIndexChanged += CmbProduct_SelectedIndexChanged;
+            numQuantity.ValueChanged += NumQuantity_ValueChanged;
         }
 
         private void FrmStockIn_Load(object sender, EventArgs e)
@@ -55,6 +57,56 @@ namespace InventoryManagementSystem
             cmbProduct.SelectedIndex = -1;
         }
 
+        /// <summary>
+        /// When a product is selected, show its primary serial and preview what item serials will be generated.
+        /// </summary>
+        private void CmbProduct_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateSerialPreview();
+        }
+
+        /// <summary>
+        /// When quantity changes, regenerate the serial number preview.
+        /// </summary>
+        private void NumQuantity_ValueChanged(object sender, EventArgs e)
+        {
+            UpdateSerialPreview();
+        }
+
+        /// <summary>
+        /// Shows a preview of the item-level serial numbers that will be auto-generated.
+        /// </summary>
+        private void UpdateSerialPreview()
+        {
+            txtSerialNumbers.Clear();
+
+            if (cmbProduct.SelectedIndex == -1 || cmbProduct.SelectedItem == null)
+                return;
+
+            var product = (Product)cmbProduct.SelectedItem;
+            int qty = (int)numQuantity.Value;
+
+            if (qty <= 0)
+            {
+                txtSerialNumbers.Text = $"Product Serial: {product.SerialNumber}\r\n\r\n(Enter quantity to preview item serials)";
+                return;
+            }
+
+            // Calculate the next available index for this product
+            int startIndex = MemoryStore.GetNextItemIndex(product.Id);
+            var previewSerials = MemoryStore.GenerateItemSerials(product.SerialNumber, startIndex, qty);
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"Product Serial: {product.SerialNumber}");
+            sb.AppendLine($"Items to be generated ({qty}):");
+            sb.AppendLine("─────────────────────────");
+            foreach (var serial in previewSerials)
+            {
+                sb.AppendLine($"  ► {serial}");
+            }
+            txtSerialNumbers.Text = sb.ToString();
+        }
+
         private void BtnExecute_Click(object sender, EventArgs e)
         {
             // 1. Validation
@@ -85,22 +137,29 @@ namespace InventoryManagementSystem
 
             // 2. Prepare Data
             int productId = (int)cmbProduct.SelectedValue;
+            var product = MemoryStore.Products.FirstOrDefault(p => p.Id == productId);
             
             string notes = $"PO: {txtOrderNumber.Text.Trim()} | Zone: {cmbStorageZone.SelectedItem} | Warranty: {txtWarrantyInfo.Text.Trim()}";
-            if (!string.IsNullOrWhiteSpace(txtSerialNumbers.Text))
-            {
-                // Clean up newlines for the notes string
-                string serials = txtSerialNumbers.Text.Replace("\r\n", ",").Replace("\n", ",");
-                notes += $" | Serials: {serials}";
-            }
 
-            // 3. Execute Business Logic
+            // 3. Execute Business Logic (serial numbers are auto-generated in PerformStockMovement)
             bool success = MemoryStore.PerformStockMovement(productId, quantity, "STOCK IN", notes);
 
             // 4. Handle Result
             if (success)
             {
-                MessageBox.Show("Stock In operation recorded successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Show confirmation with generated serials
+                var generatedItems = MemoryStore.ProductItems
+                    .Where(pi => pi.ProductId == productId && pi.IsInStock)
+                    .OrderByDescending(pi => pi.Id)
+                    .Take(quantity)
+                    .Select(pi => pi.ItemSerialNumber)
+                    .ToList();
+
+                string serialInfo = generatedItems.Count > 0
+                    ? $"\n\nGenerated Item Serials:\n{string.Join("\n", generatedItems.Take(10))}{(generatedItems.Count > 10 ? $"\n... and {generatedItems.Count - 10} more" : "")}"
+                    : "";
+
+                MessageBox.Show($"Stock In operation recorded successfully.{serialInfo}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ClearForm();
             }
             else

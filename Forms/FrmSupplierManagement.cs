@@ -51,8 +51,13 @@ namespace InventoryManagementSystem
             );
         }
 
+        private ErrorProvider errorProvider = new ErrorProvider();
+
         private void FrmSupplierManagement_Load(object sender, EventArgs e)
         {
+            // UI Feedback: Restrict phone to numbers
+            txtPhone.KeyPress += InventoryManagementSystem.Classes.ValidationHelper.AllowOnlyDigits;
+
             ClearForm();
             LoadData();
         }
@@ -115,7 +120,6 @@ namespace InventoryManagementSystem
             txtContactPerson.Clear();
             txtPhone.Clear();
             txtEmail.Clear();
-            txtAddress.Clear();
             chkIsActive.Checked = true;
             
             for (int i = 0; i < clbSuppliedProducts.Items.Count; i++)
@@ -141,32 +145,46 @@ namespace InventoryManagementSystem
 
         private bool ValidateForm()
         {
-            if (string.IsNullOrWhiteSpace(txtSupplierName.Text))
+            errorProvider.Clear();
+            bool isValid = true;
+            string errorMsg;
+
+            if (!InventoryManagementSystem.Classes.ValidationHelper.IsRequired(txtSupplierName.Text, out errorMsg))
             {
-                MessageBox.Show("Supplier Name is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtSupplierName.Focus();
-                return false;
+                errorProvider.SetError(txtSupplierName, errorMsg);
+                isValid = false;
             }
-            if (string.IsNullOrWhiteSpace(txtContactPerson.Text))
+            else if (!isEditMode && MemoryStore.Suppliers.Any(s => s.Name.Equals(txtSupplierName.Text.Trim(), StringComparison.OrdinalIgnoreCase)))
             {
-                MessageBox.Show("Contact Person is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtContactPerson.Focus();
-                return false;
-            }
-            if (string.IsNullOrWhiteSpace(txtPhone.Text))
-            {
-                MessageBox.Show("Phone number is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtPhone.Focus();
-                return false;
-            }
-            if (string.IsNullOrWhiteSpace(txtEmail.Text))
-            {
-                MessageBox.Show("Email address is required.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtEmail.Focus();
-                return false;
+                // Unique Check enforced using Data Source (Business Rule)
+                errorProvider.SetError(txtSupplierName, "A supplier with this name already exists.");
+                isValid = false;
             }
 
-            return true;
+            if (!InventoryManagementSystem.Classes.ValidationHelper.IsRequired(txtContactPerson.Text, out errorMsg))
+            {
+                errorProvider.SetError(txtContactPerson, errorMsg);
+                isValid = false;
+            }
+
+            if (!InventoryManagementSystem.Classes.ValidationHelper.IsValidPhone(txtPhone.Text, out errorMsg))
+            {
+                errorProvider.SetError(txtPhone, errorMsg);
+                isValid = false;
+            }
+
+            if (!InventoryManagementSystem.Classes.ValidationHelper.IsValidEmail(txtEmail.Text, out errorMsg))
+            {
+                errorProvider.SetError(txtEmail, errorMsg);
+                isValid = false;
+            }
+
+            if (!isValid)
+            {
+                MessageBox.Show("Please correct the errors indicated before saving.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            return isValid;
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
@@ -189,7 +207,6 @@ namespace InventoryManagementSystem
                     supplier.ContactPerson = txtContactPerson.Text.Trim();
                     supplier.Phone = txtPhone.Text.Trim();
                     supplier.Email = txtEmail.Text.Trim();
-                    supplier.Address = txtAddress.Text.Trim();
                     supplier.IsActive = chkIsActive.Checked;
                     supplier.SuppliedProducts = selectedProducts;
 
@@ -200,13 +217,6 @@ namespace InventoryManagementSystem
             else
             {
                 int newId = MemoryStore.Suppliers.Count > 0 ? MemoryStore.Suppliers.Max(s => s.Id) + 1 : 1;
-                
-                // Check if name already exists
-                if (MemoryStore.Suppliers.Any(s => s.Name.Equals(txtSupplierName.Text.Trim(), StringComparison.OrdinalIgnoreCase)))
-                {
-                    MessageBox.Show("A supplier with this name already exists.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
 
                 var newSupplier = new Supplier
                 {
@@ -216,7 +226,6 @@ namespace InventoryManagementSystem
                     ContactPerson = txtContactPerson.Text.Trim(),
                     Phone = txtPhone.Text.Trim(),
                     Email = txtEmail.Text.Trim(),
-                    Address = txtAddress.Text.Trim(),
                     IsActive = chkIsActive.Checked,
                     SuppliedProducts = selectedProducts
                 };
@@ -248,7 +257,6 @@ namespace InventoryManagementSystem
                 txtContactPerson.Text = supplier.ContactPerson;
                 txtPhone.Text = supplier.Phone;
                 txtEmail.Text = supplier.Email;
-                txtAddress.Text = supplier.Address;
                 chkIsActive.Checked = supplier.IsActive;
 
                 for (int i = 0; i < clbSuppliedProducts.Items.Count; i++)
@@ -330,6 +338,11 @@ namespace InventoryManagementSystem
                 // Emphasize the status text slightly to stand out
                 e.CellStyle.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold);
             }
+        }
+
+        private void dgvSuppliers_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
         }
     }
 }
