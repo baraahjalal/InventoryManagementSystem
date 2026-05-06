@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
@@ -55,12 +55,12 @@ namespace InventoryManagementSystem
             if (!isValid) return;
 
             string enteredUsername = cmbUserName.Text.Trim();
-            string enteredPassword = txtPassword.Text.Trim();
+            string enteredPassword = txtPassword.Text;
 
             User authenticatedUser = MemoryStore.Users.FirstOrDefault(u =>
               u.Username.Equals(enteredUsername, StringComparison.OrdinalIgnoreCase) &&
               u.Password == enteredPassword);
-
+            // في حالة المستخدم صح !
             if (authenticatedUser != null)
             {
                 // Successful login
@@ -69,12 +69,14 @@ namespace InventoryManagementSystem
                 // Save the current user for the session
                 MemoryStore.CurrentUser = authenticatedUser;
 
-                MessageBox.Show($"Welcome, {authenticatedUser.Role}!", "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+             //   MessageBox.Show($"Welcome, {authenticatedUser.Role}!", "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 FrmMain mainForm = new FrmMain();
                 mainForm.Show();
                 this.Hide();
             }
+
+            // في حالة المستخدم غلط !
             else
             {
                 // Failed login

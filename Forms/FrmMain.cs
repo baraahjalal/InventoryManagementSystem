@@ -17,10 +17,8 @@ namespace InventoryManagementSystem
             InitializeComponent();
             this.DoubleBuffered = true;
         }
-
+ 
         private bool isExpanded = false; // متغير لتتبع حالة الشريط الجانبي (موسع أم لا)
-        private Size originalNavSize; // حجم أيقونة التنقل الأصلي
-        private Point originalNavLoc; // موقع أيقونة التنقل الأصلي
         private const int MinWidth = 70; // الحد الأدنى لعرض الشريط الجانبي (عندما يكون منكمشاً)
         private const int MaxWidth = 235; // الحد الأقصى لعرض الشريط الجانبي (عندما يكون موسعاً)
         private const int AnimSpeed = 20; // سرعة حركة التوسع والانكماش

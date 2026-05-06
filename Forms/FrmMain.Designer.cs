@@ -377,7 +377,7 @@ namespace InventoryManagementSystem
             // 
             this.lblCompanyDetails.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCompanyDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(96)))), ((int)(((byte)(96)))));
-            this.lblCompanyDetails.Location = new System.Drawing.Point(327, 350);
+            this.lblCompanyDetails.Location = new System.Drawing.Point(327, 368);
             this.lblCompanyDetails.Name = "lblCompanyDetails";
             this.lblCompanyDetails.Size = new System.Drawing.Size(400, 60);
             this.lblCompanyDetails.TabIndex = 15;
@@ -388,7 +388,7 @@ namespace InventoryManagementSystem
             // 
             this.lblCompanyName.Font = new System.Drawing.Font("Segoe UI Semibold", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCompanyName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.lblCompanyName.Location = new System.Drawing.Point(327, 310);
+            this.lblCompanyName.Location = new System.Drawing.Point(327, 328);
             this.lblCompanyName.Name = "lblCompanyName";
             this.lblCompanyName.Size = new System.Drawing.Size(400, 40);
             this.lblCompanyName.TabIndex = 14;
