@@ -14,6 +14,11 @@ namespace InventoryManagementSystem
     public partial class FrmStockIn : Form
     {
         private readonly ErrorProvider _errorProvider = new ErrorProvider();
+
+        // Holds the product ID passed in from FrmProducts right-click; -1 means normal (no preselection)
+        private int _preselectedProductId = -1;
+
+        /// <summary>Standard constructor — no preselection.</summary>
         public FrmStockIn()
         {
             InitializeComponent();
@@ -21,6 +26,15 @@ namespace InventoryManagementSystem
             btnExecute.Click += BtnExecute_Click;
             cmbProduct.SelectedIndexChanged += CmbProduct_SelectedIndexChanged;
             numQuantity.ValueChanged += NumQuantity_ValueChanged;
+        }
+
+        /// <summary>
+        /// Constructor used when launched via right-click from FrmProducts.
+        /// The specified product will be pre-selected in cmbProduct on load.
+        /// </summary>
+        public FrmStockIn(int productId) : this()
+        {
+            _preselectedProductId = productId;
         }
 
         private void FrmStockIn_Load(object sender, EventArgs e)
@@ -31,7 +45,13 @@ namespace InventoryManagementSystem
         public void RefreshData()
         {
             LoadProducts();
-            
+
+            // Pre-select product when launched via right-click from FrmProducts
+            if (_preselectedProductId > 0)
+            {
+                cmbProduct.SelectedValue = _preselectedProductId;
+            }
+
             if (cmbStorageZone.Items.Count > 0)
                 cmbStorageZone.SelectedIndex = 0;
         }
@@ -194,13 +214,11 @@ namespace InventoryManagementSystem
             int productId = (int)cmbProduct.SelectedValue;
             var product   = MemoryStore.Products.FirstOrDefault(p => p.Id == productId);
 
-            string notes = $"PO: {txtOrderNumber.Text.Trim()} | Zone: {((StorageZone)cmbStorageZone.SelectedItem).Name} | Warranty: {txtWarrantyInfo.Text.Trim()}";
+            string notes = $"PO: {txtOrderNumber.Text.Trim()} | Zone: {((StorageZone)cmbStorageZone.SelectedItem).Name} | Warranty: {(int)numWarrantyMonths.Value} Months";
 
-            int? warrantyDuration = null;
-            if (int.TryParse(txtWarrantyInfo.Text.Trim(), out int duration))
-            {
-                warrantyDuration = duration;
-            }
+            // Warranty: 0 means "no warranty" — store as null so it's excluded from warranty lookups
+            int warrantyValue = (int)numWarrantyMonths.Value;
+            int? warrantyDuration = warrantyValue > 0 ? warrantyValue : (int?)null;
             
             int? supplierId = (int?)cmbSupplier.SelectedValue;
 
@@ -247,7 +265,7 @@ namespace InventoryManagementSystem
             numQuantity.Value = 0;
             cmbStorageZone.DataSource = null;
             txtSerialNumbers.Clear();
-            txtWarrantyInfo.Clear();
+            numWarrantyMonths.Value = 12; // Reset to sensible default
         }
     }
 }

@@ -71,6 +71,13 @@ namespace InventoryManagementSystem
         public bool IsInStock { get; set; }       // true = available, false = dispatched/sold
         public DateTime DateAdded { get; set; }
         public DateTime? DateRemoved { get; set; } // null if still in stock
+
+        /// <summary>
+        /// Links this item to the StockMovement (batch) it arrived with.
+        /// Enables per-item warranty lookup when multiple batches exist for the same product.
+        /// Null for seeded/legacy items with no known batch.
+        /// </summary>
+        public int? BatchMovementId { get; set; }
     }
 
     public class Product
@@ -241,6 +248,9 @@ namespace InventoryManagementSystem
 
             if (quantityChange > 0) // STOCK IN
             {
+                // Reserve the movement ID before creating items so we can link them
+                int newMovementId = StockMovements.Count > 0 ? StockMovements.Max(m => m.Id) + 1 : 1;
+
                 int startIndex = GetNextItemIndex(productId);
                 var newSerials = GenerateItemSerials(product.SerialNumber, startIndex, quantityChange);
 
@@ -253,11 +263,33 @@ namespace InventoryManagementSystem
                         ProductId = productId,
                         ItemSerialNumber = serial,
                         IsInStock = true,
-                        DateAdded = DateTime.Now
+                        DateAdded = DateTime.Now,
+                        BatchMovementId = newMovementId // Link item to its batch
                     });
                 }
 
                 affectedSerials = newSerials;
+
+                // Update Product quantity
+                product.Quantity += quantityChange;
+
+                // Record the movement with the pre-reserved ID
+                StockMovements.Add(new StockMovement
+                {
+                    Id = newMovementId,
+                    ProductId = productId,
+                    QuantityChanged = quantityChange,
+                    Type = movementType,
+                    Timestamp = DateTime.Now,
+                    UserId = CurrentUser?.Id,
+                    Notes = notes,
+                    AffectedItemSerials = affectedSerials,
+                    WarrantyDurationMonths = warrantyDurationMonths,
+                    SupplierId = supplierId
+                });
+
+                LogAction(movementType.ToString(), $"Product '{product.Name}' increased by {quantityChange}. Items: [{string.Join(", ", affectedSerials.Take(5))}{(affectedSerials.Count > 5 ? "..." : "")}]");
+                return true;
             }
             else if (quantityChange < 0) // STOCK OUT
             {
@@ -296,14 +328,13 @@ namespace InventoryManagementSystem
                 }
             }
 
-            // Update Product quantity
+            // STOCK OUT / RESTOCK / RETURN — standard movement record
             product.Quantity += quantityChange;
 
-            // Generate Movement Record
-            int newMovementId = StockMovements.Count > 0 ? StockMovements.Max(m => m.Id) + 1 : 1;
+            int newMovementId2 = StockMovements.Count > 0 ? StockMovements.Max(m => m.Id) + 1 : 1;
             StockMovements.Add(new StockMovement
             {
-                Id = newMovementId,
+                Id = newMovementId2,
                 ProductId = productId,
                 QuantityChanged = quantityChange,
                 Type = movementType,
@@ -315,8 +346,40 @@ namespace InventoryManagementSystem
                 SupplierId = supplierId
             });
 
-            LogAction(movementType.ToString(), $"Product '{product.Name}' {(quantityChange > 0 ? "increased" : "decreased")} by {Math.Abs(quantityChange)}. Items: [{string.Join(", ", affectedSerials.Take(5))}{(affectedSerials.Count > 5 ? "..." : "")}]");
+            LogAction(movementType.ToString(), $"Product '{product.Name}' decreased by {Math.Abs(quantityChange)}. Items: [{string.Join(", ", affectedSerials.Take(5))}{(affectedSerials.Count > 5 ? "..." : "")}]");
             return true;
+        }
+
+        /// <summary>
+        /// Resolves the warranty for a specific item serial number.
+        /// Looks up the item's BatchMovementId to get the exact warranty from its Stock IN batch.
+        /// Falls back to the most recent Stock IN warranty for legacy/unlinked items.
+        /// Returns null if no warranty data is available.
+        /// </summary>
+        public static int? GetItemWarrantyMonths(int productId, string itemSerial)
+        {
+            var item = ProductItems.FirstOrDefault(pi =>
+                pi.ProductId == productId && pi.ItemSerialNumber == itemSerial);
+
+            if (item == null) return null;
+
+            // Primary path: use the batch this item was received with
+            if (item.BatchMovementId.HasValue)
+            {
+                var batchMovement = StockMovements.FirstOrDefault(m => m.Id == item.BatchMovementId.Value);
+                if (batchMovement != null)
+                    return batchMovement.WarrantyDurationMonths;
+            }
+
+            return null; // ❗ ما فيش ضمان
+
+            // Fallback for legacy seeded items: use most recent StockIn for the product
+            return StockMovements
+                .Where(m => m.ProductId == productId &&
+                            m.Type == StockMovementType.StockIn &&
+                            m.WarrantyDurationMonths.HasValue)
+                .OrderByDescending(m => m.Timestamp)
+                .FirstOrDefault()?.WarrantyDurationMonths;
         }
 
         #endregion
@@ -496,6 +559,12 @@ namespace InventoryManagementSystem
             int itemId = 1;
             foreach (var product in Products)
             {
+                // Find the first StockIn movement for this product to link seeded items to a batch
+                var seedBatch = StockMovements
+                    .Where(m => m.ProductId == product.Id && m.Type == StockMovementType.StockIn)
+                    .OrderBy(m => m.Timestamp)
+                    .FirstOrDefault();
+
                 for (int i = 1; i <= product.Quantity; i++)
                 {
                     ProductItems.Add(new ProductItem
@@ -504,7 +573,8 @@ namespace InventoryManagementSystem
                         ProductId = product.Id,
                         ItemSerialNumber = $"{product.SerialNumber}-{i:D2}",
                         IsInStock = true,
-                        DateAdded = DateTime.Now.AddDays(-10) // Simulated initial stock date
+                        DateAdded = DateTime.Now.AddDays(-10), // Simulated initial stock date
+                        BatchMovementId = seedBatch?.Id // Link to seed batch if available
                     });
                 }
             }

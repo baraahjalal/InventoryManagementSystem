@@ -17,7 +17,7 @@ namespace InventoryManagementSystem
         private System.Windows.Forms.NumericUpDown numQuantity;
         private System.Windows.Forms.ComboBox cmbStorageZone;
         private System.Windows.Forms.TextBox txtSerialNumbers;
-        private System.Windows.Forms.TextBox txtWarrantyInfo;
+        private System.Windows.Forms.NumericUpDown numWarrantyMonths;
         private System.Windows.Forms.Button btnExecute;
 
         // Labels for Inputs
@@ -54,11 +54,12 @@ namespace InventoryManagementSystem
             this.lblSerialNumbers = new System.Windows.Forms.Label();
             this.txtSerialNumbers = new System.Windows.Forms.TextBox();
             this.lblWarrantyInfo = new System.Windows.Forms.Label();
-            this.txtWarrantyInfo = new System.Windows.Forms.TextBox();
+            this.numWarrantyMonths = new System.Windows.Forms.NumericUpDown();
             this.btnExecute = new System.Windows.Forms.Button();
             this.pnlHeader.SuspendLayout();
             this.pnlMainCard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numWarrantyMonths)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlHeader
@@ -112,7 +113,7 @@ namespace InventoryManagementSystem
             this.pnlMainCard.Controls.Add(this.lblSerialNumbers);
             this.pnlMainCard.Controls.Add(this.txtSerialNumbers);
             this.pnlMainCard.Controls.Add(this.lblWarrantyInfo);
-            this.pnlMainCard.Controls.Add(this.txtWarrantyInfo);
+            this.pnlMainCard.Controls.Add(this.numWarrantyMonths);
             this.pnlMainCard.Controls.Add(this.btnExecute);
             this.pnlMainCard.Location = new System.Drawing.Point(17, 157);
             this.pnlMainCard.Name = "pnlMainCard";
@@ -256,15 +257,18 @@ namespace InventoryManagementSystem
             this.lblWarrantyInfo.Name = "lblWarrantyInfo";
             this.lblWarrantyInfo.Size = new System.Drawing.Size(243, 17);
             this.lblWarrantyInfo.TabIndex = 15;
-            this.lblWarrantyInfo.Text = "Warranty Information (e.g., 12 Months)";
+            this.lblWarrantyInfo.Text = "Warranty Duration (Months)  [0 = No Warranty]";
             // 
-            // txtWarrantyInfo
+            // numWarrantyMonths
             // 
-            this.txtWarrantyInfo.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtWarrantyInfo.Location = new System.Drawing.Point(440, 299);
-            this.txtWarrantyInfo.Name = "txtWarrantyInfo";
-            this.txtWarrantyInfo.Size = new System.Drawing.Size(370, 27);
-            this.txtWarrantyInfo.TabIndex = 16;
+            this.numWarrantyMonths.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.numWarrantyMonths.Location = new System.Drawing.Point(440, 299);
+            this.numWarrantyMonths.Maximum = new decimal(new int[] { 120, 0, 0, 0 });
+            this.numWarrantyMonths.Minimum = new decimal(new int[] { 0, 0, 0, 0 });
+            this.numWarrantyMonths.Name = "numWarrantyMonths";
+            this.numWarrantyMonths.Size = new System.Drawing.Size(370, 27);
+            this.numWarrantyMonths.TabIndex = 16;
+            this.numWarrantyMonths.Value = new decimal(new int[] { 12, 0, 0, 0 });
             // 
             // btnExecute
             // 
@@ -298,6 +302,7 @@ namespace InventoryManagementSystem
             this.pnlMainCard.ResumeLayout(false);
             this.pnlMainCard.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numQuantity)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numWarrantyMonths)).EndInit();
             this.ResumeLayout(false);
 
         }

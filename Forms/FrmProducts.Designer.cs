@@ -130,7 +130,7 @@ namespace InventoryManagementSystem
             this.lblProcessor.AutoSize = true;
             this.lblProcessor.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblProcessor.ForeColor = System.Drawing.Color.White;
-            this.lblProcessor.Location = new System.Drawing.Point(440, 31);
+            this.lblProcessor.Location = new System.Drawing.Point(472, 31);
             this.lblProcessor.Name = "lblProcessor";
             this.lblProcessor.Size = new System.Drawing.Size(72, 17);
             this.lblProcessor.TabIndex = 8;
@@ -151,7 +151,7 @@ namespace InventoryManagementSystem
             "Intel Core i5",
             "Snapdragon 8 Gen 3",
             "A17 Pro"});
-            this.cmbFilterProcessor.Location = new System.Drawing.Point(515, 28);
+            this.cmbFilterProcessor.Location = new System.Drawing.Point(547, 28);
             this.cmbFilterProcessor.Name = "cmbFilterProcessor";
             this.cmbFilterProcessor.Size = new System.Drawing.Size(140, 25);
             this.cmbFilterProcessor.TabIndex = 7;
@@ -162,7 +162,7 @@ namespace InventoryManagementSystem
             this.lblRAM.AutoSize = true;
             this.lblRAM.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblRAM.ForeColor = System.Drawing.Color.White;
-            this.lblRAM.Location = new System.Drawing.Point(680, 31);
+            this.lblRAM.Location = new System.Drawing.Point(712, 31);
             this.lblRAM.Name = "lblRAM";
             this.lblRAM.Size = new System.Drawing.Size(41, 17);
             this.lblRAM.TabIndex = 6;
@@ -180,7 +180,7 @@ namespace InventoryManagementSystem
             "16 GB",
             "32 GB",
             "64 GB"});
-            this.cmbFilterRAM.Location = new System.Drawing.Point(725, 28);
+            this.cmbFilterRAM.Location = new System.Drawing.Point(757, 28);
             this.cmbFilterRAM.Name = "cmbFilterRAM";
             this.cmbFilterRAM.Size = new System.Drawing.Size(100, 25);
             this.cmbFilterRAM.TabIndex = 5;
@@ -256,7 +256,7 @@ namespace InventoryManagementSystem
             this.btnClearSelection.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClearSelection.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.btnClearSelection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.btnClearSelection.Location = new System.Drawing.Point(750, 147);
+            this.btnClearSelection.Location = new System.Drawing.Point(662, 139);
             this.btnClearSelection.Name = "btnClearSelection";
             this.btnClearSelection.Size = new System.Drawing.Size(120, 28);
             this.btnClearSelection.TabIndex = 13;
@@ -431,14 +431,14 @@ namespace InventoryManagementSystem
             this.dgvProducts.DefaultCellStyle = dataGridViewCellStyle3;
             this.dgvProducts.EnableHeadersVisualStyles = false;
             this.dgvProducts.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(231)))), ((int)(((byte)(235)))));
-            this.dgvProducts.Location = new System.Drawing.Point(20, 20);
+            this.dgvProducts.Location = new System.Drawing.Point(12, 20);
             this.dgvProducts.MultiSelect = false;
             this.dgvProducts.Name = "dgvProducts";
             this.dgvProducts.ReadOnly = true;
             this.dgvProducts.RowHeadersVisible = false;
             this.dgvProducts.RowTemplate.Height = 42;
             this.dgvProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProducts.Size = new System.Drawing.Size(837, 479);
+            this.dgvProducts.Size = new System.Drawing.Size(862, 479);
             this.dgvProducts.TabIndex = 0;
             // 
             // lblMainTitle

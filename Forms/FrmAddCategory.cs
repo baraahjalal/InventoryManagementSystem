@@ -9,7 +9,6 @@ namespace InventoryManagementSystem.Forms
 {
     public partial class FrmAddCategory : Form
     {
-        // Property to get the newly added Category Name when successful
         public string CreatedCategoryName { get; private set; }
 
         // Dictionary to store "Filter Name" -> "List of Filter Values"

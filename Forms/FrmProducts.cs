@@ -12,6 +12,7 @@ namespace InventoryManagementSystem
         private List<Product> _allProducts;
         private Product _selectedProduct;
         private readonly ErrorProvider _errorProvider = new ErrorProvider();
+        private ContextMenuStrip _ctxProductMenu;
 
         // Holds our newly created dynamic combos mapped to their filter name
         private Dictionary<string, ComboBox> _dynamicFilters = new Dictionary<string, ComboBox>();
@@ -54,6 +55,7 @@ namespace InventoryManagementSystem
             btnAddProduct.Click += BtnAddProduct_Click;
             btnClearSelection.Click += BtnClearSelection_Click;
 
+            InitContextMenu();
             EnableDoubleBuffered(dgvProducts);
         }
 
@@ -430,6 +432,75 @@ namespace InventoryManagementSystem
                 if (cmb.Items.Count > 0)
                     cmb.SelectedIndex = 0;
             }
+        }
+
+        // ─────────────────────────────────────────────────────────────────────
+        // Right-Click Context Menu – Stock IN / OUT shortcut from product list
+        // ─────────────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Builds the ContextMenuStrip programmatically and wires CellMouseDown.
+        /// Kept out of the Designer file intentionally to avoid .resx churn.
+        /// </summary>
+        private void InitContextMenu()
+        {
+            _ctxProductMenu = new ContextMenuStrip();
+            _ctxProductMenu.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+
+            var mnuStockIn  = new ToolStripMenuItem("📦   Perform Stock IN");
+            var mnuStockOut = new ToolStripMenuItem("📤   Perform Stock OUT");
+
+            mnuStockIn.Click  += (s, e) => OpenStockForm(isStockIn: true);
+            mnuStockOut.Click += (s, e) => OpenStockForm(isStockIn: false);
+
+            _ctxProductMenu.Items.AddRange(new ToolStripItem[] { mnuStockIn, new ToolStripSeparator(), mnuStockOut });
+
+            dgvProducts.CellMouseDown += DgvProducts_CellMouseDown;
+        }
+
+        /// <summary>
+        /// Selects the right-clicked row and shows the context menu.
+        /// Clicking the header row (RowIndex &lt; 0) is ignored.
+        /// </summary>
+        private void DgvProducts_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            if (e.RowIndex < 0) return; // header row – do nothing
+
+            // Programmatically select the right-clicked row so _selectedProduct is populated
+            dgvProducts.ClearSelection();
+            dgvProducts.Rows[e.RowIndex].Selected = true;
+
+            int safeColumnIndex = e.ColumnIndex >= 0 ? e.ColumnIndex : 0;
+            dgvProducts.CurrentCell = dgvProducts.Rows[e.RowIndex].Cells[safeColumnIndex];
+
+            // Guard: only show menu when a valid product row is selected
+            if (_selectedProduct == null) return;
+
+            _ctxProductMenu.Show(dgvProducts, dgvProducts.PointToClient(Cursor.Position));
+        }
+
+        /// <summary>
+        /// Opens FrmStockIn or FrmStockOut with the currently selected product
+        /// pre-selected in the form's product ComboBox.
+        /// Uses FrmMain.OpenChildForm so the target form is embedded inside
+        /// pnlMainContent — exactly the same way sidebar navigation works.
+        /// </summary>
+        private void OpenStockForm(bool isStockIn)
+        {
+            if (_selectedProduct == null) return;
+
+            // Walk up to FrmMain (this form is itself a child embedded inside it)
+            var frmMain = this.ParentForm as FrmMain;
+            if (frmMain == null) return;
+
+            int productId = _selectedProduct.Id;
+
+            Form stockForm = isStockIn
+                ? (Form)new FrmStockIn(productId)
+                : (Form)new FrmStockOut(productId);
+
+            frmMain.OpenChildForm(stockForm);
         }
 
     }

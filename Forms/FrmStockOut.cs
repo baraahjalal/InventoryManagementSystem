@@ -14,6 +14,11 @@ namespace InventoryManagementSystem
     public partial class FrmStockOut : Form
     {
         private readonly ErrorProvider _errorProvider = new ErrorProvider();
+
+        // Holds the product ID passed in from FrmProducts right-click; -1 means normal (no preselection)
+        private int _preselectedProductId = -1;
+
+        /// <summary>Standard constructor — no preselection.</summary>
         public FrmStockOut()
         {
             InitializeComponent();
@@ -21,6 +26,15 @@ namespace InventoryManagementSystem
             btnExecuteStockOut.Click += BtnExecuteStockOut_Click;
             cmbProduct.SelectedIndexChanged += CmbProduct_SelectedIndexChanged;
             clbSerialNumbers.ItemCheck += ClbSerialNumbers_ItemCheck;
+        }
+
+        /// <summary>
+        /// Constructor used when launched via right-click from FrmProducts.
+        /// The specified product will be pre-selected in cmbProduct on load.
+        /// </summary>
+        public FrmStockOut(int productId) : this()
+        {
+            _preselectedProductId = productId;
         }
 
         private void FrmStockOut_Load(object sender, EventArgs e)
@@ -34,12 +48,24 @@ namespace InventoryManagementSystem
         public void RefreshData()
         {
             LoadProducts();
-            
+
+            // Pre-select product when launched via right-click from FrmProducts
+            if (_preselectedProductId > 0)
+            {
+                cmbProduct.SelectedValue = _preselectedProductId;
+                // Disable the combo to make it clear this was an intentional pre-selection
+                cmbProduct.Enabled = false;
+            }
+            else
+            {
+                cmbProduct.Enabled = true;
+            }
+
             if (cmbOutReason.Items.Count > 0)
                 cmbOutReason.SelectedIndex = 0;
-            
+
             txtRecipient.Clear();
-            txtWarrantyStatus.Clear();
+            ResetWarrantyCard();
         }
 
         private void LoadProducts()
@@ -67,7 +93,7 @@ namespace InventoryManagementSystem
             numQty.Enabled = false;
             
             clbSerialNumbers.Items.Clear();
-            lblWarrantyInfo.Text = "Warranty Expires: --/--/----";
+            ResetWarrantyCard();
         }
 
         /// <summary>
@@ -102,27 +128,121 @@ namespace InventoryManagementSystem
             {
                 clbSerialNumbers.Items.Add(item.ItemSerialNumber);
             }
-            
-            // Get Warranty Duration from last STOCK IN movement
-            var lastStockIn = MemoryStore.StockMovements
-                .Where(m => m.ProductId == product.Id && m.Type == StockMovementType.StockIn && m.WarrantyDurationMonths.HasValue)
-                .OrderByDescending(m => m.Timestamp)
-                .FirstOrDefault();
 
-            string warrantyText = "--/--/----";
-            if (lastStockIn != null)
+            // Show initial warranty info (no items selected yet)
+            UpdateWarrantyDisplay(new List<string>(), product);
+        }
+
+        // ─────────────────────────────────────────────────────────────────
+        // Warranty Card Helpers
+        // ─────────────────────────────────────────────────────────────────
+
+        /// <summary>Resets the warranty card to its default "awaiting" state.</summary>
+        private void ResetWarrantyCard()
+        {
+            pnlWarrantyCard.BackColor  = Color.FromArgb(240, 244, 255);  // blue tint
+            lblWarrantyTitle.ForeColor = Color.FromArgb(100, 116, 139);
+            lblWarrantyDuration.Text      = "—";
+            lblWarrantyDuration.ForeColor = Color.FromArgb(148, 163, 184);
+            lblWarrantyExpiry.Text     = "Select a product to begin";
+            lblWarrantyExpiry.ForeColor= Color.FromArgb(148, 163, 184);
+            txtWarrantyInfo.Text       = "";
+        }
+
+        /// <summary>
+        /// Resolves and displays warranty for the selected serials.
+        /// • No selection   → prompts user to select items
+        /// • Uniform warranty → GREEN card  — shows duration + expiry date
+        /// • Mixed warranties  → AMBER card  — "Varies per batch" + per-item summary
+        /// • No warranty data  → GREY  card  — "No Warranty"
+        /// </summary>
+        private void UpdateWarrantyDisplay(List<string> selectedSerials, Product product = null)
+        {
+            if (product == null)
             {
-                DateTime endDate = DateTime.Now.AddMonths(lastStockIn.WarrantyDurationMonths.Value);
-                warrantyText = endDate.ToString("dd/MM/yyyy");
-                txtWarrantyStatus.Text = $"{lastStockIn.WarrantyDurationMonths.Value} Months";
+                if (cmbProduct.SelectedItem is Product p) product = p;
+                else { ResetWarrantyCard(); return; }
             }
-            
-            lblWarrantyInfo.Text = $"Product Serial: {product.SerialNumber} | Warranty Expires: {warrantyText}";
+
+            // Right-side label always shows the product serial
+            txtWarrantyInfo.Text = $"Product Serial:\r\n{product.SerialNumber}";
+
+            // ── No items selected yet ────────────────────────────────────
+            if (selectedSerials == null || selectedSerials.Count == 0)
+            {
+                pnlWarrantyCard.BackColor     = Color.FromArgb(240, 244, 255); // blue tint
+                lblWarrantyDuration.Text      = "—";
+                lblWarrantyDuration.ForeColor = Color.FromArgb(100, 116, 139);
+                lblWarrantyExpiry.Text        = "Select items below to view warranty";
+                lblWarrantyExpiry.ForeColor   = Color.FromArgb(100, 116, 139);
+                return;
+            }
+
+            // Resolve warranty months for each selected item via its batch
+            var warrantyResults = selectedSerials
+                .Select(serial => new
+                {
+                    Serial = serial,
+                    Months = MemoryStore.GetItemWarrantyMonths(product.Id, serial)
+                })
+                .ToList();
+
+            var distinctMonths = warrantyResults.Select(r => r.Months).Distinct().ToList();
+
+            if (distinctMonths.Count == 1)
+            {
+                int? months = distinctMonths[0];
+
+                if (months.HasValue && months.Value > 0)
+                {
+                    // ── GREEN: Active warranty ────────────────────────────
+                    DateTime expiryDate = DateTime.Now.AddMonths(months.Value);
+                    pnlWarrantyCard.BackColor     = Color.FromArgb(240, 253, 244); // green tint
+                    lblWarrantyDuration.Text      = $"{months.Value} Months";
+                    lblWarrantyDuration.ForeColor = Color.FromArgb(21, 128, 61);   // green
+                    lblWarrantyExpiry.Text        = $"Expires: {expiryDate:dd MMM yyyy}";
+                    lblWarrantyExpiry.ForeColor   = Color.FromArgb(22, 101, 52);
+                    txtWarrantyInfo.Text         += $"\r\nWarranty Expires:\r\n{expiryDate:dd MMM yyyy}";
+                }
+                else
+                {
+                    // ── GREY: No warranty ─────────────────────────────────
+                    pnlWarrantyCard.BackColor     = Color.FromArgb(249, 250, 251); // grey
+                    lblWarrantyDuration.Text      = "No Warranty";
+                    lblWarrantyDuration.ForeColor = Color.FromArgb(107, 114, 128);
+                    lblWarrantyExpiry.Text        = "No warranty recorded for this batch";
+                    lblWarrantyExpiry.ForeColor   = Color.FromArgb(156, 163, 175);
+                }
+            }
+            else
+            {
+                // ── AMBER: Mixed warranties from different batches ────────
+                pnlWarrantyCard.BackColor     = Color.FromArgb(255, 251, 235); // amber tint
+                lblWarrantyDuration.Text      = "Varies";
+                lblWarrantyDuration.ForeColor = Color.FromArgb(180, 83, 9);   // amber
+                lblWarrantyExpiry.Text        = "Items sourced from multiple batches";
+                lblWarrantyExpiry.ForeColor   = Color.FromArgb(146, 64, 14);
+
+                // Build per-item detail on the right side
+                var sb = new StringBuilder();
+                sb.AppendLine($"Product Serial:");
+                sb.AppendLine(product.SerialNumber);
+                sb.AppendLine();
+                sb.AppendLine("Per-item Warranty:");
+                foreach (var r in warrantyResults)
+                {
+                    string w = r.Months.HasValue && r.Months.Value > 0
+                        ? $"{r.Months.Value} Months"
+                        : "No warranty";
+                    sb.AppendLine($"{r.Serial}  →  {w}");
+                }
+                txtWarrantyInfo.Text = sb.ToString().TrimEnd();
+            }
         }
 
         /// <summary>
         /// Sync the quantity spinner with the number of checked serial numbers.
-        /// Users select individual items (serial numbers) they want to dispatch.
+        /// Also refreshes warranty display after the check state settles.
         /// </summary>
         private void ClbSerialNumbers_ItemCheck(object sender, ItemCheckEventArgs e)
         {
@@ -135,6 +255,14 @@ namespace InventoryManagementSystem
             {
                 numQty.Value = checkedCount;
             }
+
+            // Warranty refresh must run after the CheckedItems list is updated
+            // (ItemCheck fires before the state actually changes, so use BeginInvoke)
+            this.BeginInvoke(new Action(() =>
+            {
+                var selected = clbSerialNumbers.CheckedItems.Cast<string>().ToList();
+                UpdateWarrantyDisplay(selected);
+            }));
         }
 
         private void BtnExecuteStockOut_Click(object sender, EventArgs e)
@@ -194,10 +322,12 @@ namespace InventoryManagementSystem
             string reason = cmbOutReason.SelectedItem.ToString();
             
             string notes = $"Reason: {reason} | Recipient: {txtRecipient.Text.Trim()}";
-            
-            if (!string.IsNullOrWhiteSpace(txtWarrantyStatus.Text))
+
+            // Append warranty info from the auto-detected card
+            string warrantyLabel = lblWarrantyDuration.Text;
+            if (!string.IsNullOrWhiteSpace(warrantyLabel) && warrantyLabel != "—")
             {
-                notes += $" | Warranty Info: {txtWarrantyStatus.Text.Trim()}";
+                notes += $" | Warranty: {warrantyLabel}";
             }
 
             // 3. Execute Business Logic (pass selected serials for item-level tracking)
