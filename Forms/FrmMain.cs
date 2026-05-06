@@ -16,9 +16,10 @@ namespace InventoryManagementSystem
         {
             InitializeComponent();
             this.DoubleBuffered = true;
+
         }
  
-        private bool isExpanded = false; // متغير لتتبع حالة الشريط الجانبي (موسع أم لا)
+        private bool isExpanded = true ; // متغير لتتبع حالة الشريط الجانبي (موسع أم لا)
         private const int MinWidth = 70; // الحد الأدنى لعرض الشريط الجانبي (عندما يكون منكمشاً)
         private const int MaxWidth = 235; // الحد الأقصى لعرض الشريط الجانبي (عندما يكون موسعاً)
         private const int AnimSpeed = 20; // سرعة حركة التوسع والانكماش
@@ -129,12 +130,6 @@ namespace InventoryManagementSystem
         private void FrmMain_Load(object sender, EventArgs e)
         {
             ApplyUserPermissions();
-            
-            // Optionally open the Dashboard by default if a user is logged in
-            if (MemoryStore.CurrentUser != null)
-            {
-                btnDashboard_Click(this, EventArgs.Empty);
-            }
         }
 
         private void ApplyUserPermissions()

@@ -1,4 +1,4 @@
-namespace InventoryManagementSystem
+﻿namespace InventoryManagementSystem
 {
     partial class FrmMain
     {
@@ -92,7 +92,7 @@ namespace InventoryManagementSystem
             this.pnlSideBar.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlSideBar.Location = new System.Drawing.Point(0, 0);
             this.pnlSideBar.Name = "pnlSideBar";
-            this.pnlSideBar.Size = new System.Drawing.Size(235, 749);
+            this.pnlSideBar.Size = new System.Drawing.Size(70, 749);
             this.pnlSideBar.TabIndex = 2;
             // 
             // btnReports
@@ -356,9 +356,9 @@ namespace InventoryManagementSystem
             this.pnlMainContent.Controls.Add(this.lblCompanyName);
             this.pnlMainContent.Controls.Add(this.picLogoMain);
             this.pnlMainContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlMainContent.Location = new System.Drawing.Point(235, 0);
+            this.pnlMainContent.Location = new System.Drawing.Point(70, 0);
             this.pnlMainContent.Name = "pnlMainContent";
-            this.pnlMainContent.Size = new System.Drawing.Size(1135, 749);
+            this.pnlMainContent.Size = new System.Drawing.Size(1300, 749);
             this.pnlMainContent.TabIndex = 3;
             // 
             // lblSystemID
@@ -375,13 +375,13 @@ namespace InventoryManagementSystem
             // 
             // lblCompanyDetails
             // 
-            this.lblCompanyDetails.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCompanyDetails.Font = new System.Drawing.Font("Hacen Saudi Arabia", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCompanyDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(96)))), ((int)(((byte)(96)))));
             this.lblCompanyDetails.Location = new System.Drawing.Point(327, 368);
             this.lblCompanyDetails.Name = "lblCompanyDetails";
             this.lblCompanyDetails.Size = new System.Drawing.Size(400, 60);
             this.lblCompanyDetails.TabIndex = 15;
-            this.lblCompanyDetails.Text = "Address | Phone | Email";
+            this.lblCompanyDetails.Text = "شركة التقنية الحديثة ";
             this.lblCompanyDetails.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblCompanyName
