@@ -156,7 +156,6 @@ namespace InventoryManagementSystem
             this.lblContactPerson.Size = new System.Drawing.Size(88, 15);
             this.lblContactPerson.TabIndex = 5;
             this.lblContactPerson.Text = "Contact Person";
-            this.lblContactPerson.Click += new System.EventHandler(this.lblContactPerson_Click);
             // 
             // txtContactPerson
             // 
@@ -165,7 +164,6 @@ namespace InventoryManagementSystem
             this.txtContactPerson.Name = "txtContactPerson";
             this.txtContactPerson.Size = new System.Drawing.Size(274, 27);
             this.txtContactPerson.TabIndex = 6;
-            this.txtContactPerson.TextChanged += new System.EventHandler(this.txtContactPerson_TextChanged);
             // 
             // lblPhone
             // 
@@ -177,7 +175,6 @@ namespace InventoryManagementSystem
             this.lblPhone.Size = new System.Drawing.Size(41, 15);
             this.lblPhone.TabIndex = 7;
             this.lblPhone.Text = "Phone";
-            this.lblPhone.Click += new System.EventHandler(this.lblPhone_Click);
             // 
             // txtPhone
             // 
@@ -186,7 +183,6 @@ namespace InventoryManagementSystem
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.Size = new System.Drawing.Size(274, 27);
             this.txtPhone.TabIndex = 8;
-            this.txtPhone.TextChanged += new System.EventHandler(this.txtPhone_TextChanged);
             // 
             // lblEmail
             // 
@@ -198,7 +194,6 @@ namespace InventoryManagementSystem
             this.lblEmail.Size = new System.Drawing.Size(36, 15);
             this.lblEmail.TabIndex = 9;
             this.lblEmail.Text = "Email";
-            this.lblEmail.Click += new System.EventHandler(this.lblEmail_Click);
             // 
             // txtEmail
             // 
@@ -207,7 +202,6 @@ namespace InventoryManagementSystem
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(274, 27);
             this.txtEmail.TabIndex = 10;
-            this.txtEmail.TextChanged += new System.EventHandler(this.txtEmail_TextChanged);
             // 
             // lblSuppliedProducts
             // 
@@ -219,7 +213,6 @@ namespace InventoryManagementSystem
             this.lblSuppliedProducts.Size = new System.Drawing.Size(103, 15);
             this.lblSuppliedProducts.TabIndex = 13;
             this.lblSuppliedProducts.Text = "Supplied Products";
-            this.lblSuppliedProducts.Click += new System.EventHandler(this.lblSuppliedProducts_Click);
             // 
             // clbSuppliedProducts
             // 
@@ -232,7 +225,6 @@ namespace InventoryManagementSystem
             this.clbSuppliedProducts.Name = "clbSuppliedProducts";
             this.clbSuppliedProducts.Size = new System.Drawing.Size(274, 92);
             this.clbSuppliedProducts.TabIndex = 14;
-            this.clbSuppliedProducts.SelectedIndexChanged += new System.EventHandler(this.clbSuppliedProducts_SelectedIndexChanged);
             // 
             // chkIsActive
             // 
@@ -247,7 +239,6 @@ namespace InventoryManagementSystem
             this.chkIsActive.TabIndex = 15;
             this.chkIsActive.Text = "Is Active";
             this.chkIsActive.UseVisualStyleBackColor = true;
-            this.chkIsActive.CheckedChanged += new System.EventHandler(this.chkIsActive_CheckedChanged);
             // 
             // btnSave
             // 
@@ -263,7 +254,6 @@ namespace InventoryManagementSystem
             this.btnSave.TabIndex = 16;
             this.btnSave.Text = "Save Supplier";
             this.btnSave.UseVisualStyleBackColor = false;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click_1);
             // 
             // btnClear
             // 
@@ -279,7 +269,6 @@ namespace InventoryManagementSystem
             this.btnClear.TabIndex = 17;
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = false;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click_1);
             // 
             // pnlGridContainer
             // 
@@ -344,7 +333,6 @@ namespace InventoryManagementSystem
             this.dgvSuppliers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvSuppliers.Size = new System.Drawing.Size(840, 409);
             this.dgvSuppliers.TabIndex = 0;
-            this.dgvSuppliers.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSuppliers_CellContentClick);
             // 
             // pnlActionButtons
             // 

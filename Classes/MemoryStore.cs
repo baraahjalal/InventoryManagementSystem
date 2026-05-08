@@ -19,10 +19,9 @@ namespace InventoryManagementSystem
         public string Password { get; set; }
         public string Role { get; set; }
         public System.Drawing.Image ProfilePicture { get; set; }
-
         public bool IsAdmin { get; set; } // Super User override
 
-         }
+    }
 
     public class Supplier
     {
@@ -231,7 +230,9 @@ namespace InventoryManagementSystem
         /// For STOCK IN: automatically generates item-level serial numbers.
         /// For STOCK OUT: marks specified items as dispatched.
         /// </summary>
-        public static bool PerformStockMovement(int productId, int quantityChange, StockMovementType movementType, string notes = "", List<string> selectedItemSerials = null, int? warrantyDurationMonths = null, int? supplierId = null)
+        public static bool PerformStockMovement(int productId, int quantityChange, StockMovementType movementType,
+            string notes = "", List<string> selectedItemSerials = null,
+            int? warrantyDurationMonths = null, int? supplierId = null)
         {
             // Business Rules: Only STOCK IN and RETURN TO SUPPLIER require supplier info
             if (movementType == StockMovementType.StockIn && supplierId == null) return false;
@@ -359,25 +360,29 @@ namespace InventoryManagementSystem
         public static int? GetItemWarrantyMonths(int productId, string itemSerial)
         {
             var item = ProductItems.FirstOrDefault(pi =>
-                pi.ProductId == productId && pi.ItemSerialNumber == itemSerial);
+                pi.ProductId == productId &&
+                pi.ItemSerialNumber == itemSerial);
 
-            if (item == null) return null;
+            if (item == null)
+                return null;
 
-            // Primary path: use the batch this item was received with
+            // Primary path: use exact batch movement
             if (item.BatchMovementId.HasValue)
             {
-                var batchMovement = StockMovements.FirstOrDefault(m => m.Id == item.BatchMovementId.Value);
+                var batchMovement = StockMovements.FirstOrDefault(m =>
+                    m.Id == item.BatchMovementId.Value);
+
                 if (batchMovement != null)
                     return batchMovement.WarrantyDurationMonths;
             }
 
-            return null; // ❗ ما فيش ضمان
-
-            // Fallback for legacy seeded items: use most recent StockIn for the product
+            // Fallback for legacy/unlinked items:
+            // use latest StockIn movement that has warranty
             return StockMovements
-                .Where(m => m.ProductId == productId &&
-                            m.Type == StockMovementType.StockIn &&
-                            m.WarrantyDurationMonths.HasValue)
+                .Where(m =>
+                    m.ProductId == productId &&
+                    m.Type == StockMovementType.StockIn &&
+                    m.WarrantyDurationMonths.HasValue)
                 .OrderByDescending(m => m.Timestamp)
                 .FirstOrDefault()?.WarrantyDurationMonths;
         }
@@ -461,11 +466,11 @@ namespace InventoryManagementSystem
             // Seed Suppliers (Address removed)
             Suppliers.AddRange(new[]
             {
-                new Supplier { Id = 1, Name = "TechSource Inc.", ContactPerson = "Arthur Morgan", Phone = "555-0101", Email = "arthur@techsource.com", IsActive = true },
-                new Supplier { Id = 2, Name = "Global Electronics", ContactPerson = "Harvey Specter", Phone = "555-0202", Email = "harvey@globalelec.com", IsActive = true },
-                new Supplier { Id = 3, Name = "Office Depot", ContactPerson = "Michael Scott", Phone = "555-0303", Email = "michael@officedepot.com", IsActive = true },
-                new Supplier { Id = 4, Name = "Mega Traders", ContactPerson = "Dwight Schrute", Phone = "555-0404", Email = "dwight@megatraders.com", IsActive = true },
-                new Supplier { Id = 5, Name = "Samsung Electronics", ContactPerson = "John Doe", Phone = "555-0505", Email = "john@samsung.com", IsActive = true },
+                new Supplier { Id = 1, Name = "TechSource Inc.", ContactPerson = "Arthur Morgan", Phone = "555-010100", Email = "arthur@techsource.com", IsActive = true },
+                new Supplier { Id = 2, Name = "Global Electronics", ContactPerson = "Harvey Specter", Phone = "555-020200", Email = "harvey@globalelec.com", IsActive = true },
+                new Supplier { Id = 3, Name = "Office Depot", ContactPerson = "Michael Scott", Phone = "555-030300", Email = "michael@officedepot.com", IsActive = true },
+                new Supplier { Id = 4, Name = "Mega Traders", ContactPerson = "Dwight Schrute", Phone = "555-040400", Email = "dwight@megatraders.com", IsActive = true },
+                new Supplier { Id = 5, Name = "Samsung Electronics", ContactPerson = "John Doe", Phone = "555-050500", Email = "john@samsung.com", IsActive = true },
             });
 
             SupplierCategories.AddRange(new[]

@@ -104,31 +104,7 @@ namespace InventoryManagementSystem
             return true;
         }
 
-        // 7. Serial Count matches Quantity (Business Rule)
-        public static bool IsValidSerialCount(string serialsInput, int expectedQuantity, out string errorMessage)
-        {
-            var serials = serialsInput.Split(new[] { '\r', '\n', ',' }, StringSplitOptions.RemoveEmptyEntries);
-            if (serials.Length != expectedQuantity)
-            {
-                errorMessage = $"عدد الأرقام التسلسلية المدخلة ({serials.Length}) لا يطابق الكمية المحددة ({expectedQuantity}).";
-                return false;
-            }
-            errorMessage = string.Empty;
-            return true;
-        }
-
         // 8. Handle UI Validation Result (ErrorProvider)
-        public static bool ValidateControl(Control control, ErrorProvider errorProvider, bool isValid, string errorMessage)
-        {
-            if (!isValid)
-            {
-                errorProvider.SetError(control, errorMessage);
-                control.Focus();
-                return false;
-            }
-            errorProvider.SetError(control, string.Empty);
-            return true;
-        }
 
         // 9. Restrict KeyPress to Digits Only (UI Level)
         public static void AllowOnlyDigits(object sender, KeyPressEventArgs e)

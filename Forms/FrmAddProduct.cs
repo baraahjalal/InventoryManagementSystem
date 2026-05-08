@@ -16,8 +16,11 @@ namespace InventoryManagementSystem.Forms
         {
             InitializeComponent();
 
+            btnSave.Click -= BtnSave_Click;
             btnSave.Click += BtnSave_Click;
+            btnCancel.Click -= BtnCancel_Click;
             btnCancel.Click += BtnCancel_Click;
+            cmbCategory.SelectedIndexChanged -= CmbCategory_SelectedIndexChanged;
             cmbCategory.SelectedIndexChanged += CmbCategory_SelectedIndexChanged;
 
             // KeyPress restrictions

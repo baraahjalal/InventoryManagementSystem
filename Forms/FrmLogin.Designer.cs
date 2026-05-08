@@ -121,7 +121,7 @@ namespace InventoryManagementSystem
             this.cmbUserName.Location = new System.Drawing.Point(50, 283);
             this.cmbUserName.Name = "cmbUserName";
             this.cmbUserName.Size = new System.Drawing.Size(330, 28);
-            this.cmbUserName.TabIndex = 10;
+            this.cmbUserName.TabIndex = 1;
             // 
             // lblPasswordTitle
             // 
@@ -140,7 +140,7 @@ namespace InventoryManagementSystem
             this.txtPassword.Location = new System.Drawing.Point(50, 353);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(330, 29);
-            this.txtPassword.TabIndex = 6;
+            this.txtPassword.TabIndex = 2;
             this.txtPassword.UseSystemPasswordChar = true;
             // 
             // btnAuthenticate
@@ -156,7 +156,7 @@ namespace InventoryManagementSystem
             this.btnAuthenticate.Location = new System.Drawing.Point(50, 425);
             this.btnAuthenticate.Name = "btnAuthenticate";
             this.btnAuthenticate.Size = new System.Drawing.Size(330, 45);
-            this.btnAuthenticate.TabIndex = 7;
+            this.btnAuthenticate.TabIndex = 3;
             this.btnAuthenticate.Text = "Sign In";
             this.btnAuthenticate.UseVisualStyleBackColor = false;
             this.btnAuthenticate.Click += new System.EventHandler(this.btnAuthenticate_Click);

@@ -83,16 +83,10 @@ namespace InventoryManagementSystem
 
         private void FrmProducts_Load(object sender, EventArgs e)
         {
-            // Load Dynamic Categories
-            cmbCategory.Items.Clear();
-            cmbCategory.Items.Add("All Categories");
-            foreach (var template in MemoryStore.CategoryTemplates)
-            {
-                cmbCategory.Items.Add(MemoryStore.Categories.FirstOrDefault(c => c.Id == template.CategoryId)?.Name ?? "");
-            }
+            txtProdSpec.ReadOnly = true; // منع التعديل اليدوي على حقل المواصفات المجمع
+            txtProdSpec.BackColor = System.Drawing.SystemColors.Window; // الحفاظ على لونه كأنه نشط لسهولة القراءة
 
-            if (cmbCategory.Items.Count > 0)
-                cmbCategory.SelectedIndex = 0; // Default to "All Categories"
+            LoadCategories();
 
             // KeyPress restriction on price edit field
             txtProdPrice.KeyPress += ValidationHelper.AllowOnlyDecimals;
@@ -100,9 +94,33 @@ namespace InventoryManagementSystem
             RefreshData();
         }
 
+        private void LoadCategories()
+        {
+            cmbCategory.SelectedIndexChanged -= CmbCategory_SelectedIndexChanged;
+
+            var displayCategories = new List<Category>
+            {
+                new Category { Id = 0, Name = "All Categories" }
+            };
+            displayCategories.AddRange(MemoryStore.Categories);
+
+            cmbCategory.DataSource = null;
+            cmbCategory.DataSource = displayCategories;
+            cmbCategory.DisplayMember = "Name";
+            cmbCategory.ValueMember = "Id";
+
+            if (cmbCategory.Items.Count > 0)
+                cmbCategory.SelectedIndex = 0;
+
+            cmbCategory.SelectedIndexChanged += CmbCategory_SelectedIndexChanged;
+        }
+
         private void CmbCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GenerateDynamicFilters(cmbCategory.SelectedItem?.ToString());
+            if (cmbCategory.SelectedItem is Category selectedCategory)
+            {
+                GenerateDynamicFilters(selectedCategory.Name);
+            }
             ApplyFilters();
         }
 
@@ -194,14 +212,9 @@ namespace InventoryManagementSystem
             var filteredList = _allProducts.AsEnumerable();
 
             // 1. Static Category Filter
-            string selectedCategory = cmbCategory.SelectedItem?.ToString();
-            if (!string.IsNullOrEmpty(selectedCategory) && selectedCategory != "All Categories")
+            if (cmbCategory.SelectedItem is Category selectedCat && selectedCat.Id != 0)
             {
-                var catId = MemoryStore.Categories.FirstOrDefault(c => c.Name.Equals(selectedCategory, StringComparison.OrdinalIgnoreCase))?.Id;
-                if (catId.HasValue)
-                {
-                    filteredList = filteredList.Where(p => p.CategoryId == catId.Value);
-                }
+                filteredList = filteredList.Where(p => p.CategoryId == selectedCat.Id);
             }
 
             // 2. Dynamic Attribute Filters
@@ -381,30 +394,15 @@ namespace InventoryManagementSystem
                     string newCategory = frmAdd.CreatedCategoryName;
                     var newFilters = frmAdd.CreatedFilters;
 
-                    // Add template to memory store if it doesn't exist
-                    var catId = MemoryStore.Categories.FirstOrDefault(c => c.Name.Equals(newCategory, StringComparison.OrdinalIgnoreCase))?.Id;
-                    if (catId == null)
-                    {
-                        int newCatId = MemoryStore.Categories.Count > 0 ? MemoryStore.Categories.Max(c => c.Id) + 1 : 1;
-                        MemoryStore.Categories.Add(new Category { Id = newCatId, Name = newCategory });
-                        catId = newCatId;
-                    }
+                    // The category and template are already added to MemoryStore by FrmAddCategory
+                    // Just reload and select
+                    LoadCategories();
+                    
+                    var newCatItem = ((List<Category>)cmbCategory.DataSource).FirstOrDefault(c => c.Name.Equals(newCategory, StringComparison.OrdinalIgnoreCase));
+                    if (newCatItem != null)
+                        cmbCategory.SelectedItem = newCatItem;
 
-                    if (!MemoryStore.CategoryTemplates.Any(t => t.CategoryId == catId.Value))
-                    {
-                        MemoryStore.CategoryTemplates.Add(new CategoryTemplate
-                        {
-                            CategoryId = catId.Value,
-                            AvailableFilters = newFilters
-                        });
-                    }
-
-                    if (!cmbCategory.Items.Contains(newCategory))
-                    {
-                        cmbCategory.Items.Add(newCategory);
-                    }
-
-                    MessageBox.Show($"Category '{newCategory}' with {newFilters.Count} filters added successfully.", "Add Category", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Category '{newCategory}' with {newFilters?.Count ?? 0} filters added successfully.", "Add Category", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }

@@ -17,8 +17,8 @@ namespace InventoryManagementSystem.Forms
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
             this.pnlFooter = new System.Windows.Forms.Panel();
@@ -62,7 +62,7 @@ namespace InventoryManagementSystem.Forms
             this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.lblTitle.Location = new System.Drawing.Point(20, 18);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(176, 25);
+            this.lblTitle.Size = new System.Drawing.Size(175, 25);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Add New Category";
             // 
@@ -103,7 +103,7 @@ namespace InventoryManagementSystem.Forms
             this.btnSave.Location = new System.Drawing.Point(375, 15);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(100, 38);
-            this.btnSave.TabIndex = 0;
+            this.btnSave.TabIndex = 4;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = false;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -132,28 +132,28 @@ namespace InventoryManagementSystem.Forms
             this.dgvFilters.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvFilters.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.dgvFilters.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvFilters.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(244)))), ((int)(((byte)(246)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvFilters.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvFilters.ColumnHeadersHeight = 35;
             this.dgvFilters.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvFilters.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colFilterName,
             this.colFilterValues,
             this.colAction});
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvFilters.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvFilters.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgvFilters.EnableHeadersVisualStyles = false;
             this.dgvFilters.Location = new System.Drawing.Point(25, 275);
             this.dgvFilters.MultiSelect = false;
@@ -232,7 +232,7 @@ namespace InventoryManagementSystem.Forms
             this.lblFilterValues.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblFilterValues.Location = new System.Drawing.Point(15, 55);
             this.lblFilterValues.Name = "lblFilterValues";
-            this.lblFilterValues.Size = new System.Drawing.Size(49, 17);
+            this.lblFilterValues.Size = new System.Drawing.Size(48, 17);
             this.lblFilterValues.TabIndex = 2;
             this.lblFilterValues.Text = "Values:";
             // 
@@ -242,7 +242,7 @@ namespace InventoryManagementSystem.Forms
             this.txtFilterName.Location = new System.Drawing.Point(120, 17);
             this.txtFilterName.Name = "txtFilterName";
             this.txtFilterName.Size = new System.Drawing.Size(310, 25);
-            this.txtFilterName.TabIndex = 1;
+            this.txtFilterName.TabIndex = 2;
             // 
             // lblFilterName
             // 
@@ -251,7 +251,7 @@ namespace InventoryManagementSystem.Forms
             this.lblFilterName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblFilterName.Location = new System.Drawing.Point(15, 20);
             this.lblFilterName.Name = "lblFilterName";
-            this.lblFilterName.Size = new System.Drawing.Size(79, 17);
+            this.lblFilterName.Size = new System.Drawing.Size(78, 17);
             this.lblFilterName.TabIndex = 0;
             this.lblFilterName.Text = "Filter Name:";
             // 
@@ -262,7 +262,7 @@ namespace InventoryManagementSystem.Forms
             this.lblFiltersSection.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
             this.lblFiltersSection.Location = new System.Drawing.Point(21, 95);
             this.lblFiltersSection.Name = "lblFiltersSection";
-            this.lblFiltersSection.Size = new System.Drawing.Size(183, 20);
+            this.lblFiltersSection.Size = new System.Drawing.Size(190, 20);
             this.lblFiltersSection.TabIndex = 2;
             this.lblFiltersSection.Text = "Category Filters (Optional)";
             // 
