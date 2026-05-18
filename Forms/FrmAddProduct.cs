@@ -10,7 +10,6 @@ namespace InventoryManagementSystem.Forms
 {
     public partial class FrmAddProduct : Form
     {
-        private readonly Dictionary<string, ComboBox> _specSelectors = new Dictionary<string, ComboBox>();
         private readonly ErrorProvider _errorProvider = new ErrorProvider();
 
         public FrmAddProduct()
@@ -50,11 +49,13 @@ namespace InventoryManagementSystem.Forms
 
         private void CmbCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            flpDynamicSpecs.Controls.Clear();
-            _specSelectors.Clear();
-
-            // No CategoryTemplates in new schema — specs are free-form text
-            // Load all active suppliers for the combo
+            dgvProductSpecs.Rows.Clear();
+            if (cmbCategory.SelectedItem is Models.Category cat)
+            {
+                var keys = CategorySpecTemplateRepository.GetByCategory(cat.CategoryName);
+                foreach (var key in keys)
+                    dgvProductSpecs.Rows.Add(key, "");
+            }
             LoadAllActiveSuppliers();
         }
 
@@ -84,13 +85,14 @@ namespace InventoryManagementSystem.Forms
                 return;
             }
 
-            // Build specifications from any dynamic controls added
             var specs = new List<ProductSpecification>();
-            foreach (var kvp in _specSelectors)
+            foreach (DataGridViewRow row in dgvProductSpecs.Rows)
             {
-                string val = kvp.Value.SelectedItem?.ToString();
-                if (!string.IsNullOrWhiteSpace(val))
-                    specs.Add(new ProductSpecification { ProductSerial = serial, SpecKey = kvp.Key, SpecValue = val });
+                if (row.IsNewRow) continue;
+                string key = row.Cells["colSpecKey"].Value?.ToString();
+                string val = row.Cells["colSpecValue"].Value?.ToString();
+                if (!string.IsNullOrWhiteSpace(key) && !string.IsNullOrWhiteSpace(val))
+                    specs.Add(new ProductSpecification { ProductSerial = serial, SpecKey = key, SpecValue = val });
             }
 
             var newProd = new Product

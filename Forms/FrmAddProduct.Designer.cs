@@ -46,13 +46,16 @@ namespace InventoryManagementSystem.Forms
             this.lblSuppliers = new System.Windows.Forms.Label();
             this.clbSuppliers = new System.Windows.Forms.CheckedListBox();
             this.lblSpecs = new System.Windows.Forms.Label();
-            this.flpDynamicSpecs = new System.Windows.Forms.FlowLayoutPanel();
+            this.dgvProductSpecs = new System.Windows.Forms.DataGridView();
+            this.colSpecKey      = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSpecValue    = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlFooter = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.pnlHeader.SuspendLayout();
             this.pnlBody.SuspendLayout();
             this.tblForm.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvProductSpecs)).BeginInit();
             this.pnlFooter.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -119,7 +122,7 @@ namespace InventoryManagementSystem.Forms
             this.tblForm.Controls.Add(this.lblSuppliers, 0, 5);
             this.tblForm.Controls.Add(this.clbSuppliers, 1, 5);
             this.tblForm.Controls.Add(this.lblSpecs, 0, 6);
-            this.tblForm.Controls.Add(this.flpDynamicSpecs, 1, 6);
+            this.tblForm.Controls.Add(this.dgvProductSpecs, 1, 6);
             this.tblForm.Dock = System.Windows.Forms.DockStyle.Top;
             this.tblForm.Location = new System.Drawing.Point(24, 12);
             this.tblForm.Name = "tblForm";
@@ -281,20 +284,43 @@ namespace InventoryManagementSystem.Forms
             this.lblSpecs.Size = new System.Drawing.Size(87, 17);
             this.lblSpecs.TabIndex = 12;
             this.lblSpecs.Text = "Specifications";
-            // 
-            // flpDynamicSpecs
-            // 
-            this.flpDynamicSpecs.AutoScroll = true;
-            this.flpDynamicSpecs.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
-            this.flpDynamicSpecs.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.flpDynamicSpecs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.flpDynamicSpecs.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flpDynamicSpecs.Location = new System.Drawing.Point(153, 323);
-            this.flpDynamicSpecs.Name = "flpDynamicSpecs";
-            this.flpDynamicSpecs.Padding = new System.Windows.Forms.Padding(8);
-            this.flpDynamicSpecs.Size = new System.Drawing.Size(316, 184);
-            this.flpDynamicSpecs.TabIndex = 13;
-            this.flpDynamicSpecs.WrapContents = false;
+            //
+            // dgvProductSpecs
+            //
+            this.dgvProductSpecs.AllowUserToAddRows    = false;
+            this.dgvProductSpecs.AllowUserToDeleteRows = false;
+            this.dgvProductSpecs.AllowUserToResizeRows = false;
+            this.dgvProductSpecs.BackgroundColor       = System.Drawing.Color.White;
+            this.dgvProductSpecs.BorderStyle           = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.dgvProductSpecs.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.dgvProductSpecs.ColumnHeadersHeight   = 28;
+            this.dgvProductSpecs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvProductSpecs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+                this.colSpecKey,
+                this.colSpecValue });
+            this.dgvProductSpecs.Dock          = System.Windows.Forms.DockStyle.Fill;
+            this.dgvProductSpecs.EnableHeadersVisualStyles = false;
+            this.dgvProductSpecs.Location      = new System.Drawing.Point(153, 323);
+            this.dgvProductSpecs.Name          = "dgvProductSpecs";
+            this.dgvProductSpecs.ReadOnly      = false;
+            this.dgvProductSpecs.RowHeadersVisible = false;
+            this.dgvProductSpecs.RowTemplate.Height = 28;
+            this.dgvProductSpecs.Size          = new System.Drawing.Size(316, 184);
+            this.dgvProductSpecs.TabIndex      = 13;
+            //
+            // colSpecKey
+            //
+            this.colSpecKey.HeaderText = "Property";
+            this.colSpecKey.Name       = "colSpecKey";
+            this.colSpecKey.ReadOnly   = true;
+            this.colSpecKey.Width      = 120;
+            //
+            // colSpecValue
+            //
+            this.colSpecValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colSpecValue.HeaderText   = "Value";
+            this.colSpecValue.Name         = "colSpecValue";
+            this.colSpecValue.ReadOnly     = false;
             // 
             // pnlFooter
             // 
@@ -361,6 +387,7 @@ namespace InventoryManagementSystem.Forms
             this.pnlBody.ResumeLayout(false);
             this.tblForm.ResumeLayout(false);
             this.tblForm.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvProductSpecs)).EndInit();
             this.pnlFooter.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -386,7 +413,9 @@ namespace InventoryManagementSystem.Forms
         private System.Windows.Forms.Label lblSuppliers;
         private System.Windows.Forms.CheckedListBox clbSuppliers;
         private System.Windows.Forms.Label lblSpecs;
-        private System.Windows.Forms.FlowLayoutPanel flpDynamicSpecs;
+        private System.Windows.Forms.DataGridView dgvProductSpecs;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSpecKey;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSpecValue;
         private System.Windows.Forms.Panel pnlFooter;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnSave;
