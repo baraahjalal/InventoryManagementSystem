@@ -17,6 +17,7 @@ namespace InventoryManagementSystem
 
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.lblHeader = new System.Windows.Forms.Label();
             this.lblSubHeader = new System.Windows.Forms.Label();
@@ -39,6 +40,7 @@ namespace InventoryManagementSystem
             this.lblWarrantyDuration = new System.Windows.Forms.Label();
             this.lblWarrantyExpiry = new System.Windows.Forms.Label();
             this.lblSystemID = new System.Windows.Forms.Label();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.pnlHeader.SuspendLayout();
             this.pnlMainCard.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numQty)).BeginInit();
@@ -115,7 +117,6 @@ namespace InventoryManagementSystem
             this.btnExecuteStockOut.TabIndex = 12;
             this.btnExecuteStockOut.Text = "CONFIRM STOCK OUT";
             this.btnExecuteStockOut.UseVisualStyleBackColor = false;
-            // 
             // 
             // txtWarrantyInfo
             // 
@@ -319,6 +320,11 @@ namespace InventoryManagementSystem
             this.lblSystemID.TabIndex = 4;
             this.lblSystemID.Text = "SYSTEM USER: UNKNOWN";
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
             // FrmStockOut
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -367,5 +373,6 @@ namespace InventoryManagementSystem
         private System.Windows.Forms.Label lblWarrantyTitle;
         private System.Windows.Forms.Label lblWarrantyDuration;
         private System.Windows.Forms.Label lblWarrantyExpiry;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }

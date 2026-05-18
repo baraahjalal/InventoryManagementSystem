@@ -377,5 +377,9 @@ namespace InventoryManagementSystem
             }
         }
 
+        private void dgvSuppliers_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }

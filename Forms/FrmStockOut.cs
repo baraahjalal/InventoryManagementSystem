@@ -262,6 +262,7 @@ namespace InventoryManagementSystem
             {
                 var selected = clbSerialNumbers.CheckedItems.Cast<string>().ToList();
                 UpdateWarrantyDisplay(selected);
+
             }));
         }
 
