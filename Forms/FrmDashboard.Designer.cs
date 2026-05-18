@@ -320,6 +320,7 @@ namespace InventoryManagementSystem
             this.pnlLowStock.ResumeLayout(false);
             this.pnlLowStock.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRecentActions)).EndInit();
+            InventoryManagementSystem.Classes.AppTheme.ApplyStandardGrid(this.dgvRecentActions);
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
             this.ResumeLayout(false);

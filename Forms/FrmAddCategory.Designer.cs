@@ -219,6 +219,7 @@ namespace InventoryManagementSystem.Forms
             this.pnlBody.ResumeLayout(false);
             this.pnlBody.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvSpecKeys)).EndInit();
+            InventoryManagementSystem.Classes.AppTheme.ApplyStandardGrid(this.dgvSpecKeys, headerHeight: 35, rowHeight: 35);
             this.ResumeLayout(false);
         }
 

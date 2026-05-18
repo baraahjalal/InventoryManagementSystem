@@ -20,6 +20,7 @@ namespace InventoryManagementSystem
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle specsCellStyle = new System.Windows.Forms.DataGridViewCellStyle();
             this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colProductName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -276,7 +277,7 @@ namespace InventoryManagementSystem
             this.btnAddProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddProduct.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnAddProduct.ForeColor = System.Drawing.Color.White;
-            this.btnAddProduct.Location = new System.Drawing.Point(23, 559);
+            this.btnAddProduct.Location = new System.Drawing.Point(23, 498);
             this.btnAddProduct.Name = "btnAddProduct";
             this.btnAddProduct.Size = new System.Drawing.Size(272, 40);
             this.btnAddProduct.TabIndex = 12;
@@ -310,11 +311,11 @@ namespace InventoryManagementSystem
             this.lblProdSpec.AutoSize = true;
             this.lblProdSpec.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblProdSpec.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblProdSpec.Location = new System.Drawing.Point(20, 210);
+            this.lblProdSpec.Location = new System.Drawing.Point(20, 323);
             this.lblProdSpec.Name = "lblProdSpec";
-            this.lblProdSpec.Size = new System.Drawing.Size(80, 15);
+            this.lblProdSpec.Size = new System.Drawing.Size(83, 15);
             this.lblProdSpec.TabIndex = 7;
-            this.lblProdSpec.Text = "Specifications";
+            this.lblProdSpec.Text = "Item Tracking";
             // 
             // lblProdPrice
             // 
@@ -355,11 +356,12 @@ namespace InventoryManagementSystem
             // 
             // txtProdSpec
             // 
-            this.txtProdSpec.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.txtProdSpec.Location = new System.Drawing.Point(23, 230);
+            this.txtProdSpec.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtProdSpec.Location = new System.Drawing.Point(23, 340);
             this.txtProdSpec.Multiline = true;
             this.txtProdSpec.Name = "txtProdSpec";
-            this.txtProdSpec.Size = new System.Drawing.Size(274, 146);
+            this.txtProdSpec.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtProdSpec.Size = new System.Drawing.Size(274, 95);
             this.txtProdSpec.TabIndex = 3;
             // 
             // txtProdPrice
@@ -388,6 +390,65 @@ namespace InventoryManagementSystem
             this.lblDetailsTitle.Size = new System.Drawing.Size(150, 28);
             this.lblDetailsTitle.TabIndex = 0;
             this.lblDetailsTitle.Text = "Product Details";
+            // 
+            // lblItemTracking
+            // 
+            this.lblItemTracking.AutoSize = true;
+            this.lblItemTracking.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblItemTracking.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.lblItemTracking.Location = new System.Drawing.Point(20, 200);
+            this.lblItemTracking.Name = "lblItemTracking";
+            this.lblItemTracking.Size = new System.Drawing.Size(80, 15);
+            this.lblItemTracking.TabIndex = 8;
+            this.lblItemTracking.Text = "Specifications";
+            // 
+            // dgvSpecs
+            // 
+            this.dgvSpecs.AllowUserToAddRows = false;
+            this.dgvSpecs.AllowUserToDeleteRows = false;
+            this.dgvSpecs.AllowUserToResizeRows = false;
+            this.dgvSpecs.BackgroundColor = System.Drawing.Color.White;
+            this.dgvSpecs.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvSpecs.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
+            this.dgvSpecs.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
+            this.dgvSpecs.ColumnHeadersHeight = 26;
+            this.dgvSpecs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvSpecs.ColumnHeadersVisible = true;
+            this.dgvSpecs.EnableHeadersVisualStyles = false;
+            this.dgvSpecs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colSpecProperty,
+            this.colSpecValue});
+            specsCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            specsCellStyle.BackColor = System.Drawing.Color.White;
+            specsCellStyle.Font = new System.Drawing.Font("Segoe UI", 9F);
+            specsCellStyle.ForeColor = System.Drawing.SystemColors.ControlText;
+            specsCellStyle.SelectionBackColor = System.Drawing.Color.White;
+            specsCellStyle.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            specsCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvSpecs.DefaultCellStyle = specsCellStyle;
+            this.dgvSpecs.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(231)))), ((int)(((byte)(235)))));
+            this.dgvSpecs.Location = new System.Drawing.Point(23, 218);
+            this.dgvSpecs.Name = "dgvSpecs";
+            this.dgvSpecs.ReadOnly = true;
+            this.dgvSpecs.RowHeadersVisible = false;
+            this.dgvSpecs.RowTemplate.Height = 26;
+            this.dgvSpecs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvSpecs.Size = new System.Drawing.Size(274, 88);
+            this.dgvSpecs.TabIndex = 9;
+            // 
+            // colSpecProperty
+            // 
+            this.colSpecProperty.HeaderText = "Property";
+            this.colSpecProperty.Name = "colSpecProperty";
+            this.colSpecProperty.ReadOnly = true;
+            this.colSpecProperty.Width = 100;
+            // 
+            // colSpecValue
+            // 
+            this.colSpecValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.colSpecValue.HeaderText = "Value";
+            this.colSpecValue.Name = "colSpecValue";
+            this.colSpecValue.ReadOnly = true;
             // 
             // pnlGridContainer
             // 
@@ -490,6 +551,9 @@ namespace InventoryManagementSystem
             this.pnlDetails.PerformLayout();
             this.pnlGridContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSpecs)).EndInit();
+            InventoryManagementSystem.Classes.AppTheme.ApplyStandardGrid(this.dgvProducts);
+            InventoryManagementSystem.Classes.AppTheme.ApplyCompactGrid(this.dgvSpecs);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -528,5 +592,11 @@ namespace InventoryManagementSystem
         private System.Windows.Forms.Label lblMainTitle;
         private System.Windows.Forms.Label lblSubTitle;
         private System.Windows.Forms.Button btnClearSelection;
+        private System.Windows.Forms.DataGridView dgvSpecs;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSpecProperty;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSpecValue;
+        private System.Windows.Forms.Label lblItemTracking;
+
+
     }
 }

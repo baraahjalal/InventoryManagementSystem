@@ -198,19 +198,13 @@ namespace InventoryManagementSystem
             var specs = ProductRepository.GetSpecifications(_selectedProduct.SerialNumber);
             var items = ProductItemRepository.GetAvailable(_selectedProduct.SerialNumber);
 
+            dgvSpecs.Rows.Clear();
+            foreach (var s in specs)
+                dgvSpecs.Rows.Add(s.SpecKey, s.SpecValue);
+
             var sb = new StringBuilder();
             sb.AppendLine($"Category: {_selectedProduct.CategoryName}");
             sb.AppendLine($"Product Serial: {_selectedProduct.SerialNumber}");
-            sb.AppendLine();
-
-            if (specs.Count > 0)
-            {
-                foreach (var s in specs)
-                    sb.AppendLine($"{s.SpecKey}: {s.SpecValue}");
-                sb.AppendLine();
-            }
-
-            sb.AppendLine("── Item Tracking ──");
             sb.AppendLine($"In Stock: {items.Count}");
 
             if (items.Count > 0)
@@ -233,6 +227,7 @@ namespace InventoryManagementSystem
             txtProdName.Text  = string.Empty;
             txtProdPrice.Text = string.Empty;
             txtProdSpec.Text  = string.Empty;
+            dgvSpecs.Rows.Clear();
             btnEdit.Enabled   = false;
         }
 
@@ -300,6 +295,7 @@ namespace InventoryManagementSystem
             txtProdName.Text  = string.Empty;
             txtProdPrice.Text = string.Empty;
             txtProdSpec.Text  = string.Empty;
+            dgvSpecs.Rows.Clear();
             txtSearch.Text    = string.Empty;
             dgvProducts.ClearSelection();
             _selectedProduct  = null;

@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\AppTheme.cs" />
     <Compile Include="Classes\ValidationHelper.cs" />
     <Compile Include="Forms\FrmAddCategory.cs">
       <SubType>Form</SubType>
@@ -169,6 +170,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="2026-05-18-system-analysis-fix-round2.md" />
+    <None Include="Error Fix Plan - FrmProducts.docx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -200,6 +203,7 @@
     <Compile Include="DAL\StorageZoneRepository.cs" />
     <Compile Include="DAL\SupplierRepository.cs" />
     <Compile Include="DAL\UserRepository.cs" />
+    <Compile Include="DAL\CategorySpecTemplateRepository.cs" />
     <None Include="Database\CreateDatabase.sql" />
     <None Include="Database\SeedData.sql" />
     <None Include="Database\Triggers.sql" />

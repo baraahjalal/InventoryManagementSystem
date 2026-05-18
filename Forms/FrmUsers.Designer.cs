@@ -458,6 +458,7 @@ namespace InventoryManagementSystem
             this.cmsDeletePicture.ResumeLayout(false);
             this.pnlGridContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvUsers)).EndInit();
+            InventoryManagementSystem.Classes.AppTheme.ApplyStandardGrid(this.dgvUsers);
             this.pnlActionButtons.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

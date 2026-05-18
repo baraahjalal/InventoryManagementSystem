@@ -388,6 +388,7 @@ namespace InventoryManagementSystem.Forms
             this.tblForm.ResumeLayout(false);
             this.tblForm.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductSpecs)).EndInit();
+            InventoryManagementSystem.Classes.AppTheme.ApplyCompactGrid(this.dgvProductSpecs);
             this.pnlFooter.ResumeLayout(false);
             this.ResumeLayout(false);
 

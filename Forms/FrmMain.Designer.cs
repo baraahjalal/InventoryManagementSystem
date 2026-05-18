@@ -441,6 +441,22 @@
             this.pnlMainContent.ResumeLayout(false);
             this.pnlMainContent.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picLogoMain)).EndInit();
+            InventoryManagementSystem.Classes.AppTheme.ApplyMainShell(
+                this,
+                this.pnlSideBar,
+                this.pnlMainContent,
+                new System.Windows.Forms.Button[] {
+                    this.btnDashboard,
+                    this.btnProducts,
+                    this.btnStockIn,
+                    this.btnStockOut,
+                    this.btnUserManagement,
+                    this.btnAuditLog,
+                    this.btnSuppliersManagement,
+                    this.btnReports },
+                this.lblSystemID,
+                this.lblCompanyName,
+                this.lblCompanyDetails);
             this.ResumeLayout(false);
 
         }

@@ -228,6 +228,7 @@ namespace InventoryManagementSystem
             this.Load += new System.EventHandler(this.FrmAuditLog_Load);
             this.pnlMain.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuditLog)).EndInit();
+            InventoryManagementSystem.Classes.AppTheme.ApplyStandardGrid(this.dgvAuditLog, headerHeight: 44, rowHeight: 40);
             this.pnlFilterBar.ResumeLayout(false);
             this.pnlFilterBar.PerformLayout();
             this.ResumeLayout(false);

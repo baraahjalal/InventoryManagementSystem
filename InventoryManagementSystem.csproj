@@ -64,6 +64,7 @@
     <Compile Include="DAL\StockMovementRepository.cs" />
     <Compile Include="DAL\StorageZoneRepository.cs" />
     <Compile Include="DAL\AuditLogRepository.cs" />
+    <Compile Include="Classes\AppTheme.cs" />
     <Compile Include="Classes\ValidationHelper.cs" />
     <Compile Include="Forms\FrmAddCategory.cs">
       <SubType>Form</SubType>

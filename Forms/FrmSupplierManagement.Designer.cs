@@ -463,6 +463,7 @@ namespace InventoryManagementSystem
             this.pnlRight.PerformLayout();
             this.pnlGridContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvSuppliers)).EndInit();
+            InventoryManagementSystem.Classes.AppTheme.ApplyStandardGrid(this.dgvSuppliers);
             this.pnlActionButtons.ResumeLayout(false);
             this.pnlActionButtons.PerformLayout();
             this.ResumeLayout(false);
