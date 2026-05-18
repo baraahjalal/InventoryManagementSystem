@@ -1,29 +1,28 @@
 using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-
+using InventoryManagementSystem.DAL;
+using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem
 {
     public partial class FrmUsers : Form
     {
-        private int _selectedUserId = -1;
+        private string _selectedUsername = string.Empty;
         private readonly ErrorProvider _errorProvider = new ErrorProvider();
 
         public FrmUsers()
         {
             InitializeComponent();
             
-            // Allow editing password manually instead of being read-only
             txtUserPassword.ReadOnly = false;
 
-            // Ensure the role combo contains only the simplified roles defined in the SRS
             cmbRole.Items.Clear();
             cmbRole.Items.Add("System Administrator");
             cmbRole.Items.Add("Employee");
 
-            // Attach Event Handlers
             this.Load += FrmUsers_Load;
             btnAdd.Click += BtnAdd_Click;
             btnUpdate.Click += BtnUpdate_Click;
@@ -33,15 +32,13 @@ namespace InventoryManagementSystem
             btnResetPass.Click += BtnResetPass_Click;
             dgvUsers.SelectionChanged += DgvUsers_SelectionChanged;
             
-            // Assuming cmsDeletePicture has toolStripMenuItemDelete added in designer
             if (toolStripMenuItemDelete != null)
                 toolStripMenuItemDelete.Click += ToolStripMenuItemDelete_Click;
         }
 
         private void FrmUsers_Load(object sender, EventArgs e)
         {
-            // Security Check: Only Admins can manage users according to SRS
-            if (MemoryStore.CurrentUser != null && !MemoryStore.CurrentUser.IsAdmin)
+            if (DatabaseHelper.CurrentUser != null && !DatabaseHelper.CurrentUser.IsAdmin)
             {
                 MessageBox.Show("Unauthorized Access. Only System Administrators can manage users.", "Access Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 pnlDetails.Enabled = false;
@@ -49,7 +46,6 @@ namespace InventoryManagementSystem
                 this.BeginInvoke(new Action(this.Close));
                 return;
             }
-
             LoadGridData();
         }
 
@@ -58,28 +54,27 @@ namespace InventoryManagementSystem
             dgvUsers.Rows.Clear();
             int no = 1;
             
-            // Fetch all users from MemoryStore
-            foreach (var user in MemoryStore.Users)
+            var users = UserRepository.GetAll();
+            foreach (var user in users)
             {
-                string regNum = $"REG-{user.Id:D3}";
+                Image pic = ByteArrayToImage(user.ProfilePhoto);
                 dgvUsers.Rows.Add(
-                    user.Id,
+                    user.Username,
                     no.ToString(),
                     user.Username,
-                    "********", // Mask password for security
+                    "********", 
                     user.Role,
-                    regNum,
-                    user.ProfilePicture
+                    user.Username, // regNum removed, just show username
+                    pic
                 );
                 no++;
             }
-
             ClearForm();
         }
 
         private void ClearForm()
         {
-            _selectedUserId = -1;
+            _selectedUsername = string.Empty;
             txtUserName.Clear();
             txtUserPassword.Clear();
             cmbRole.SelectedIndex = -1;
@@ -89,7 +84,6 @@ namespace InventoryManagementSystem
 
         private void BtnResetPass_Click(object sender, EventArgs e)
         {
-            // The "Reset" button clears the form to allow adding a new user easily
             ClearForm();
         }
 
@@ -100,15 +94,16 @@ namespace InventoryManagementSystem
                 var row = dgvUsers.SelectedRows[0];
                 if (row.Cells[0].Value != null)
                 {
-                    _selectedUserId = Convert.ToInt32(row.Cells[0].Value);
-                    var user = MemoryStore.Users.FirstOrDefault(u => u.Id == _selectedUserId);
+                    _selectedUsername = row.Cells[0].Value.ToString();
+                    var users = UserRepository.GetAll();
+                    var user = users.FirstOrDefault(u => u.Username == _selectedUsername);
                     
                     if (user != null)
                     {
                         txtUserName.Text = user.Username;
-                        txtUserPassword.Text = user.Password; // Show real password when editing
+                        txtUserPassword.Text = user.Password; 
                         cmbRole.SelectedItem = user.Role;
-                        picUser.Image = user.ProfilePicture;
+                        picUser.Image = ByteArrayToImage(user.ProfilePhoto);
                     }
                 }
             }
@@ -120,28 +115,24 @@ namespace InventoryManagementSystem
 
             string username = txtUserName.Text.Trim();
             
-            // Prevent duplicate usernames
-            if (MemoryStore.Users.Any(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase)))
+            if (UserRepository.Exists(username))
             {
                 MessageBox.Show("Username already exists. Please choose a different one.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            int newId = MemoryStore.Users.Count > 0 ? MemoryStore.Users.Max(u => u.Id) + 1 : 1;
             string role = cmbRole.SelectedItem.ToString();
             
             var newUser = new User
             {
-                Id = newId,
                 Username = username,
                 Password = txtUserPassword.Text,
                 Role = role,
                 IsAdmin = (role == "System Administrator"),
-                ProfilePicture = picUser.Image
+                ProfilePhoto = ImageToByteArray(picUser.Image)
             };
 
-            MemoryStore.Users.Add(newUser);
-            MemoryStore.LogAction("USER ADDED", $"User '{username}' was added as {role}.");
+            UserRepository.Add(newUser);
             
             MessageBox.Show("User added successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             LoadGridData();
@@ -149,7 +140,7 @@ namespace InventoryManagementSystem
 
         private void BtnUpdate_Click(object sender, EventArgs e)
         {
-            if (_selectedUserId == -1)
+            if (string.IsNullOrEmpty(_selectedUsername))
             {
                 MessageBox.Show("Please select a user to update.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -157,23 +148,22 @@ namespace InventoryManagementSystem
 
             if (!ValidateInputs()) return;
 
-            var user = MemoryStore.Users.FirstOrDefault(u => u.Id == _selectedUserId);
-            if (user == null) return;
-
             string newUsername = txtUserName.Text.Trim();
 
-            // Check if the username is taken by someone else
-            if (MemoryStore.Users.Any(u => u.Id != _selectedUserId && u.Username.Equals(newUsername, StringComparison.OrdinalIgnoreCase)))
+            if (newUsername != _selectedUsername && UserRepository.Exists(newUsername))
             {
                 MessageBox.Show("Username already exists. Please choose a different one.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
+            var users = UserRepository.GetAll();
+            var user = users.FirstOrDefault(u => u.Username == _selectedUsername);
+            if (user == null) return;
+
             string oldRole = user.Role;
             string newRole = cmbRole.SelectedItem.ToString();
 
-            // Prevent self-demotion from System Administrator to avoid locking everyone out
-            if (MemoryStore.CurrentUser != null && MemoryStore.CurrentUser.Id == user.Id && oldRole == "System Administrator" && newRole != "System Administrator")
+            if (DatabaseHelper.CurrentUser != null && DatabaseHelper.CurrentUser.Username == user.Username && oldRole == "System Administrator" && newRole != "System Administrator")
             {
                 MessageBox.Show("You cannot remove your own System Administrator privileges.", "Operation Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -183,9 +173,17 @@ namespace InventoryManagementSystem
             user.Password = txtUserPassword.Text;
             user.Role = newRole;
             user.IsAdmin = (newRole == "System Administrator");
-            user.ProfilePicture = picUser.Image;
+            user.ProfilePhoto = ImageToByteArray(picUser.Image);
 
-            MemoryStore.LogAction("USER UPDATED", $"User '{newUsername}' details were updated.");
+            if (newUsername != _selectedUsername)
+            {
+                UserRepository.Add(user);
+                UserRepository.Delete(_selectedUsername);
+            }
+            else
+            {
+                UserRepository.Update(user);
+            }
             
             MessageBox.Show("User updated successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             LoadGridData();
@@ -193,27 +191,22 @@ namespace InventoryManagementSystem
 
         private void BtnDelete_Click(object sender, EventArgs e)
         {
-            if (_selectedUserId == -1)
+            if (string.IsNullOrEmpty(_selectedUsername))
             {
                 MessageBox.Show("Please select a user to delete.", "Selection Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var user = MemoryStore.Users.FirstOrDefault(u => u.Id == _selectedUserId);
-            if (user == null) return;
-
-            // Prevent deleting currently logged-in user
-            if (MemoryStore.CurrentUser != null && user.Id == MemoryStore.CurrentUser.Id)
+            if (DatabaseHelper.CurrentUser != null && _selectedUsername == DatabaseHelper.CurrentUser.Username)
             {
                 MessageBox.Show("You cannot delete your own account while logged in.", "Operation Denied", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            var confirm = MessageBox.Show($"Are you sure you want to delete user '{user.Username}'?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var confirm = MessageBox.Show($"Are you sure you want to delete user '{_selectedUsername}'?", "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == DialogResult.Yes)
             {
-                MemoryStore.Users.Remove(user);
-                MemoryStore.LogAction("USER DELETED", $"User '{user.Username}' was removed from the system.");
+                UserRepository.Delete(_selectedUsername);
                 
                 MessageBox.Show("User deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadGridData();
@@ -257,7 +250,6 @@ namespace InventoryManagementSystem
             bool isValid = true;
             string errorMsg;
 
-            // Username: required + length 3–30
             if (!ValidationHelper.IsRequired(txtUserName.Text, out errorMsg))
             { _errorProvider.SetError(txtUserName, errorMsg); isValid = false; }
             else if (!ValidationHelper.IsValidLength(txtUserName.Text.Trim(), 3, 30, out errorMsg))
@@ -265,7 +257,6 @@ namespace InventoryManagementSystem
             else
               _errorProvider.SetError(txtUserName, string.Empty);
 
-            // Password: required + length 6–50
             if (!ValidationHelper.IsRequired(txtUserPassword.Text, out errorMsg))
             { _errorProvider.SetError(txtUserPassword, errorMsg); isValid = false; }
             else if (!ValidationHelper.IsValidLength(txtUserPassword.Text, 6, 50, out errorMsg))
@@ -273,7 +264,6 @@ namespace InventoryManagementSystem
             else
               _errorProvider.SetError(txtUserPassword, string.Empty);
 
-            // Role
             if (cmbRole.SelectedIndex == -1)
             { _errorProvider.SetError(cmbRole, "Please select a system role."); isValid = false; }
             else
@@ -283,6 +273,31 @@ namespace InventoryManagementSystem
                 MessageBox.Show("Please correct the highlighted errors before saving.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             return isValid;
+        }
+
+        private byte[] ImageToByteArray(Image image)
+        {
+            if (image == null) return null;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                var format = image.RawFormat;
+                // If the format is MemoryBmp, save as PNG to avoid errors
+                if (format.Equals(System.Drawing.Imaging.ImageFormat.MemoryBmp))
+                {
+                    format = System.Drawing.Imaging.ImageFormat.Png;
+                }
+                image.Save(ms, format);
+                return ms.ToArray();
+            }
+        }
+
+        private Image ByteArrayToImage(byte[] bytes)
+        {
+            if (bytes == null || bytes.Length == 0) return null;
+            using (MemoryStream ms = new MemoryStream(bytes))
+            {
+                return Image.FromStream(ms);
+            }
         }
     }
 }

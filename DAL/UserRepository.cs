@@ -55,7 +55,8 @@ namespace InventoryManagementSystem.DAL
                     cmd.Parameters.AddWithValue("@p",  u.Password);
                     cmd.Parameters.AddWithValue("@r",  u.Role);
                     cmd.Parameters.AddWithValue("@a",  u.IsAdmin);
-                    cmd.Parameters.AddWithValue("@ph", (object)u.ProfilePhoto ?? System.DBNull.Value);
+                    var addPhoto = cmd.Parameters.Add("@ph", System.Data.SqlDbType.VarBinary, -1);
+                    addPhoto.Value = (object)u.ProfilePhoto ?? System.DBNull.Value;
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -73,7 +74,8 @@ namespace InventoryManagementSystem.DAL
                     cmd.Parameters.AddWithValue("@p",  u.Password);
                     cmd.Parameters.AddWithValue("@r",  u.Role);
                     cmd.Parameters.AddWithValue("@a",  u.IsAdmin);
-                    cmd.Parameters.AddWithValue("@ph", (object)u.ProfilePhoto ?? System.DBNull.Value);
+                    var updPhoto = cmd.Parameters.Add("@ph", System.Data.SqlDbType.VarBinary, -1);
+                    updPhoto.Value = (object)u.ProfilePhoto ?? System.DBNull.Value;
                     cmd.Parameters.AddWithValue("@u",  u.Username);
                     cmd.ExecuteNonQuery();
                 }

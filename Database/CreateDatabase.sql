@@ -10,6 +10,10 @@
 --   IDENTITY used ONLY for StockMovements and AuditLog
 --   (transaction/event logs with no natural key).
 -- ============================================================
+-- ENCODING NOTE:
+--   All text columns use NVARCHAR to support full Unicode
+--   (Arabic, English, and all other languages).
+-- ============================================================
 
 USE master;
 GO
@@ -22,7 +26,8 @@ BEGIN
 END
 GO
 
-CREATE DATABASE InventoryDB;
+CREATE DATABASE InventoryDB
+    COLLATE Arabic_CI_AI;   -- supports Arabic + English, case-insensitive
 GO
 
 USE InventoryDB;
@@ -31,14 +36,11 @@ GO
 -- ============================================================
 -- TABLE 1: Users
 -- PK : Username  (natural key)
--- WHY: Username is always unique. It is referenced directly
---      in StockMovements and AuditLog — using it as PK avoids
---      an unnecessary surrogate ID.
 -- ============================================================
 CREATE TABLE Users (
-    Username     VARCHAR(50)    NOT NULL,
-    Password     VARCHAR(255)   NOT NULL,
-    Role         VARCHAR(30)    NOT NULL
+    Username     NVARCHAR(50)   NOT NULL,
+    Password     NVARCHAR(255)  NOT NULL,
+    Role         NVARCHAR(30)   NOT NULL
         CONSTRAINT CK_Users_Role
             CHECK (Role IN ('System Administrator', 'Employee')),
     IsAdmin      BIT            NOT NULL DEFAULT 0,
@@ -50,12 +52,9 @@ GO
 -- ============================================================
 -- TABLE 2: Categories
 -- PK : CategoryName  (natural key)
--- WHY: Category names are unique and stable.
---      Every form references categories by name, not by a
---      surrogate number — making it the natural identifier.
 -- ============================================================
 CREATE TABLE Categories (
-    CategoryName VARCHAR(100) NOT NULL,
+    CategoryName NVARCHAR(100) NOT NULL,
     CONSTRAINT PK_Categories PRIMARY KEY (CategoryName)
 );
 GO
@@ -63,16 +62,12 @@ GO
 -- ============================================================
 -- TABLE 3: Suppliers
 -- PK : SupplierName  (natural key)
--- WHY: The original code enforces uniqueness on supplier name
---      explicitly in ValidateForm(). Name is the real-world
---      identity of a supplier company.
--- NOTE: ContactPerson removed — that is CRM data, not inventory.
 -- ============================================================
 CREATE TABLE Suppliers (
-    SupplierName VARCHAR(150) NOT NULL,
-    Phone        VARCHAR(20)  NULL,
-    Email        VARCHAR(100) NULL,
-    IsActive     BIT          NOT NULL DEFAULT 1,
+    SupplierName NVARCHAR(150) NOT NULL,
+    Phone        NVARCHAR(20)  NULL,
+    Email        NVARCHAR(100) NULL,
+    IsActive     BIT           NOT NULL DEFAULT 1,
     CONSTRAINT PK_Suppliers PRIMARY KEY (SupplierName)
 );
 GO
@@ -80,13 +75,11 @@ GO
 -- ============================================================
 -- TABLE 4: StorageZones
 -- PK : ZoneName  (natural key)
--- WHY: Zone names such as "Aisle A-1: Laptops" are unique
---      and self-describing — no surrogate needed.
 -- FK : CategoryName → Categories
 -- ============================================================
 CREATE TABLE StorageZones (
-    ZoneName     VARCHAR(100) NOT NULL,
-    CategoryName VARCHAR(100) NOT NULL,
+    ZoneName     NVARCHAR(100) NOT NULL,
+    CategoryName NVARCHAR(100) NOT NULL,
     CONSTRAINT PK_StorageZones PRIMARY KEY (ZoneName),
     CONSTRAINT FK_Zone_Category
         FOREIGN KEY (CategoryName) REFERENCES Categories (CategoryName)
@@ -96,18 +89,15 @@ GO
 -- ============================================================
 -- TABLE 5: Products
 -- PK : SerialNumber  (natural key)
--- WHY: e.g. "APP-MBP-2023" is the real-world product identity
---      used in shipments, labels, and every form display.
 -- NOTE: No Quantity column — quantity is DERIVED from
---       ProductItems via vw_ProductStock. Storing it would
---       create redundancy and risk inconsistency.
+--       ProductItems via vw_ProductStock.
 -- FK : CategoryName → Categories
 -- ============================================================
 CREATE TABLE Products (
-    SerialNumber VARCHAR(50)   NOT NULL,
-    ProductName  NVARCHAR(200) NOT NULL,
-    CategoryName VARCHAR(100)  NOT NULL,
-    Price        DECIMAL(10,2) NOT NULL,
+    SerialNumber NVARCHAR(50)   NOT NULL,
+    ProductName  NVARCHAR(200)  NOT NULL,
+    CategoryName NVARCHAR(100)  NOT NULL,
+    Price        DECIMAL(10,2)  NOT NULL,
     CONSTRAINT PK_Products PRIMARY KEY (SerialNumber),
     CONSTRAINT FK_Product_Category
         FOREIGN KEY (CategoryName) REFERENCES Categories (CategoryName)
@@ -117,15 +107,12 @@ GO
 -- ============================================================
 -- TABLE 6: ProductSpecifications
 -- PK : (ProductSerial, SpecKey)  — composite natural key
--- WHY: A product has exactly ONE value per specification key.
---      e.g. (APP-MBP-2023, RAM, 16GB) is unique by definition.
---      The pair (serial + key) is the natural identifier.
 -- FK : ProductSerial → Products  (CASCADE on delete)
 -- ============================================================
 CREATE TABLE ProductSpecifications (
-    ProductSerial VARCHAR(50)   NOT NULL,
-    SpecKey       VARCHAR(50)   NOT NULL,
-    SpecValue     NVARCHAR(100) NOT NULL,
+    ProductSerial NVARCHAR(50)  NOT NULL,
+    SpecKey       NVARCHAR(100) NOT NULL,
+    SpecValue     NVARCHAR(200) NOT NULL,
     CONSTRAINT PK_ProductSpecs
         PRIMARY KEY (ProductSerial, SpecKey),
     CONSTRAINT FK_Specs_Product
@@ -137,27 +124,23 @@ GO
 -- ============================================================
 -- TABLE 7: StockMovements
 -- PK : MovementId  — IDENTITY  (justified exception)
--- WHY: Transaction log. The same product can be stocked in
---      hundreds of times. No combination of columns is
---      naturally unique. This is one of only two tables
---      where IDENTITY is the correct design choice.
 -- FK : ProductSerial → Products
 --      Username      → Users      (SET NULL on delete)
 --      SupplierName  → Suppliers  (SET NULL on delete)
 -- ============================================================
 CREATE TABLE StockMovements (
-    MovementId      INT           NOT NULL IDENTITY(1,1),
-    ProductSerial   VARCHAR(50)   NOT NULL,
-    MovementType    VARCHAR(20)   NOT NULL
+    MovementId      INT            NOT NULL IDENTITY(1,1),
+    ProductSerial   NVARCHAR(50)   NOT NULL,
+    MovementType    NVARCHAR(20)   NOT NULL
         CONSTRAINT CK_SM_Type
             CHECK (MovementType IN
                 ('StockIn', 'StockOut', 'Restock', 'ReturnToSupplier')),
-    QuantityChanged INT           NOT NULL,
-    MovementDate    DATETIME      NOT NULL DEFAULT GETDATE(),
-    Username        VARCHAR(50)   NULL,
-    Notes           NVARCHAR(500) NULL,
-    WarrantyMonths  INT           NULL,
-    SupplierName    VARCHAR(150)  NULL,
+    QuantityChanged INT            NOT NULL,
+    MovementDate    DATETIME       NOT NULL DEFAULT GETDATE(),
+    Username        NVARCHAR(50)   NULL,
+    Notes           NVARCHAR(500)  NULL,
+    WarrantyMonths  INT            NULL,
+    SupplierName    NVARCHAR(150)  NULL,
     CONSTRAINT PK_StockMovements PRIMARY KEY (MovementId),
     CONSTRAINT FK_SM_Product
         FOREIGN KEY (ProductSerial)  REFERENCES Products  (SerialNumber),
@@ -173,21 +156,16 @@ GO
 -- ============================================================
 -- TABLE 8: ProductItems
 -- PK : ItemSerialNumber  (natural key)
--- WHY: e.g. "APP-MBP-2023-01" is globally unique by
---      construction (product serial + sequence index).
 -- FK : ProductSerial    → Products
 --      BatchMovementId  → StockMovements  (SET NULL on delete)
---      BatchMovementId links each physical unit back to the
---      exact stock-in batch it arrived with, enabling
---      per-item warranty lookup.
 -- ============================================================
 CREATE TABLE ProductItems (
-    ItemSerialNumber VARCHAR(80) NOT NULL,
-    ProductSerial    VARCHAR(50) NOT NULL,
-    IsInStock        BIT         NOT NULL DEFAULT 1,
-    DateAdded        DATETIME    NOT NULL DEFAULT GETDATE(),
-    DateRemoved      DATETIME    NULL,
-    BatchMovementId  INT         NULL,
+    ItemSerialNumber NVARCHAR(80) NOT NULL,
+    ProductSerial    NVARCHAR(50) NOT NULL,
+    IsInStock        BIT          NOT NULL DEFAULT 1,
+    DateAdded        DATETIME     NOT NULL DEFAULT GETDATE(),
+    DateRemoved      DATETIME     NULL,
+    BatchMovementId  INT          NULL,
     CONSTRAINT PK_ProductItems PRIMARY KEY (ItemSerialNumber),
     CONSTRAINT FK_PI_Product
         FOREIGN KEY (ProductSerial)   REFERENCES Products       (SerialNumber),
@@ -200,17 +178,15 @@ GO
 -- ============================================================
 -- TABLE 9: AuditLog
 -- PK : LogId  — IDENTITY  (justified exception)
--- WHY: Event log. The same user can trigger multiple events
---      within the same millisecond. No natural key exists.
 -- RULE: This table is populated ONLY by SQL Triggers.
 --       C# code must NEVER write to this table directly.
 -- ============================================================
 CREATE TABLE AuditLog (
-    LogId        INT           NOT NULL IDENTITY(1,1),
-    LogTimestamp DATETIME      NOT NULL DEFAULT GETDATE(),
-    ActionType   VARCHAR(50)   NOT NULL,
-    Description  NVARCHAR(500) NOT NULL,
-    Username     VARCHAR(50)   NOT NULL,
+    LogId        INT            NOT NULL IDENTITY(1,1),
+    LogTimestamp DATETIME       NOT NULL DEFAULT GETDATE(),
+    ActionType   NVARCHAR(50)   NOT NULL,
+    Description  NVARCHAR(500)  NOT NULL,
+    Username     NVARCHAR(50)   NOT NULL,
     CONSTRAINT PK_AuditLog PRIMARY KEY (LogId)
 );
 GO
@@ -218,9 +194,6 @@ GO
 -- ============================================================
 -- VIEW: vw_ProductStock
 -- Purpose : Computes Quantity and StockStatus from ProductItems.
---           All forms needing product quantities read from here.
---           Storing Quantity in Products would be redundant;
---           this view is the single source of truth.
 -- ============================================================
 CREATE VIEW vw_ProductStock AS
 SELECT
@@ -253,14 +226,15 @@ SELECT
     c.name      AS PKColumn,
     c.system_type_id
 FROM sys.tables t
-JOIN sys.indexes i       ON i.object_id = t.object_id AND i.is_primary_key = 1
+JOIN sys.indexes i        ON i.object_id = t.object_id AND i.is_primary_key = 1
 JOIN sys.index_columns ic ON ic.object_id = i.object_id AND ic.index_id = i.index_id
-JOIN sys.columns c       ON c.object_id = t.object_id AND c.column_id = ic.column_id
+JOIN sys.columns c        ON c.object_id = t.object_id AND c.column_id = ic.column_id
 ORDER BY t.name, ic.key_ordinal;
 GO
 
 PRINT '============================================================';
 PRINT 'InventoryDB created — 9 tables + vw_ProductStock.';
+PRINT 'All text columns use NVARCHAR (Unicode / Arabic support).';
 PRINT 'Run Triggers.sql next, then SeedData.sql.';
 PRINT '============================================================';
 GO

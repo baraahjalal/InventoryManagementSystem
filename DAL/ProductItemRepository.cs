@@ -59,6 +59,7 @@ namespace InventoryManagementSystem.DAL
                 {
                     cmd.Parameters.AddWithValue("@isn", itemSerialNumber);
                     cmd.ExecuteNonQuery();
+
                 }
             }
         }

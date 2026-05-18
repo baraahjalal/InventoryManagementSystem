@@ -46,7 +46,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Classes\MemoryStore.cs" />
     <Compile Include="Classes\ValidationHelper.cs" />
     <Compile Include="Forms\FrmAddCategory.cs">
       <SubType>Form</SubType>
@@ -170,10 +169,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="FrmProducts_Code_Explanation.md" />
-    <None Include="FrmStockIn_شرح_شامل.md" />
-    <None Include="FrmStockOut_شرح_شامل.md" />
-    <None Include="MemoryStore_شرح_شامل.md" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

@@ -1,22 +1,17 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using InventoryManagementSystem.DAL;
+using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem
 {
     public partial class FrmStockIn : Form
     {
         private readonly ErrorProvider _errorProvider = new ErrorProvider();
-
-        // Holds the product ID passed in from FrmProducts right-click; -1 means normal (no preselection)
-        private int _preselectedProductId = -1;
+        private string _preselectedProductSerial = null;
 
         /// <summary>Standard constructor — no preselection.</summary>
         public FrmStockIn()
@@ -28,29 +23,20 @@ namespace InventoryManagementSystem
             numQuantity.ValueChanged += NumQuantity_ValueChanged;
         }
 
-        /// <summary>
-        /// Constructor used when launched via right-click from FrmProducts.
-        /// The specified product will be pre-selected in cmbProduct on load.
-        /// </summary>
-        public FrmStockIn(int productId) : this()
+        /// <summary>Constructor used when launched via right-click from FrmProducts.</summary>
+        public FrmStockIn(string productSerial) : this()
         {
-            _preselectedProductId = productId;
+            _preselectedProductSerial = productSerial;
         }
 
-        private void FrmStockIn_Load(object sender, EventArgs e)
-        {
-            RefreshData();
-        }
+        private void FrmStockIn_Load(object sender, EventArgs e) => RefreshData();
 
         public void RefreshData()
         {
             LoadProducts();
 
-            // Pre-select product when launched via right-click from FrmProducts
-            if (_preselectedProductId > 0)
-            {
-                cmbProduct.SelectedValue = _preselectedProductId;
-            }
+            if (!string.IsNullOrEmpty(_preselectedProductSerial))
+                cmbProduct.SelectedValue = _preselectedProductSerial;
 
             if (cmbStorageZone.Items.Count > 0)
                 cmbStorageZone.SelectedIndex = 0;
@@ -58,91 +44,55 @@ namespace InventoryManagementSystem
 
         private void LoadProducts()
         {
-            var productList = MemoryStore.Products.ToList();
-            
+            var products = ProductRepository.GetAll();
+
             cmbProduct.SelectedIndexChanged -= CmbProduct_SelectedIndexChanged;
-            cmbProduct.DataSource = null;
-            cmbProduct.DisplayMember = "Name";
-            cmbProduct.ValueMember = "Id";
-            cmbProduct.DataSource = productList;
+            cmbProduct.DataSource    = null;
+            cmbProduct.DisplayMember = "ProductName";
+            cmbProduct.ValueMember   = "SerialNumber";
+            cmbProduct.DataSource    = products;
             cmbProduct.SelectedIndex = -1;
             cmbProduct.SelectedIndexChanged += CmbProduct_SelectedIndexChanged;
         }
 
-        /// <summary>
-        /// When a product is selected, show its primary serial and preview what item serials will be generated.
-        /// </summary>
         private void CmbProduct_SelectedIndexChanged(object sender, EventArgs e)
         {
             UpdateSerialPreview();
-            
-            // Reload Storage Zones based on selected product category
+
             cmbStorageZone.DataSource = null;
             if (cmbProduct.SelectedItem is Product product)
             {
-                var zones = MemoryStore.StorageZones.Where(z => z.TargetCategoryId == product.CategoryId).ToList();
-                cmbStorageZone.DataSource = zones;
-                cmbStorageZone.DisplayMember = "Name";
-                cmbStorageZone.ValueMember = "Id";
-                if (zones.Count > 0)
-                    cmbStorageZone.SelectedIndex = 0;
+                var zones = StorageZoneRepository.GetByCategory(product.CategoryName);
+                cmbStorageZone.DataSource    = zones;
+                cmbStorageZone.DisplayMember = "ZoneName";
+                cmbStorageZone.ValueMember   = "ZoneName";
+                if (zones.Count > 0) cmbStorageZone.SelectedIndex = 0;
 
-                LoadSuppliersForProduct(product.Id);
+                LoadActiveSuppliers();
             }
         }
 
-        private void LoadSuppliersForProduct(int productId)
+        private void LoadActiveSuppliers()
         {
-            // Get the product to find its category
-            var product = MemoryStore.Products.FirstOrDefault(p => p.Id == productId);
-            if (product == null)
-            {
-                cmbSupplier.DataSource = null;
-                cmbSupplier.SelectedIndex = -1;
-                return;
-            }
+            var suppliers = SupplierRepository.GetActive();
+            cmbSupplier.DataSource    = null;
+            cmbSupplier.DisplayMember = "SupplierName";
+            cmbSupplier.ValueMember   = "SupplierName";
+            cmbSupplier.DataSource    = suppliers;
 
-            // Find all suppliers that supply this product's category
-            var supplierIds = MemoryStore.SupplierCategories
-                .Where(sc => sc.CategoryId == product.CategoryId)
-                .Select(sc => sc.SupplierId)
-                .ToList();
-
-            // Get active suppliers only
-            var suppliers = MemoryStore.Suppliers
-                .Where(s => supplierIds.Contains(s.Id) && s.IsActive)
-                .ToList();
-
-            cmbSupplier.DataSource = null;
-            cmbSupplier.DisplayMember = "Name";
-            cmbSupplier.ValueMember = "Id";
-            cmbSupplier.DataSource = suppliers;
-            if (suppliers.Count > 0)
-                cmbSupplier.SelectedIndex = 0;
-            else
-                cmbSupplier.SelectedIndex = -1;
+            if (suppliers.Count > 0) cmbSupplier.SelectedIndex = 0;
+            else                     cmbSupplier.SelectedIndex = -1;
         }
 
-        /// <summary>
-        /// When quantity changes, regenerate the serial number preview.
-        /// </summary>
-        private void NumQuantity_ValueChanged(object sender, EventArgs e)
-        {
-            UpdateSerialPreview();
-        }
+        private void NumQuantity_ValueChanged(object sender, EventArgs e) => UpdateSerialPreview();
 
-        /// <summary>
-        /// Shows a preview of the item-level serial numbers that will be auto-generated.
-        /// </summary>
         private void UpdateSerialPreview()
         {
             txtSerialNumbers.Clear();
-
-            if (cmbProduct.SelectedIndex == -1 || cmbProduct.SelectedItem == null)
-                return;
+            if (cmbProduct.SelectedIndex == -1 || cmbProduct.SelectedItem == null) return;
 
             var product = (Product)cmbProduct.SelectedItem;
-            int qty = (int)numQuantity.Value;
+            int qty     = (int)numQuantity.Value;
 
             if (qty <= 0)
             {
@@ -150,18 +100,14 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            // Calculate the next available index for this product
-            int startIndex = MemoryStore.GetNextItemIndex(product.Id);
-            var previewSerials = MemoryStore.GenerateItemSerials(product.SerialNumber, startIndex, qty);
-
+            // Count existing items to figure out next index
+            int existingCount = ProductItemRepository.CountInStock(product.SerialNumber);
             var sb = new StringBuilder();
             sb.AppendLine($"Product Serial: {product.SerialNumber}");
             sb.AppendLine($"Items to be generated ({qty}):");
             sb.AppendLine("─────────────────────────");
-            foreach (var serial in previewSerials)
-            {
-                sb.AppendLine($"  ► {serial}");
-            }
+            for (int i = 1; i <= qty; i++)
+                sb.AppendLine($"  ► {product.SerialNumber}-{(existingCount + i):D2}");
             txtSerialNumbers.Text = sb.ToString();
         }
 
@@ -171,38 +117,28 @@ namespace InventoryManagementSystem
             bool isValid = true;
             string errorMsg;
 
-            // Supplier
             if (cmbSupplier.SelectedValue == null)
             { _errorProvider.SetError(cmbSupplier, "Please select a supplier."); isValid = false; }
-            else
-              _errorProvider.SetError(cmbSupplier, string.Empty);
+            else _errorProvider.SetError(cmbSupplier, string.Empty);
 
-            // Product
             if (cmbProduct.SelectedValue == null)
             { _errorProvider.SetError(cmbProduct, "Please select a product."); isValid = false; }
-            else
-              _errorProvider.SetError(cmbProduct, string.Empty);
+            else _errorProvider.SetError(cmbProduct, string.Empty);
 
-            // Quantity
             int quantity = (int)numQuantity.Value;
             if (quantity <= 0)
             { _errorProvider.SetError(numQuantity, "Quantity must be greater than zero."); isValid = false; }
-            else
-              _errorProvider.SetError(numQuantity, string.Empty);
+            else _errorProvider.SetError(numQuantity, string.Empty);
 
-            // Order Number
             if (!ValidationHelper.IsRequired(txtOrderNumber.Text, out errorMsg))
             { _errorProvider.SetError(txtOrderNumber, errorMsg); isValid = false; }
             else if (!ValidationHelper.IsValidLength(txtOrderNumber.Text.Trim(), 2, 50, out errorMsg))
             { _errorProvider.SetError(txtOrderNumber, errorMsg); isValid = false; }
-            else
-              _errorProvider.SetError(txtOrderNumber, string.Empty);
+            else _errorProvider.SetError(txtOrderNumber, string.Empty);
 
-            // Storage Zone
             if (cmbStorageZone.SelectedValue == null)
             { _errorProvider.SetError(cmbStorageZone, "Please resolve missing Storage Zone."); isValid = false; }
-            else
-              _errorProvider.SetError(cmbStorageZone, string.Empty);
+            else _errorProvider.SetError(cmbStorageZone, string.Empty);
 
             if (!isValid)
             {
@@ -210,62 +146,56 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            // 2. Prepare Data
-            int productId = (int)cmbProduct.SelectedValue;
-            var product   = MemoryStore.Products.FirstOrDefault(p => p.Id == productId);
+            var product      = (Product)cmbProduct.SelectedItem;
+            string supplier  = cmbSupplier.SelectedValue?.ToString();
+            string zoneName  = cmbStorageZone.SelectedValue?.ToString();
+            int warrantyVal  = (int)numWarrantyMonths.Value;
+            int? warranty    = warrantyVal > 0 ? warrantyVal : (int?)null;
 
-            string notes = $"PO: {txtOrderNumber.Text.Trim()} | Zone: {((StorageZone)cmbStorageZone.SelectedItem).Name} | Warranty: {(int)numWarrantyMonths.Value} Months";
+            string notes = $"PO: {txtOrderNumber.Text.Trim()} | Zone: {zoneName} | Warranty: {warrantyVal} Months";
 
-            // Warranty: 0 means "no warranty" — store as null so it's excluded from warranty lookups
-            int warrantyValue = (int)numWarrantyMonths.Value;
-            int? warrantyDuration = warrantyValue > 0 ? warrantyValue : (int?)null;
-            
-            int? supplierId = (int?)cmbSupplier.SelectedValue;
-
-            // 3. Execute Business Logic (serial numbers are auto-generated in PerformStockMovement)
-            bool success = MemoryStore.PerformStockMovement(
-                productId,
-                quantity,
-                StockMovementType.StockIn,
-                notes,
-                null,
-                warrantyDuration,
-                supplierId
-            );
-
-            // 4. Handle Result
-            if (success)
+            // 1. Insert StockMovement record
+            var movement = new StockMovement
             {
-                // Show confirmation with generated serials
-                var generatedItems = MemoryStore.ProductItems
-                    .Where(pi => pi.ProductId == productId && pi.IsInStock)
-                    .OrderByDescending(pi => pi.Id)
-                    .Take(quantity)
-                    .Select(pi => pi.ItemSerialNumber)
-                    .ToList();
+                ProductSerial   = product.SerialNumber,
+                MovementType    = "StockIn",
+                QuantityChanged = quantity,
+                Username        = DatabaseHelper.CurrentUser?.Username,
+                Notes           = notes,
+                WarrantyMonths  = warranty,
+                SupplierName    = supplier
+            };
+            int movementId = StockMovementRepository.Add(movement);
 
-                string serialInfo = generatedItems.Count > 0
-                    ? $"\n\nGenerated Item Serials:\n{string.Join("\n", generatedItems.Take(10))}{(generatedItems.Count > 10 ? $"\n... and {generatedItems.Count - 10} more" : "")}"
-                    : "";
-
-                MessageBox.Show($"Stock In operation recorded successfully.{serialInfo}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                ClearForm();
-            }
-            else
+            // 2. Generate item-level serial numbers and insert into ProductItems
+            int existingCount = ProductItemRepository.CountInStock(product.SerialNumber);
+            var newItems = new List<ProductItem>();
+            for (int i = 1; i <= quantity; i++)
             {
-                MessageBox.Show("Failed to record Stock In operation. Please check product details.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                newItems.Add(new ProductItem
+                {
+                    ItemSerialNumber = $"{product.SerialNumber}-{(existingCount + i):D2}",
+                    ProductSerial    = product.SerialNumber,
+                    BatchMovementId  = movementId
+                });
             }
+            ProductItemRepository.AddBatch(newItems);
+
+            MessageBox.Show(
+                $"Stock In recorded successfully.\n\nGenerated {quantity} item(s) for [{product.SerialNumber}].",
+                "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ClearForm();
         }
 
         private void ClearForm()
         {
-            cmbSupplier.SelectedIndex = -1;
-            cmbProduct.SelectedIndex = -1;
+            cmbSupplier.SelectedIndex  = -1;
+            cmbProduct.SelectedIndex   = -1;
             txtOrderNumber.Clear();
-            numQuantity.Value = 0;
-            cmbStorageZone.DataSource = null;
+            numQuantity.Value          = 0;
+            cmbStorageZone.DataSource  = null;
             txtSerialNumbers.Clear();
-            numWarrantyMonths.Value = 12; // Reset to sensible default
+            numWarrantyMonths.Value    = 12;
         }
     }
 }

@@ -81,6 +81,22 @@ namespace InventoryManagementSystem.DAL
             }
         }
 
+        public static void Update(Product p)
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(
+                    "UPDATE Products SET ProductName = @n, Price = @pr WHERE SerialNumber = @s", conn))
+                {
+                    cmd.Parameters.AddWithValue("@s",  p.SerialNumber);
+                    cmd.Parameters.AddWithValue("@n",  p.ProductName);
+                    cmd.Parameters.AddWithValue("@pr", p.Price);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         public static void Delete(string serial)
         {
             using (var conn = DatabaseHelper.GetConnection())

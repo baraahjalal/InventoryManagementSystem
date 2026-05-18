@@ -1,8 +1,8 @@
 using System;
 using System.Drawing;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using InventoryManagementSystem.DAL;
 
 namespace InventoryManagementSystem
 {
@@ -15,8 +15,7 @@ namespace InventoryManagementSystem
 
         private void FrmAuditLog_Load(object sender, EventArgs e)
         {
-            // Double Protection: Verify admin access even if the form was opened bypassing button checks
-            var user = MemoryStore.CurrentUser;
+            var user = DatabaseHelper.CurrentUser;
             if (user == null || !user.IsAdmin)
             {
                 MessageBox.Show("Access Denied: You do not have permission to view the Audit Log.", "Unauthorized", MessageBoxButtons.OK, MessageBoxIcon.Stop);
@@ -33,27 +32,18 @@ namespace InventoryManagementSystem
             typeof(DataGridView).InvokeMember(
                 "DoubleBuffered",
                 BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.SetProperty,
-                null,
-                dgv,
-                new object[] { true }
-            );
+                null, dgv, new object[] { true });
         }
 
-        /// <summary>
-        /// Loads real audit data from MemoryStore instead of hardcoded static rows.
-        /// </summary>
         private void LoadAuditData()
         {
             dgvAuditLog.Rows.Clear();
 
-            var logs = MemoryStore.AuditLogs
-                .OrderByDescending(l => l.Timestamp)
-                .ToList();
-
+            var logs = AuditLogRepository.GetAll();
             foreach (var log in logs)
             {
                 dgvAuditLog.Rows.Add(
-                    log.Timestamp.ToString("MMM dd, hh:mm tt"),
+                    log.LogTimestamp.ToString("MMM dd, hh:mm tt"),
                     log.Username,
                     log.ActionType,
                     log.Description
@@ -72,29 +62,26 @@ namespace InventoryManagementSystem
 
                 switch (action)
                 {
-                    case "STOCK IN":
-                    case "ADDITION":
-                    case "PRODUCT CREATED":
-                    case "ADD SUPPLIER":
+                    case "STOCK STOCKIN":
+                    case "PRODUCT ADDED":
                     case "SUPPLIER ADDED":
-                        e.CellStyle.ForeColor = Color.FromArgb(16, 185, 129); // Vibrant Green
+                    case "USER ADDED":
+                        e.CellStyle.ForeColor = Color.FromArgb(16, 185, 129);
                         break;
-                    case "STOCK OUT":
-                    case "MODIFICATION":
+                    case "STOCK STOCKOUT":
+                    case "STOCK RESTOCK":
                     case "PRODUCT UPDATED":
-                    case "EDIT SUPPLIER":
-                        e.CellStyle.ForeColor = Color.FromArgb(59, 130, 246); // Clean Blue
+                    case "SUPPLIER UPDATED":
+                    case "USER UPDATED":
+                        e.CellStyle.ForeColor = Color.FromArgb(59, 130, 246);
                         break;
-                    case "DELETION":
-                    case "DELETE SUPPLIER":
-                        e.CellStyle.ForeColor = Color.FromArgb(239, 68, 68); // Alert Red
-                        break;
-                    case "LOW STOCK ALERT":
-                    case "STOCK ALERT":
-                        e.CellStyle.ForeColor = Color.FromArgb(245, 158, 11); // Warning Orange
+                    case "PRODUCT DELETED":
+                    case "SUPPLIER DELETED":
+                    case "USER DELETED":
+                        e.CellStyle.ForeColor = Color.FromArgb(239, 68, 68);
                         break;
                     default:
-                        e.CellStyle.ForeColor = Color.FromArgb(107, 114, 128); // Standard Gray
+                        e.CellStyle.ForeColor = Color.FromArgb(107, 114, 128);
                         break;
                 }
             }

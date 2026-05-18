@@ -6,7 +6,7 @@ namespace InventoryManagementSystem.DAL
     public static class DatabaseHelper
     {
         private const string ConnStr =
-            @"Server=(localdb)\MSSQLLocalDB;Database=InventoryDB;Trusted_Connection=True;";
+           "Data Source=BARAAH-PC;Initial Catalog=InventoryDB;Integrated Security=true;";
 
         public static SqlConnection GetConnection() => new SqlConnection(ConnStr);
 

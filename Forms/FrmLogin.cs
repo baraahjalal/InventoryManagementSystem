@@ -1,7 +1,9 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using InventoryManagementSystem.DAL;
+using InventoryManagementSystem.Models;
 
 
 namespace InventoryManagementSystem
@@ -26,7 +28,7 @@ namespace InventoryManagementSystem
         {
             cmbUserName.Items.Clear();
 
-            foreach (var user in MemoryStore.Users)
+            foreach (var user in UserRepository.GetAll())
             {
                 cmbUserName.Items.Add(user.Username);
             }
@@ -57,9 +59,7 @@ namespace InventoryManagementSystem
             string enteredUsername = cmbUserName.Text.Trim();
             string enteredPassword = txtPassword.Text;
 
-            User authenticatedUser = MemoryStore.Users.FirstOrDefault(u =>
-              u.Username.Equals(enteredUsername, StringComparison.OrdinalIgnoreCase) &&
-              u.Password == enteredPassword);
+            User authenticatedUser = UserRepository.Authenticate(enteredUsername, enteredPassword);
             // في حالة المستخدم صح !
             if (authenticatedUser != null)
             {
@@ -67,7 +67,7 @@ namespace InventoryManagementSystem
                 failedAttempts = 0;
 
                 // Save the current user for the session
-                MemoryStore.CurrentUser = authenticatedUser;
+                DatabaseHelper.CurrentUser = authenticatedUser;
 
              //   MessageBox.Show($"Welcome, {authenticatedUser.Role}!", "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
 

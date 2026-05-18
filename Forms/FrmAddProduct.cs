@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-
+using InventoryManagementSystem.DAL;
+using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem.Forms
 {
@@ -16,14 +17,13 @@ namespace InventoryManagementSystem.Forms
         {
             InitializeComponent();
 
-            btnSave.Click -= BtnSave_Click;
-            btnSave.Click += BtnSave_Click;
+            btnSave.Click   -= BtnSave_Click;
+            btnSave.Click   += BtnSave_Click;
             btnCancel.Click -= BtnCancel_Click;
             btnCancel.Click += BtnCancel_Click;
             cmbCategory.SelectedIndexChanged -= CmbCategory_SelectedIndexChanged;
             cmbCategory.SelectedIndexChanged += CmbCategory_SelectedIndexChanged;
 
-            // KeyPress restrictions
             txtPrice.KeyPress    += ValidationHelper.AllowOnlyDecimals;
             txtQuantity.KeyPress += ValidationHelper.AllowOnlyDigits;
 
@@ -35,10 +35,10 @@ namespace InventoryManagementSystem.Forms
             cmbCategory.BeginUpdate();
             try
             {
-                cmbCategory.DataSource = MemoryStore.Categories.ToList();
-                cmbCategory.DisplayMember = "Name";
-                cmbCategory.ValueMember = "Id";
-
+                var cats = CategoryRepository.GetAll();
+                cmbCategory.DataSource    = cats;
+                cmbCategory.DisplayMember = "CategoryName";
+                cmbCategory.ValueMember   = "CategoryName";
                 if (cmbCategory.Items.Count > 0)
                     cmbCategory.SelectedIndex = 0;
             }
@@ -53,57 +53,17 @@ namespace InventoryManagementSystem.Forms
             flpDynamicSpecs.Controls.Clear();
             _specSelectors.Clear();
 
-            if (cmbCategory.SelectedItem is Category selectedCat)
-            {
-                LoadSuppliersForCategory(selectedCat.Id);
-
-                var template = MemoryStore.CategoryTemplates.FirstOrDefault(t => t.CategoryId == selectedCat.Id);
-                if (template == null) return;
-
-                foreach (var filter in template.AvailableFilters)
-                {
-                    var lbl = new Label
-                    {
-                        Text = filter.Key + ":",
-                        Width = 120,
-                        Margin = new Padding(0, 6, 6, 0),
-                        ForeColor = Color.FromArgb(100, 100, 100),
-                        Font = new Font("Segoe UI", 9.5F)
-                    };
-                    var cmb = new ComboBox
-                    {
-                        Width = 150,
-                        DropDownStyle = ComboBoxStyle.DropDownList,
-                        Font = new Font("Segoe UI", 9.5F)
-                    };
-                    foreach (var opt in filter.Value) cmb.Items.Add(opt);
-                    if (cmb.Items.Count > 0) cmb.SelectedIndex = 0;
-
-                    var panel = new FlowLayoutPanel
-                    {
-                        AutoSize = true,
-                        AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                        FlowDirection = FlowDirection.LeftToRight,
-                        WrapContents = false,
-                        Margin = new Padding(0, 0, 0, 8)
-                    };
-                    panel.Controls.Add(lbl);
-                    panel.Controls.Add(cmb);
-                    flpDynamicSpecs.Controls.Add(panel);
-
-                    _specSelectors.Add(filter.Key, cmb);
-                }
-            }
+            // No CategoryTemplates in new schema — specs are free-form text
+            // Load all active suppliers for the combo
+            LoadAllActiveSuppliers();
         }
 
-        private void LoadSuppliersForCategory(int categoryId)
+        private void LoadAllActiveSuppliers()
         {
-            var supplierIds = MemoryStore.SupplierCategories.Where(sc => sc.CategoryId == categoryId).Select(sc => sc.SupplierId).ToList();
-            var validSuppliers = MemoryStore.Suppliers.Where(s => supplierIds.Contains(s.Id) && s.IsActive).ToList();
-            
-            ((ListBox)clbSuppliers).DataSource = validSuppliers;
-            ((ListBox)clbSuppliers).DisplayMember = "Name";
-            ((ListBox)clbSuppliers).ValueMember = "Id";
+            var suppliers = SupplierRepository.GetActive();
+            ((ListBox)clbSuppliers).DataSource    = suppliers;
+            ((ListBox)clbSuppliers).DisplayMember = "SupplierName";
+            ((ListBox)clbSuppliers).ValueMember   = "SupplierName";
         }
 
         private void BtnCancel_Click(object sender, EventArgs e)
@@ -114,97 +74,102 @@ namespace InventoryManagementSystem.Forms
 
         private void BtnSave_Click(object sender, EventArgs e)
         {
-            if (!ValidateInputs(out var name, out var price, out var qty, out var serial, out var categoryId, out var selectedSuppliers))
+            if (!ValidateInputs(out var name, out var price, out var qty,
+                                out var serial, out var categoryName, out var selectedSuppliers))
                 return;
 
-            // Unique Serial check (if provided)
-            if (!string.IsNullOrWhiteSpace(serial))
+            if (ProductRepository.Exists(serial))
             {
-                bool serialExists = MemoryStore.Products.Any(p =>
-                    !string.IsNullOrWhiteSpace(p.SerialNumber) &&
-                    p.SerialNumber.Equals(serial, StringComparison.OrdinalIgnoreCase));
+                MessageBox.Show("Serial Number already exists.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                if (serialExists)
-                {
-                    MessageBox.Show("Serial Number already exists.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+            // Build specifications from any dynamic controls added
+            var specs = new List<ProductSpecification>();
+            foreach (var kvp in _specSelectors)
+            {
+                string val = kvp.Value.SelectedItem?.ToString();
+                if (!string.IsNullOrWhiteSpace(val))
+                    specs.Add(new ProductSpecification { ProductSerial = serial, SpecKey = kvp.Key, SpecValue = val });
             }
 
             var newProd = new Product
             {
-                Id = MemoryStore.Products.Count > 0 ? MemoryStore.Products.Max(p => p.Id) + 1 : 1,
-                Name = name,
-                Price = price,
-                Quantity = 0,
-                CategoryId = categoryId,
-                SerialNumber = serial,
-                Specifications = new Dictionary<string, string>()
+                SerialNumber  = serial,
+                ProductName   = name,
+                Price         = price,
+                CategoryName  = categoryName,
+                Specifications = specs
             };
 
-            foreach (var spec in _specSelectors)
+            ProductRepository.Add(newProd);
+
+            // If initial quantity > 0, record a StockIn movement and generate items
+            if (qty > 0)
             {
-                newProd.Specifications[spec.Key] = spec.Value.SelectedItem?.ToString();
+                string supplierName = selectedSuppliers.FirstOrDefault();
+                var movement = new StockMovement
+                {
+                    ProductSerial   = serial,
+                    MovementType    = "StockIn",
+                    QuantityChanged = qty,
+                    Username        = DatabaseHelper.CurrentUser?.Username,
+                    Notes           = "Initial stock on product creation",
+                    SupplierName    = supplierName
+                };
+                int movementId = StockMovementRepository.Add(movement);
+
+                var items = new List<ProductItem>();
+                for (int i = 1; i <= qty; i++)
+                    items.Add(new ProductItem
+                    {
+                        ItemSerialNumber = $"{serial}-{i:D2}",
+                        ProductSerial    = serial,
+                        BatchMovementId  = movementId
+                    });
+                ProductItemRepository.AddBatch(items);
             }
-
-            MemoryStore.Products.Add(newProd);
-
-            foreach (var supId in selectedSuppliers)
-            {
-                MemoryStore.ProductSuppliers.Add(new ProductSupplier { ProductId = newProd.Id, SupplierId = supId });
-            }
-
-            // Apply initial quantity through stock movement (so audit trail is consistent)
-            if (qty > 0 && selectedSuppliers.Count > 0)
-            {
-                MemoryStore.PerformStockMovement(newProd.Id, qty, StockMovementType.StockIn, "Initial stock", null, null, selectedSuppliers.FirstOrDefault());
-            }
-
-            MemoryStore.LogAction("PRODUCT CREATED", $"New product created: ID {newProd.Id} - '{newProd.Name}' (Category ID: {newProd.CategoryId}).");
 
             MessageBox.Show("Product created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
 
-        private bool ValidateInputs(out string name, out decimal price, out int qty, out string serial, out int categoryId, out List<int> selectedSuppliers)
+        private bool ValidateInputs(out string name, out decimal price, out int qty,
+                                    out string serial, out string categoryName,
+                                    out List<string> selectedSuppliers)
         {
-            name     = txtName.Text.Trim();
-            serial   = txtSerialNumber.Text.Trim();
-            categoryId = cmbCategory.SelectedItem is Category c ? c.Id : 0;
-            
-            selectedSuppliers = new List<int>();
-            foreach (var checkedItem in clbSuppliers.CheckedItems)
-            {
-                if (checkedItem is Supplier s) selectedSuppliers.Add(s.Id);
-            }
-            
+            name      = txtName.Text.Trim();
+            serial    = txtSerialNumber.Text.Trim();
+            categoryName = cmbCategory.SelectedItem is Models.Category c ? c.CategoryName : string.Empty;
+
+            selectedSuppliers = new List<string>();
+            foreach (var item in clbSuppliers.CheckedItems)
+                if (item is Models.Supplier s) selectedSuppliers.Add(s.SupplierName);
+
             price = 0m;
             qty   = 0;
 
             _errorProvider.Clear();
-            bool isValid = true;
+            bool   isValid = true;
             string errorMsg;
 
             // Name
             if (!ValidationHelper.IsRequired(name, out errorMsg))
             { _errorProvider.SetError(txtName, errorMsg); isValid = false; }
-            else if (!ValidationHelper.IsValidLength(name, 2, 100, out errorMsg))
+            else if (!ValidationHelper.IsValidLength(name, 2, 200, out errorMsg))
             { _errorProvider.SetError(txtName, errorMsg); isValid = false; }
-            else
-              _errorProvider.SetError(txtName, string.Empty);
+            else _errorProvider.SetError(txtName, string.Empty);
+
+            // Serial Number (required)
+            if (!ValidationHelper.IsRequired(serial, out errorMsg))
+            { _errorProvider.SetError(txtSerialNumber, errorMsg); isValid = false; }
+            else _errorProvider.SetError(txtSerialNumber, string.Empty);
 
             // Category
-            if (categoryId == 0)
+            if (string.IsNullOrEmpty(categoryName))
             { _errorProvider.SetError(cmbCategory, "Please select a category."); isValid = false; }
-            else
-              _errorProvider.SetError(cmbCategory, string.Empty);
-
-            // Suppliers
-            if (selectedSuppliers.Count == 0)
-            { _errorProvider.SetError(clbSuppliers, "Please select at least one supplier."); isValid = false; }
-            else
-              _errorProvider.SetError(clbSuppliers, string.Empty);
+            else _errorProvider.SetError(cmbCategory, string.Empty);
 
             // Price
             string priceText = txtPrice.Text.Trim();
@@ -212,17 +177,14 @@ namespace InventoryManagementSystem.Forms
             { _errorProvider.SetError(txtPrice, errorMsg); isValid = false; }
             else if (!ValidationHelper.IsValidDecimal(priceText, out errorMsg))
             { _errorProvider.SetError(txtPrice, errorMsg); isValid = false; }
-            else
-            { price = decimal.Parse(priceText); _errorProvider.SetError(txtPrice, string.Empty); }
+            else { price = decimal.Parse(priceText); _errorProvider.SetError(txtPrice, string.Empty); }
 
-            // Quantity
+            // Quantity (optional — 0 is acceptable)
             string qtyText = txtQuantity.Text.Trim();
-            if (!ValidationHelper.IsRequired(qtyText, out errorMsg))
+            if (string.IsNullOrWhiteSpace(qtyText)) qtyText = "0";
+            if (!ValidationHelper.IsValidInteger(qtyText, out errorMsg))
             { _errorProvider.SetError(txtQuantity, errorMsg); isValid = false; }
-            else if (!ValidationHelper.IsValidInteger(qtyText, out errorMsg))
-            { _errorProvider.SetError(txtQuantity, errorMsg); isValid = false; }
-            else
-            { qty = int.Parse(qtyText); _errorProvider.SetError(txtQuantity, string.Empty); }
+            else { qty = int.Parse(qtyText); _errorProvider.SetError(txtQuantity, string.Empty); }
 
             if (!isValid)
                 MessageBox.Show("Please correct the highlighted errors before saving.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
