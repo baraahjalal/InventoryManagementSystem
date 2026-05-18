@@ -130,12 +130,6 @@ namespace InventoryManagementSystem
             { _errorProvider.SetError(numQuantity, "Quantity must be greater than zero."); isValid = false; }
             else _errorProvider.SetError(numQuantity, string.Empty);
 
-            if (!ValidationHelper.IsRequired(txtOrderNumber.Text, out errorMsg))
-            { _errorProvider.SetError(txtOrderNumber, errorMsg); isValid = false; }
-            else if (!ValidationHelper.IsValidLength(txtOrderNumber.Text.Trim(), 2, 50, out errorMsg))
-            { _errorProvider.SetError(txtOrderNumber, errorMsg); isValid = false; }
-            else _errorProvider.SetError(txtOrderNumber, string.Empty);
-
             if (cmbStorageZone.SelectedValue == null)
             { _errorProvider.SetError(cmbStorageZone, "Please resolve missing Storage Zone."); isValid = false; }
             else _errorProvider.SetError(cmbStorageZone, string.Empty);
@@ -152,7 +146,7 @@ namespace InventoryManagementSystem
             int warrantyVal  = (int)numWarrantyMonths.Value;
             int? warranty    = warrantyVal > 0 ? warrantyVal : (int?)null;
 
-            string notes = $"PO: {txtOrderNumber.Text.Trim()} | Zone: {zoneName} | Warranty: {warrantyVal} Months";
+            string notes = $"Zone: {zoneName} | Warranty: {warrantyVal} Months";
 
             // 1. Insert StockMovement record
             var movement = new StockMovement
@@ -191,7 +185,6 @@ namespace InventoryManagementSystem
         {
             cmbSupplier.SelectedIndex  = -1;
             cmbProduct.SelectedIndex   = -1;
-            txtOrderNumber.Clear();
             numQuantity.Value          = 0;
             cmbStorageZone.DataSource  = null;
             txtSerialNumbers.Clear();

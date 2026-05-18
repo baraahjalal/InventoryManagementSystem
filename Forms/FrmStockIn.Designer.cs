@@ -12,7 +12,6 @@ namespace InventoryManagementSystem
 
         // Input Controls
         private System.Windows.Forms.ComboBox cmbSupplier;
-        private System.Windows.Forms.TextBox txtOrderNumber;
         private System.Windows.Forms.ComboBox cmbProduct;
         private System.Windows.Forms.NumericUpDown numQuantity;
         private System.Windows.Forms.ComboBox cmbStorageZone;
@@ -22,7 +21,6 @@ namespace InventoryManagementSystem
 
         // Labels for Inputs
         private System.Windows.Forms.Label lblSupplier;
-        private System.Windows.Forms.Label lblOrderNumber;
         private System.Windows.Forms.Label lblProduct;
         private System.Windows.Forms.Label lblQuantity;
         private System.Windows.Forms.Label lblStorageZone;
@@ -43,8 +41,6 @@ namespace InventoryManagementSystem
             this.pnlMainCard = new System.Windows.Forms.Panel();
             this.lblSupplier = new System.Windows.Forms.Label();
             this.cmbSupplier = new System.Windows.Forms.ComboBox();
-            this.lblOrderNumber = new System.Windows.Forms.Label();
-            this.txtOrderNumber = new System.Windows.Forms.TextBox();
             this.lblProduct = new System.Windows.Forms.Label();
             this.cmbProduct = new System.Windows.Forms.ComboBox();
             this.lblQuantity = new System.Windows.Forms.Label();
@@ -102,8 +98,6 @@ namespace InventoryManagementSystem
             this.pnlMainCard.BackColor = System.Drawing.Color.White;
             this.pnlMainCard.Controls.Add(this.lblSupplier);
             this.pnlMainCard.Controls.Add(this.cmbSupplier);
-            this.pnlMainCard.Controls.Add(this.lblOrderNumber);
-            this.pnlMainCard.Controls.Add(this.txtOrderNumber);
             this.pnlMainCard.Controls.Add(this.lblProduct);
             this.pnlMainCard.Controls.Add(this.cmbProduct);
             this.pnlMainCard.Controls.Add(this.lblQuantity);
@@ -140,26 +134,7 @@ namespace InventoryManagementSystem
             this.cmbSupplier.Name = "cmbSupplier";
             this.cmbSupplier.Size = new System.Drawing.Size(370, 28);
             this.cmbSupplier.TabIndex = 4;
-            // 
-            // lblOrderNumber
-            // 
-            this.lblOrderNumber.AutoSize = true;
-            this.lblOrderNumber.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOrderNumber.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblOrderNumber.Location = new System.Drawing.Point(437, 32);
-            this.lblOrderNumber.Name = "lblOrderNumber";
-            this.lblOrderNumber.Size = new System.Drawing.Size(156, 17);
-            this.lblOrderNumber.TabIndex = 5;
-            this.lblOrderNumber.Text = "Purchase Order Number";
-            // 
-            // txtOrderNumber
-            // 
-            this.txtOrderNumber.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtOrderNumber.Location = new System.Drawing.Point(440, 59);
-            this.txtOrderNumber.Name = "txtOrderNumber";
-            this.txtOrderNumber.Size = new System.Drawing.Size(370, 27);
-            this.txtOrderNumber.TabIndex = 6;
-            // 
+            //
             // lblProduct
             // 
             this.lblProduct.AutoSize = true;
