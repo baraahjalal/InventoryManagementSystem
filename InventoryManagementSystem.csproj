@@ -57,6 +57,7 @@
     <Compile Include="DAL\DatabaseHelper.cs" />
     <Compile Include="DAL\UserRepository.cs" />
     <Compile Include="DAL\CategoryRepository.cs" />
+    <Compile Include="DAL\CategorySpecTemplateRepository.cs" />
     <Compile Include="DAL\SupplierRepository.cs" />
     <Compile Include="DAL\ProductRepository.cs" />
     <Compile Include="DAL\ProductItemRepository.cs" />
