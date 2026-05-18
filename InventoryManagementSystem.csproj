@@ -47,6 +47,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\MemoryStore.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Supplier.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductItem.cs" />
+    <Compile Include="Models\StockMovement.cs" />
+    <Compile Include="Models\StorageZone.cs" />
+    <Compile Include="Models\AuditLogEntry.cs" />
+    <Compile Include="DAL\DatabaseHelper.cs" />
+    <Compile Include="DAL\UserRepository.cs" />
+    <Compile Include="DAL\CategoryRepository.cs" />
+    <Compile Include="DAL\SupplierRepository.cs" />
+    <Compile Include="DAL\ProductRepository.cs" />
+    <Compile Include="DAL\ProductItemRepository.cs" />
+    <Compile Include="DAL\StockMovementRepository.cs" />
+    <Compile Include="DAL\StorageZoneRepository.cs" />
+    <Compile Include="DAL\AuditLogRepository.cs" />
     <Compile Include="Classes\ValidationHelper.cs" />
     <Compile Include="Forms\FrmAddCategory.cs">
       <SubType>Form</SubType>
