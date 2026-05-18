@@ -47,6 +47,10 @@ namespace InventoryManagementSystem
             this.txtProdPrice = new System.Windows.Forms.TextBox();
             this.txtProdName = new System.Windows.Forms.TextBox();
             this.lblDetailsTitle = new System.Windows.Forms.Label();
+            this.dgvSpecs        = new System.Windows.Forms.DataGridView();
+            this.colSpecProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSpecValue    = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.lblItemTracking = new System.Windows.Forms.Label();
             this.pnlGridContainer = new System.Windows.Forms.Panel();
             this.dgvProducts = new System.Windows.Forms.DataGridView();
             this.lblMainTitle = new System.Windows.Forms.Label();
@@ -55,6 +59,7 @@ namespace InventoryManagementSystem
             this.pnlDetails.SuspendLayout();
             this.pnlGridContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSpecs)).BeginInit();
             this.SuspendLayout();
             // 
             // colID
@@ -291,6 +296,8 @@ namespace InventoryManagementSystem
             this.pnlDetails.Controls.Add(this.txtProdPrice);
             this.pnlDetails.Controls.Add(this.txtProdName);
             this.pnlDetails.Controls.Add(this.lblDetailsTitle);
+            this.pnlDetails.Controls.Add(this.lblItemTracking);
+            this.pnlDetails.Controls.Add(this.dgvSpecs);
             this.pnlDetails.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlDetails.Location = new System.Drawing.Point(880, 88);
             this.pnlDetails.Name = "pnlDetails";
@@ -339,7 +346,7 @@ namespace InventoryManagementSystem
             this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEdit.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.btnEdit.ForeColor = System.Drawing.Color.White;
-            this.btnEdit.Location = new System.Drawing.Point(23, 394);
+            this.btnEdit.Location = new System.Drawing.Point(23, 447);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(274, 40);
             this.btnEdit.TabIndex = 4;
