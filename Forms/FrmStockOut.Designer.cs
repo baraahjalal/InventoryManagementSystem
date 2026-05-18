@@ -30,10 +30,6 @@ namespace InventoryManagementSystem
             this.lblSerialNumber = new System.Windows.Forms.Label();
             this.cmbProduct = new System.Windows.Forms.ComboBox();
             this.lblProduct = new System.Windows.Forms.Label();
-            this.txtRecipient = new System.Windows.Forms.TextBox();
-            this.lblRecipient = new System.Windows.Forms.Label();
-            this.cmbOutReason = new System.Windows.Forms.ComboBox();
-            this.lblOutReason = new System.Windows.Forms.Label();
             this.pnlWarrantyCard = new System.Windows.Forms.Panel();
             this.lblWarrantyTitle = new System.Windows.Forms.Label();
             this.lblWarrantyDuration = new System.Windows.Forms.Label();
@@ -90,10 +86,6 @@ namespace InventoryManagementSystem
             this.pnlMainCard.Controls.Add(this.lblSerialNumber);
             this.pnlMainCard.Controls.Add(this.cmbProduct);
             this.pnlMainCard.Controls.Add(this.lblProduct);
-            this.pnlMainCard.Controls.Add(this.txtRecipient);
-            this.pnlMainCard.Controls.Add(this.lblRecipient);
-            this.pnlMainCard.Controls.Add(this.cmbOutReason);
-            this.pnlMainCard.Controls.Add(this.lblOutReason);
             this.pnlMainCard.Controls.Add(this.pnlWarrantyCard);
             this.pnlMainCard.Location = new System.Drawing.Point(17, 157);
             this.pnlMainCard.Name = "pnlMainCard";
@@ -195,73 +187,28 @@ namespace InventoryManagementSystem
             this.lblSerialNumber.Size = new System.Drawing.Size(300, 17);
             this.lblSerialNumber.TabIndex = 6;
             this.lblSerialNumber.Text = "SELECT SPECIFIC SERIAL NUMBERS TO DISPATCH";
-            // 
+            //
             // cmbProduct
-            // 
+            //
             this.cmbProduct.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbProduct.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbProduct.FormattingEnabled = true;
-            this.cmbProduct.Location = new System.Drawing.Point(38, 139);
+            this.cmbProduct.Location = new System.Drawing.Point(38, 59);
             this.cmbProduct.Name = "cmbProduct";
             this.cmbProduct.Size = new System.Drawing.Size(772, 28);
             this.cmbProduct.TabIndex = 5;
-            // 
+            //
             // lblProduct
-            // 
+            //
             this.lblProduct.AutoSize = true;
             this.lblProduct.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblProduct.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblProduct.Location = new System.Drawing.Point(35, 112);
+            this.lblProduct.Location = new System.Drawing.Point(35, 32);
             this.lblProduct.Name = "lblProduct";
             this.lblProduct.Size = new System.Drawing.Size(113, 17);
             this.lblProduct.TabIndex = 4;
             this.lblProduct.Text = "SELECT PRODUCT";
-            // 
-            // txtRecipient
-            // 
-            this.txtRecipient.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtRecipient.Location = new System.Drawing.Point(440, 59);
-            this.txtRecipient.Name = "txtRecipient";
-            this.txtRecipient.Size = new System.Drawing.Size(370, 27);
-            this.txtRecipient.TabIndex = 3;
-            // 
-            // lblRecipient
-            // 
-            this.lblRecipient.AutoSize = true;
-            this.lblRecipient.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRecipient.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblRecipient.Location = new System.Drawing.Point(437, 32);
-            this.lblRecipient.Name = "lblRecipient";
-            this.lblRecipient.Size = new System.Drawing.Size(193, 17);
-            this.lblRecipient.TabIndex = 2;
-            this.lblRecipient.Text = "RECIPIENT / CUSTOMER NAME";
-            // 
-            // cmbOutReason
-            // 
-            this.cmbOutReason.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbOutReason.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbOutReason.FormattingEnabled = true;
-            this.cmbOutReason.Items.AddRange(new object[] {
-            "Customer Sale",
-            "Internal Use",
-            "Damaged/Waste",
-            "Return to Supplier"});
-            this.cmbOutReason.Location = new System.Drawing.Point(38, 59);
-            this.cmbOutReason.Name = "cmbOutReason";
-            this.cmbOutReason.Size = new System.Drawing.Size(370, 28);
-            this.cmbOutReason.TabIndex = 1;
-            // 
-            // lblOutReason
-            // 
-            this.lblOutReason.AutoSize = true;
-            this.lblOutReason.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOutReason.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblOutReason.Location = new System.Drawing.Point(35, 32);
-            this.lblOutReason.Name = "lblOutReason";
-            this.lblOutReason.Size = new System.Drawing.Size(131, 17);
-            this.lblOutReason.TabIndex = 0;
-            this.lblOutReason.Text = "TRANSACTION TYPE";
-            // 
+            //
             // pnlWarrantyCard
             // 
             this.pnlWarrantyCard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(244)))), ((int)(((byte)(255)))));
@@ -349,10 +296,6 @@ namespace InventoryManagementSystem
         private System.Windows.Forms.Label lblHeader;
         private System.Windows.Forms.Label lblSubHeader;
         private System.Windows.Forms.Panel pnlMainCard;
-        private System.Windows.Forms.Label lblOutReason;
-        private System.Windows.Forms.ComboBox cmbOutReason;
-        private System.Windows.Forms.Label lblRecipient;
-        private System.Windows.Forms.TextBox txtRecipient;
         private System.Windows.Forms.Label lblProduct;
         private System.Windows.Forms.ComboBox cmbProduct;
         private System.Windows.Forms.Label lblSerialNumber;

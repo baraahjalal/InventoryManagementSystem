@@ -50,8 +50,6 @@ namespace InventoryManagementSystem
                 cmbProduct.Enabled = true;
             }
 
-            if (cmbOutReason.Items.Count > 0) cmbOutReason.SelectedIndex = 0;
-            txtRecipient.Clear();
             ResetWarrantyCard();
         }
 
@@ -221,21 +219,10 @@ namespace InventoryManagementSystem
         {
             _errorProvider.Clear();
             bool isValid = true;
-            string errorMsg;
 
             if (cmbProduct.SelectedValue == null)
             { _errorProvider.SetError(cmbProduct, "Please select a product."); isValid = false; }
             else _errorProvider.SetError(cmbProduct, string.Empty);
-
-            if (cmbOutReason.SelectedItem == null)
-            { _errorProvider.SetError(cmbOutReason, "Please select a transaction type."); isValid = false; }
-            else _errorProvider.SetError(cmbOutReason, string.Empty);
-
-            if (!ValidationHelper.IsRequired(txtRecipient.Text, out errorMsg))
-            { _errorProvider.SetError(txtRecipient, errorMsg); isValid = false; }
-            else if (!ValidationHelper.IsValidLength(txtRecipient.Text.Trim(), 2, 100, out errorMsg))
-            { _errorProvider.SetError(txtRecipient, errorMsg); isValid = false; }
-            else _errorProvider.SetError(txtRecipient, string.Empty);
 
             if (!isValid)
             {
@@ -260,8 +247,7 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            string reason  = cmbOutReason.SelectedItem.ToString();
-            string notes   = $"Reason: {reason} | Recipient: {txtRecipient.Text.Trim()} | Warranty: {lblWarrantyDuration.Text}";
+            string notes = $"Warranty: {lblWarrantyDuration.Text}";
 
             // 1. Record StockMovement
             var movement = new StockMovement
