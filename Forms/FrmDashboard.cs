@@ -56,10 +56,13 @@ namespace InventoryManagementSystem
             dgvRecentActions.AutoGenerateColumns = false;
 
             var movements = StockMovementRepository.GetAll().Take(10).ToList();
+            var productDict = ProductRepository.GetAll()
+                .ToDictionary(p => p.SerialNumber, p => p.ProductName);
 
             foreach (var m in movements)
             {
-                string productDetails = $"[{m.ProductSerial}]";
+                productDict.TryGetValue(m.ProductSerial, out string pName);
+                string productDetails = $"{pName ?? m.ProductSerial} [{m.ProductSerial}]";
                 string operatorName   = m.Username ?? "System";
                 string formattedQty   = m.QuantityChanged > 0
                     ? $"+{m.QuantityChanged}"
