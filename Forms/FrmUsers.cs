@@ -259,7 +259,7 @@ namespace InventoryManagementSystem
 
             if (!ValidationHelper.IsRequired(txtUserPassword.Text, out errorMsg))
             { _errorProvider.SetError(txtUserPassword, errorMsg); isValid = false; }
-            else if (!ValidationHelper.IsValidLength(txtUserPassword.Text, 6, 50, out errorMsg))
+            else if (!ValidationHelper.IsValidLength(txtUserPassword.Text, 2, 50, out errorMsg))
             { _errorProvider.SetError(txtUserPassword, errorMsg); isValid = false; }
             else
               _errorProvider.SetError(txtUserPassword, string.Empty);
