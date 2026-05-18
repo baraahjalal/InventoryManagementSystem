@@ -6,9 +6,9 @@ namespace InventoryManagementSystem.DAL
 {
     public static class CategoryRepository
     {
-        public static List<Category> GetAll()
+        public static List<InventoryManagementSystem.Models.Category> GetAll()
         {
-            var list = new List<Category>();
+            var list = new List<InventoryManagementSystem.Models.Category>();
             using (var conn = DatabaseHelper.GetConnection())
             {
                 conn.Open();
@@ -16,7 +16,7 @@ namespace InventoryManagementSystem.DAL
                     "SELECT CategoryName FROM Categories ORDER BY CategoryName", conn))
                 using (var r = cmd.ExecuteReader())
                     while (r.Read())
-                        list.Add(new Category { CategoryName = r.GetString(0) });
+                        list.Add(new InventoryManagementSystem.Models.Category { CategoryName = r.GetString(0) });
             }
             return list;
         }
