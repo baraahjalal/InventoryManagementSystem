@@ -96,6 +96,20 @@ namespace InventoryManagementSystem.DAL
             }
         }
 
+        public static int CountAll(string productSerial)
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(
+                    "SELECT COUNT(1) FROM ProductItems WHERE ProductSerial = @ps", conn))
+                {
+                    cmd.Parameters.AddWithValue("@ps", productSerial);
+                    return (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+
         private static ProductItem MapItem(SqlDataReader r)
         {
             return new ProductItem

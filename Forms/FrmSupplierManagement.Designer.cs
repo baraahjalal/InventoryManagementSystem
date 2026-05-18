@@ -47,10 +47,8 @@ namespace InventoryManagementSystem
             this.btnAddSupplier = new System.Windows.Forms.Button();
             this.btnExport = new System.Windows.Forms.Button();
             this.colName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colContact = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colPhone = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colEmail = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colActiveProducts = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlHeader.SuspendLayout();
             this.pnlRight.SuspendLayout();
@@ -308,10 +306,8 @@ namespace InventoryManagementSystem
             this.dgvSuppliers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvSuppliers.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colName,
-            this.colContact,
             this.colPhone,
             this.colEmail,
-            this.colActiveProducts,
             this.colStatus});
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
@@ -426,14 +422,7 @@ namespace InventoryManagementSystem
             this.colName.HeaderText = "Supplier Name";
             this.colName.Name = "colName";
             this.colName.ReadOnly = true;
-            // 
-            // colContact
-            // 
-            this.colContact.FillWeight = 120F;
-            this.colContact.HeaderText = "Contact Person";
-            this.colContact.Name = "colContact";
-            this.colContact.ReadOnly = true;
-            // 
+            //
             // colPhone
             // 
             this.colPhone.FillWeight = 95F;
@@ -447,14 +436,7 @@ namespace InventoryManagementSystem
             this.colEmail.HeaderText = "Email";
             this.colEmail.Name = "colEmail";
             this.colEmail.ReadOnly = true;
-            // 
-            // colActiveProducts
-            // 
-            this.colActiveProducts.FillWeight = 90F;
-            this.colActiveProducts.HeaderText = "Products";
-            this.colActiveProducts.Name = "colActiveProducts";
-            this.colActiveProducts.ReadOnly = true;
-            // 
+            //
             // colStatus
             // 
             this.colStatus.FillWeight = 75F;
@@ -516,10 +498,8 @@ namespace InventoryManagementSystem
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.DataGridViewTextBoxColumn colName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colContact;
         private System.Windows.Forms.DataGridViewTextBoxColumn colPhone;
         private System.Windows.Forms.DataGridViewTextBoxColumn colEmail;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colActiveProducts;
         private System.Windows.Forms.DataGridViewTextBoxColumn colStatus;
     }
 }

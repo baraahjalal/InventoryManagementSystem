@@ -46,7 +46,10 @@ namespace InventoryManagementSystem
         private void FrmSupplierManagement_Load(object sender, EventArgs e)
         {
             txtPhone.KeyPress += ValidationHelper.AllowOnlyDigits;
-            // clbSuppliedProducts removed — no SupplierCategories in new schema
+            clbSuppliedProducts.Visible = false;
+            if (txtContactPerson != null) txtContactPerson.Visible = false;
+            if (lblContactPerson != null) lblContactPerson.Visible = false;
+            if (lblSuppliedProducts != null) lblSuppliedProducts.Visible = false;
             ClearForm();
             LoadData();
         }
@@ -90,6 +93,7 @@ namespace InventoryManagementSystem
         private void ClearForm()
         {
             txtSupplierName.Clear();
+            txtSupplierName.ReadOnly = false;
             txtPhone.Clear();
             txtEmail.Clear();
             chkIsActive.Checked = true;
@@ -171,13 +175,14 @@ namespace InventoryManagementSystem
 
             if (supplier != null)
             {
-                txtSupplierName.Text = supplier.SupplierName;
-                txtPhone.Text        = supplier.Phone;
-                txtEmail.Text        = supplier.Email;
-                chkIsActive.Checked  = supplier.IsActive;
-                isEditMode           = true;
-                currentEditName      = supplier.SupplierName;
-                lblFormTitle.Text    = "Edit Supplier";
+                txtSupplierName.Text     = supplier.SupplierName;
+                txtSupplierName.ReadOnly = true;
+                txtPhone.Text            = supplier.Phone;
+                txtEmail.Text            = supplier.Email;
+                chkIsActive.Checked      = supplier.IsActive;
+                isEditMode               = true;
+                currentEditName          = supplier.SupplierName;
+                lblFormTitle.Text        = "Edit Supplier";
             }
         }
 

@@ -101,7 +101,7 @@ namespace InventoryManagementSystem
             }
 
             // Count existing items to figure out next index
-            int existingCount = ProductItemRepository.CountInStock(product.SerialNumber);
+            int existingCount = ProductItemRepository.CountAll(product.SerialNumber);
             var sb = new StringBuilder();
             sb.AppendLine($"Product Serial: {product.SerialNumber}");
             sb.AppendLine($"Items to be generated ({qty}):");
@@ -168,7 +168,7 @@ namespace InventoryManagementSystem
             int movementId = StockMovementRepository.Add(movement);
 
             // 2. Generate item-level serial numbers and insert into ProductItems
-            int existingCount = ProductItemRepository.CountInStock(product.SerialNumber);
+            int existingCount = ProductItemRepository.CountAll(product.SerialNumber);
             var newItems = new List<ProductItem>();
             for (int i = 1; i <= quantity; i++)
             {

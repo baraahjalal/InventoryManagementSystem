@@ -119,11 +119,12 @@ namespace InventoryManagementSystem.Forms
                 };
                 int movementId = StockMovementRepository.Add(movement);
 
+                int existingCount = ProductItemRepository.CountAll(serial);
                 var items = new List<ProductItem>();
                 for (int i = 1; i <= qty; i++)
                     items.Add(new ProductItem
                     {
-                        ItemSerialNumber = $"{serial}-{i:D2}",
+                        ItemSerialNumber = $"{serial}-{(existingCount + i):D2}",
                         ProductSerial    = serial,
                         BatchMovementId  = movementId
                     });
