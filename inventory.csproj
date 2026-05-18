@@ -187,6 +187,27 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Compile Include="Models\AuditLogEntry.cs" />
+    <Compile Include="Models\Category.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\ProductItem.cs" />
+    <Compile Include="Models\StockMovement.cs" />
+    <Compile Include="Models\StorageZone.cs" />
+    <Compile Include="Models\Supplier.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="DAL\AuditLogRepository.cs" />
+    <Compile Include="DAL\CategoryRepository.cs" />
+    <Compile Include="DAL\DatabaseHelper.cs" />
+    <Compile Include="DAL\ProductItemRepository.cs" />
+    <Compile Include="DAL\ProductRepository.cs" />
+    <Compile Include="DAL\StockMovementRepository.cs" />
+    <Compile Include="DAL\StorageZoneRepository.cs" />
+    <Compile Include="DAL\SupplierRepository.cs" />
+    <Compile Include="DAL\UserRepository.cs" />
+    <None Include="Database\CreateDatabase.sql" />
+    <None Include="Database\SeedData.sql" />
+    <None Include="Database\Triggers.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
