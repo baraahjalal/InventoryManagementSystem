@@ -36,7 +36,7 @@ namespace InventoryManagementSystem
             this.colTimestamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colUserIdentity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colActionType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colTargetEntity = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuditLog)).BeginInit();
             this.pnlFilterBar.SuspendLayout();
@@ -77,7 +77,7 @@ namespace InventoryManagementSystem
             this.colTimestamp,
             this.colUserIdentity,
             this.colActionType,
-            this.colTargetEntity});
+            this.colDescription});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -100,6 +100,7 @@ namespace InventoryManagementSystem
             this.dgvAuditLog.Size = new System.Drawing.Size(940, 487);
             this.dgvAuditLog.TabIndex = 1;
             this.dgvAuditLog.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.DgvAuditLog_CellFormatting);
+            this.dgvAuditLog.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.DgvAuditLog_RowPrePaint);
             // 
             // pnlFilterBar
             // 
@@ -186,34 +187,34 @@ namespace InventoryManagementSystem
             this.lblTitle.Size = new System.Drawing.Size(114, 30);
             this.lblTitle.TabIndex = 0;
             this.lblTitle.Text = "Audit Log";
-            // 
+            //
             // colTimestamp
-            // 
+            //
             this.colTimestamp.FillWeight = 15F;
             this.colTimestamp.HeaderText = "Timestamp";
             this.colTimestamp.Name = "colTimestamp";
             this.colTimestamp.ReadOnly = true;
-            // 
+            //
             // colUserIdentity
-            // 
-            this.colUserIdentity.FillWeight = 20F;
-            this.colUserIdentity.HeaderText = "User Identity";
+            //
+            this.colUserIdentity.FillWeight = 15F;
+            this.colUserIdentity.HeaderText = "Username";
             this.colUserIdentity.Name = "colUserIdentity";
             this.colUserIdentity.ReadOnly = true;
-            // 
+            //
             // colActionType
-            // 
-            this.colActionType.FillWeight = 15F;
-            this.colActionType.HeaderText = "Action Type";
+            //
+            this.colActionType.FillWeight = 20F;
+            this.colActionType.HeaderText = "Action";
             this.colActionType.Name = "colActionType";
             this.colActionType.ReadOnly = true;
-            // 
-            // colTargetEntity
-            // 
-            this.colTargetEntity.FillWeight = 25F;
-            this.colTargetEntity.HeaderText = "Target Entity";
-            this.colTargetEntity.Name = "colTargetEntity";
-            this.colTargetEntity.ReadOnly = true;
+            //
+            // colDescription
+            //
+            this.colDescription.FillWeight = 50F;
+            this.colDescription.HeaderText = "Description";
+            this.colDescription.Name = "colDescription";
+            this.colDescription.ReadOnly = true;
             // 
             // FrmAuditLog
             // 
@@ -246,6 +247,6 @@ namespace InventoryManagementSystem
         private DataGridViewTextBoxColumn colTimestamp;
         private DataGridViewTextBoxColumn colUserIdentity;
         private DataGridViewTextBoxColumn colActionType;
-        private DataGridViewTextBoxColumn colTargetEntity;
+        private DataGridViewTextBoxColumn colDescription;
     }
 }
