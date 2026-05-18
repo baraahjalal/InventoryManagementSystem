@@ -192,6 +192,23 @@ CREATE TABLE AuditLog (
 GO
 
 -- ============================================================
+-- TABLE 10: CategorySpecTemplates
+-- PK : (CategoryName, SpecKey) — composite natural key
+-- FK : CategoryName → Categories  (CASCADE on delete)
+-- PURPOSE : Defines which specification keys are expected for
+--           each category. Used to pre-fill FrmAddProduct.
+-- ============================================================
+CREATE TABLE CategorySpecTemplates (
+    CategoryName NVARCHAR(100) NOT NULL,
+    SpecKey      NVARCHAR(50)  NOT NULL,
+    CONSTRAINT PK_CategorySpecTemplates PRIMARY KEY (CategoryName, SpecKey),
+    CONSTRAINT FK_CST_Category
+        FOREIGN KEY (CategoryName) REFERENCES Categories (CategoryName)
+        ON DELETE CASCADE
+);
+GO
+
+-- ============================================================
 -- VIEW: vw_ProductStock
 -- Purpose : Computes Quantity and StockStatus from ProductItems.
 -- ============================================================
