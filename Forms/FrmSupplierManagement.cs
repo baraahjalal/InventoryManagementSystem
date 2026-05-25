@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Reflection;
@@ -12,7 +11,7 @@ namespace InventoryManagementSystem
 {
     public partial class FrmSupplierManagement : Form
     {
-        private bool   isEditMode     = false;
+        private bool   isEditMode      = false;
         private string currentEditName = string.Empty;
 
         private ErrorProvider errorProvider = new ErrorProvider();
@@ -46,10 +45,19 @@ namespace InventoryManagementSystem
         private void FrmSupplierManagement_Load(object sender, EventArgs e)
         {
             txtPhone.KeyPress += ValidationHelper.AllowOnlyDigits;
+            txtContactPerson.KeyPress += ValidationHelper.AllowOnlyDigits;
+
+            // Repurpose txtContactPerson as Tax Number input
+            if (lblContactPerson != null)
+            {
+                lblContactPerson.Visible = true;
+                lblContactPerson.Text    = "Tax Number";
+            }
+            txtContactPerson.Visible = true;
+
             clbSuppliedProducts.Visible = false;
-            if (txtContactPerson != null) txtContactPerson.Visible = false;
-            if (lblContactPerson != null) lblContactPerson.Visible = false;
             if (lblSuppliedProducts != null) lblSuppliedProducts.Visible = false;
+
             ClearForm();
             LoadData();
         }
@@ -64,6 +72,7 @@ namespace InventoryManagementSystem
                 searchTerm = searchTerm.ToLower();
                 suppliers  = suppliers.Where(s =>
                     s.SupplierName.ToLower().Contains(searchTerm) ||
+                    s.SupplierTaxNumber.ToString().Contains(searchTerm) ||
                     (s.Email != null && s.Email.ToLower().Contains(searchTerm)) ||
                     (s.Phone != null && s.Phone.ToLower().Contains(searchTerm))
                 ).ToList();
@@ -73,7 +82,7 @@ namespace InventoryManagementSystem
             {
                 string status = sup.IsActive ? "Active" : "Inactive";
                 dgvSuppliers.Rows.Add(sup.SupplierName, sup.Phone, sup.Email, status);
-                dgvSuppliers.Rows[dgvSuppliers.Rows.Count - 1].Tag = sup.SupplierName;
+                dgvSuppliers.Rows[dgvSuppliers.Rows.Count - 1].Tag = sup;
             }
             dgvSuppliers.ClearSelection();
         }
@@ -93,7 +102,9 @@ namespace InventoryManagementSystem
         private void ClearForm()
         {
             txtSupplierName.Clear();
-            txtSupplierName.ReadOnly = false;
+            txtSupplierName.ReadOnly  = false;
+            txtContactPerson.Clear();
+            txtContactPerson.ReadOnly = false;
             txtPhone.Clear();
             txtEmail.Clear();
             chkIsActive.Checked = true;
@@ -102,7 +113,7 @@ namespace InventoryManagementSystem
             lblFormTitle.Text   = "Add New Supplier";
         }
 
-        private void BtnClear_Click(object sender, EventArgs e)  => ClearForm();
+        private void BtnClear_Click(object sender, EventArgs e)     => ClearForm();
         private void BtnAddSupplier_Click(object sender, EventArgs e)
         {
             ClearForm();
@@ -122,6 +133,13 @@ namespace InventoryManagementSystem
             else if (!isEditMode && SupplierRepository.Exists(txtSupplierName.Text.Trim()))
             { errorProvider.SetError(txtSupplierName, "A supplier with this name already exists."); isValid = false; }
 
+            if (!ValidationHelper.IsRequired(txtContactPerson.Text, out errorMsg))
+            { errorProvider.SetError(txtContactPerson, "Tax Number is required."); isValid = false; }
+            else if (!int.TryParse(txtContactPerson.Text.Trim(), out int taxNum) || taxNum <= 0)
+            { errorProvider.SetError(txtContactPerson, "Tax Number must be a positive integer."); isValid = false; }
+            else if (!isEditMode && SupplierRepository.TaxNumberExists(taxNum))
+            { errorProvider.SetError(txtContactPerson, "This Tax Number is already registered."); isValid = false; }
+
             if (!ValidationHelper.IsValidPhone(txtPhone.Text, out errorMsg))
             { errorProvider.SetError(txtPhone, errorMsg); isValid = false; }
 
@@ -140,10 +158,11 @@ namespace InventoryManagementSystem
 
             var supplier = new Supplier
             {
-                SupplierName = txtSupplierName.Text.Trim(),
-                Phone        = string.IsNullOrWhiteSpace(txtPhone.Text) ? null : txtPhone.Text.Trim(),
-                Email        = string.IsNullOrWhiteSpace(txtEmail.Text) ? null : txtEmail.Text.Trim(),
-                IsActive     = chkIsActive.Checked
+                SupplierTaxNumber = int.Parse(txtContactPerson.Text.Trim()),
+                SupplierName      = txtSupplierName.Text.Trim(),
+                Phone             = string.IsNullOrWhiteSpace(txtPhone.Text) ? null : txtPhone.Text.Trim(),
+                Email             = string.IsNullOrWhiteSpace(txtEmail.Text) ? null : txtEmail.Text.Trim(),
+                IsActive          = chkIsActive.Checked
             };
 
             if (isEditMode)
@@ -169,21 +188,19 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            string name     = dgvSuppliers.SelectedRows[0].Tag?.ToString();
-            var suppliers   = SupplierRepository.GetAll();
-            var supplier    = suppliers.FirstOrDefault(s => s.SupplierName == name);
+            var supplier = dgvSuppliers.SelectedRows[0].Tag as Supplier;
+            if (supplier == null) return;
 
-            if (supplier != null)
-            {
-                txtSupplierName.Text     = supplier.SupplierName;
-                txtSupplierName.ReadOnly = true;
-                txtPhone.Text            = supplier.Phone;
-                txtEmail.Text            = supplier.Email;
-                chkIsActive.Checked      = supplier.IsActive;
-                isEditMode               = true;
-                currentEditName          = supplier.SupplierName;
-                lblFormTitle.Text        = "Edit Supplier";
-            }
+            txtSupplierName.Text      = supplier.SupplierName;
+            txtSupplierName.ReadOnly  = true;
+            txtContactPerson.Text     = supplier.SupplierTaxNumber.ToString();
+            txtContactPerson.ReadOnly = true;
+            txtPhone.Text             = supplier.Phone;
+            txtEmail.Text             = supplier.Email;
+            chkIsActive.Checked       = supplier.IsActive;
+            isEditMode                = true;
+            currentEditName           = supplier.SupplierName;
+            lblFormTitle.Text         = "Edit Supplier";
         }
 
         private void BtnDeleteSupplier_Click(object sender, EventArgs e)
@@ -194,14 +211,16 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            string name = dgvSuppliers.SelectedRows[0].Tag?.ToString();
-            var result  = MessageBox.Show(
+            var supplier = dgvSuppliers.SelectedRows[0].Tag as Supplier;
+            if (supplier == null) return;
+
+            var result = MessageBox.Show(
                 "Are you sure you want to delete this supplier?\nThis action cannot be undone.",
                 "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
 
             if (result == DialogResult.Yes)
             {
-                SupplierRepository.Delete(name);
+                SupplierRepository.Delete(supplier.SupplierTaxNumber);
                 LoadData(txtSearch.Text);
                 ClearForm();
                 MessageBox.Show("Supplier deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);

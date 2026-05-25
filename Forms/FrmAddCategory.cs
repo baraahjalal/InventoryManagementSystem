@@ -72,20 +72,23 @@ namespace InventoryManagementSystem.Forms
                 return;
             }
 
-            CategoryRepository.Add(catName);
+            // Add category — returns the new CategoryID (IDENTITY)
+            int newCategoryId = CategoryRepository.Add(catName);
 
+            // Auto-create a storage zone linked by CategoryID
             StorageZoneRepository.Add(new StorageZone
             {
-                ZoneName     = $"Auto Zone: {catName}",
-                CategoryName = catName
+                ZoneName   = $"Auto Zone: {catName}",
+                CategoryID = newCategoryId
             });
 
+            // Add spec templates linked by CategoryID
             foreach (DataGridViewRow row in dgvSpecKeys.Rows)
             {
                 if (row.IsNewRow) continue;
                 string key = row.Cells["colSpecKeyName"].Value?.ToString();
                 if (!string.IsNullOrWhiteSpace(key))
-                    CategorySpecTemplateRepository.Add(catName, key);
+                    CategorySpecTemplateRepository.Add(newCategoryId, key);
             }
 
             CreatedCategoryName = catName;

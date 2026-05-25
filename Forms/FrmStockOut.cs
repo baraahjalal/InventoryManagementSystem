@@ -12,9 +12,8 @@ namespace InventoryManagementSystem
     public partial class FrmStockOut : Form
     {
         private readonly ErrorProvider _errorProvider = new ErrorProvider();
-        private string _preselectedProductSerial = null;
+        private int? _preselectedProductId = null;
 
-        /// <summary>Standard constructor — no preselection.</summary>
         public FrmStockOut()
         {
             InitializeComponent();
@@ -24,10 +23,9 @@ namespace InventoryManagementSystem
             clbSerialNumbers.ItemCheck += ClbSerialNumbers_ItemCheck;
         }
 
-        /// <summary>Constructor used when launched via right-click from FrmProducts.</summary>
-        public FrmStockOut(string productSerial) : this()
+        public FrmStockOut(int productId) : this()
         {
-            _preselectedProductSerial = productSerial;
+            _preselectedProductId = productId;
         }
 
         private void FrmStockOut_Load(object sender, EventArgs e)
@@ -40,9 +38,9 @@ namespace InventoryManagementSystem
         {
             LoadProducts();
 
-            if (!string.IsNullOrEmpty(_preselectedProductSerial))
+            if (_preselectedProductId.HasValue)
             {
-                cmbProduct.SelectedValue = _preselectedProductSerial;
+                cmbProduct.SelectedValue = _preselectedProductId.Value;
                 cmbProduct.Enabled       = false;
             }
             else
@@ -59,7 +57,7 @@ namespace InventoryManagementSystem
 
             cmbProduct.DataSource    = null;
             cmbProduct.DisplayMember = "ProductName";
-            cmbProduct.ValueMember   = "SerialNumber";
+            cmbProduct.ValueMember   = "ProductID";
             cmbProduct.DataSource    = products;
             cmbProduct.SelectedIndex = -1;
 
@@ -89,7 +87,7 @@ namespace InventoryManagementSystem
             }
 
             var product        = (Product)cmbProduct.SelectedItem;
-            var availableItems = ProductItemRepository.GetAvailable(product.SerialNumber);
+            var availableItems = ProductItemRepository.GetAvailable(product.ProductID);
             int count          = availableItems.Count;
 
             lblStockStatus.Text      = $"In Stock: {count} items";
@@ -101,10 +99,10 @@ namespace InventoryManagementSystem
             numQty.Value   = count > 0 ? 1 : 0;
 
             clbSerialNumbers.Items.Clear();
-            foreach (var item in availableItems.OrderBy(i => i.ItemSerialNumber))
-                clbSerialNumbers.Items.Add(item.ItemSerialNumber);
+            foreach (var item in availableItems.OrderBy(i => i.ItemID))
+                clbSerialNumbers.Items.Add(item.ItemID);
 
-            UpdateWarrantyDisplay(new List<string>(), product);
+            UpdateWarrantyDisplay(new List<int>(), product);
         }
 
         private void ResetWarrantyCard()
@@ -118,7 +116,7 @@ namespace InventoryManagementSystem
             txtWarrantyInfo.Text          = "";
         }
 
-        private void UpdateWarrantyDisplay(List<string> selectedSerials, Product product = null)
+        private void UpdateWarrantyDisplay(List<int> selectedItemIds, Product product = null)
         {
             if (product == null)
             {
@@ -126,9 +124,9 @@ namespace InventoryManagementSystem
                 else { ResetWarrantyCard(); return; }
             }
 
-            txtWarrantyInfo.Text = $"Product Serial:\r\n{product.SerialNumber}";
+            txtWarrantyInfo.Text = $"Product ID:\r\n{product.ProductID}";
 
-            if (selectedSerials == null || selectedSerials.Count == 0)
+            if (selectedItemIds == null || selectedItemIds.Count == 0)
             {
                 pnlWarrantyCard.BackColor     = Color.FromArgb(240, 244, 255);
                 lblWarrantyDuration.Text      = "—";
@@ -138,18 +136,17 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            // Resolve warranty for each item via its batch movement
-            var warrantyResults = selectedSerials.Select(serial =>
+            var warrantyResults = selectedItemIds.Select(itemId =>
             {
-                var item = ProductItemRepository.GetAvailable(product.SerialNumber)
-                    .FirstOrDefault(i => i.ItemSerialNumber == serial);
+                var item = ProductItemRepository.GetAvailable(product.ProductID)
+                    .FirstOrDefault(i => i.ItemID == itemId);
                 int? months = null;
                 if (item?.BatchMovementId.HasValue == true)
                 {
-                    var movements = StockMovementRepository.GetByProduct(product.SerialNumber);
+                    var movements = StockMovementRepository.GetByProduct(product.ProductID);
                     months = movements.FirstOrDefault(m => m.MovementId == item.BatchMovementId.Value)?.WarrantyMonths;
                 }
-                return new { Serial = serial, Months = months };
+                return new { ItemId = itemId, Months = months };
             }).ToList();
 
             var distinct = warrantyResults.Select(r => r.Months).Distinct().ToList();
@@ -185,15 +182,15 @@ namespace InventoryManagementSystem
                 lblWarrantyExpiry.ForeColor   = Color.FromArgb(146, 64, 14);
 
                 var sb = new StringBuilder();
-                sb.AppendLine("Product Serial:");
-                sb.AppendLine(product.SerialNumber);
+                sb.AppendLine("Product ID:");
+                sb.AppendLine(product.ProductID.ToString());
                 sb.AppendLine();
                 sb.AppendLine("Per-item Warranty:");
                 foreach (var r in warrantyResults)
                 {
                     string w = r.Months.HasValue && r.Months.Value > 0
                         ? $"{r.Months.Value} Months" : "No warranty";
-                    sb.AppendLine($"{r.Serial}  →  {w}");
+                    sb.AppendLine($"ItemID {r.ItemId}  →  {w}");
                 }
                 txtWarrantyInfo.Text = sb.ToString().TrimEnd();
             }
@@ -210,7 +207,7 @@ namespace InventoryManagementSystem
 
             this.BeginInvoke(new Action(() =>
             {
-                var selected = clbSerialNumbers.CheckedItems.Cast<string>().ToList();
+                var selected = clbSerialNumbers.CheckedItems.Cast<int>().ToList();
                 UpdateWarrantyDisplay(selected);
             }));
         }
@@ -230,9 +227,9 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            var product  = (Product)cmbProduct.SelectedItem;
-            var selected = clbSerialNumbers.CheckedItems.Cast<string>().ToList();
-            int quantity = selected.Count > 0 ? selected.Count : (int)numQty.Value;
+            var product      = (Product)cmbProduct.SelectedItem;
+            var selectedIds  = clbSerialNumbers.CheckedItems.Cast<int>().ToList();
+            int quantity     = selectedIds.Count > 0 ? selectedIds.Count : (int)numQty.Value;
 
             if (quantity <= 0)
             {
@@ -240,7 +237,7 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            int available = ProductItemRepository.CountInStock(product.SerialNumber);
+            int available = ProductItemRepository.CountInStock(product.ProductID);
             if (quantity > available)
             {
                 MessageBox.Show($"Cannot dispatch {quantity} items. Only {available} available.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -249,32 +246,29 @@ namespace InventoryManagementSystem
 
             string notes = $"Warranty: {lblWarrantyDuration.Text}";
 
-            // 1. Record StockMovement
             var movement = new StockMovement
             {
-                ProductSerial   = product.SerialNumber,
+                ProductID       = product.ProductID,
                 MovementType    = "StockOut",
                 QuantityChanged = quantity,
-                Username        = DatabaseHelper.CurrentUser?.Username,
+                EmployeeID      = DatabaseHelper.CurrentUser?.EmployeeID,
                 Notes           = notes
             };
             StockMovementRepository.Add(movement);
 
-            // 2. Mark items as removed (specific serials if chosen, otherwise FIFO)
-            if (selected.Count > 0)
-                foreach (var serial in selected)
-                    ProductItemRepository.MarkRemoved(serial);
+            if (selectedIds.Count > 0)
+                foreach (var itemId in selectedIds)
+                    ProductItemRepository.MarkRemoved(itemId);
             else
-                ProductItemRepository.MarkRemovedBatch(product.SerialNumber, quantity);
+                ProductItemRepository.MarkRemovedBatch(product.ProductID, quantity);
 
-            string details = selected.Count > 0
-                ? $"\n\nDispatched:\n{string.Join("\n", selected.Take(10))}{(selected.Count > 10 ? $"\n... and {selected.Count - 10} more" : "")}"
+            string details = selectedIds.Count > 0
+                ? $"\n\nDispatched Item IDs:\n{string.Join(", ", selectedIds.Take(10))}{(selectedIds.Count > 10 ? $"\n... and {selectedIds.Count - 10} more" : "")}"
                 : $"\n\n{quantity} item(s) dispatched via FIFO.";
 
             MessageBox.Show($"Stock Out recorded successfully.{details}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            // Low stock warning
-            int remaining = ProductItemRepository.CountInStock(product.SerialNumber);
+            int remaining = ProductItemRepository.CountInStock(product.ProductID);
             if (remaining <= 5)
                 MessageBox.Show($"⚠ Warning: Stock for '{product.ProductName}' is running low ({remaining} left).", "Low Stock Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 

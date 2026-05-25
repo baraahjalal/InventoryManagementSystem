@@ -57,13 +57,13 @@ namespace InventoryManagementSystem
 
             var movements = StockMovementRepository.GetAll().Take(10).ToList();
             var productDict = ProductRepository.GetAll()
-                .ToDictionary(p => p.SerialNumber, p => p.ProductName);
+                .ToDictionary(p => p.ProductID, p => p.ProductName);
 
             foreach (var m in movements)
             {
-                productDict.TryGetValue(m.ProductSerial, out string pName);
-                string productDetails = $"{pName ?? m.ProductSerial} [{m.ProductSerial}]";
-                string operatorName   = m.Username ?? "System";
+                productDict.TryGetValue(m.ProductID, out string pName);
+                string productDetails = $"{pName ?? m.ProductID.ToString()} [{m.ProductID}]";
+                string operatorName   = m.EmployeeID.HasValue ? $"ID:{m.EmployeeID}" : "System";
                 string formattedQty   = m.QuantityChanged > 0
                     ? $"+{m.QuantityChanged}"
                     : m.QuantityChanged.ToString();

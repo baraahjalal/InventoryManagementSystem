@@ -25,6 +25,8 @@ namespace InventoryManagementSystem.Forms
 
             txtPrice.KeyPress    += ValidationHelper.AllowOnlyDecimals;
             txtQuantity.KeyPress += ValidationHelper.AllowOnlyDigits;
+            // ProductID is a plain integer entered by the user
+            txtSerialNumber.KeyPress += ValidationHelper.AllowOnlyDigits;
 
             LoadCategories();
         }
@@ -37,7 +39,7 @@ namespace InventoryManagementSystem.Forms
                 var cats = CategoryRepository.GetAll();
                 cmbCategory.DataSource    = cats;
                 cmbCategory.DisplayMember = "CategoryName";
-                cmbCategory.ValueMember   = "CategoryName";
+                cmbCategory.ValueMember   = "CategoryID";
                 if (cmbCategory.Items.Count > 0)
                     cmbCategory.SelectedIndex = 0;
             }
@@ -52,7 +54,7 @@ namespace InventoryManagementSystem.Forms
             dgvProductSpecs.Rows.Clear();
             if (cmbCategory.SelectedItem is Models.Category cat)
             {
-                var keys = CategorySpecTemplateRepository.GetByCategory(cat.CategoryName);
+                var keys = CategorySpecTemplateRepository.GetByCategory(cat.CategoryID);
                 foreach (var key in keys)
                     dgvProductSpecs.Rows.Add(key, "");
             }
@@ -64,7 +66,7 @@ namespace InventoryManagementSystem.Forms
             var suppliers = SupplierRepository.GetActive();
             ((ListBox)clbSuppliers).DataSource    = suppliers;
             ((ListBox)clbSuppliers).DisplayMember = "SupplierName";
-            ((ListBox)clbSuppliers).ValueMember   = "SupplierName";
+            ((ListBox)clbSuppliers).ValueMember   = "SupplierTaxNumber";
         }
 
         private void BtnCancel_Click(object sender, EventArgs e)
@@ -76,12 +78,12 @@ namespace InventoryManagementSystem.Forms
         private void BtnSave_Click(object sender, EventArgs e)
         {
             if (!ValidateInputs(out var name, out var price, out var qty,
-                                out var serial, out var categoryName, out var selectedSuppliers))
+                                out var productId, out var categoryId, out var selectedSupplierTaxNum))
                 return;
 
-            if (ProductRepository.Exists(serial))
+            if (ProductRepository.Exists(productId))
             {
-                MessageBox.Show("Serial Number already exists.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Product ID already exists.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -92,43 +94,39 @@ namespace InventoryManagementSystem.Forms
                 string key = row.Cells["colSpecKey"].Value?.ToString();
                 string val = row.Cells["colSpecValue"].Value?.ToString();
                 if (!string.IsNullOrWhiteSpace(key) && !string.IsNullOrWhiteSpace(val))
-                    specs.Add(new ProductSpecification { ProductSerial = serial, SpecKey = key, SpecValue = val });
+                    specs.Add(new ProductSpecification { ProductID = productId, SpecKey = key, SpecValue = val });
             }
 
             var newProd = new Product
             {
-                SerialNumber  = serial,
-                ProductName   = name,
-                Price         = price,
-                CategoryName  = categoryName,
+                ProductID    = productId,
+                ProductName  = name,
+                Price        = price,
+                CategoryID   = categoryId,
                 Specifications = specs
             };
 
             ProductRepository.Add(newProd);
 
-            // If initial quantity > 0, record a StockIn movement and generate items
             if (qty > 0)
             {
-                string supplierName = selectedSuppliers.FirstOrDefault();
                 var movement = new StockMovement
                 {
-                    ProductSerial   = serial,
-                    MovementType    = "StockIn",
-                    QuantityChanged = qty,
-                    Username        = DatabaseHelper.CurrentUser?.Username,
-                    Notes           = "Initial stock on product creation",
-                    SupplierName    = supplierName
+                    ProductID         = productId,
+                    MovementType      = "StockIn",
+                    QuantityChanged   = qty,
+                    EmployeeID        = DatabaseHelper.CurrentUser?.EmployeeID,
+                    Notes             = "Initial stock on product creation",
+                    SupplierTaxNumber = selectedSupplierTaxNum
                 };
                 int movementId = StockMovementRepository.Add(movement);
 
-                int existingCount = ProductItemRepository.CountAll(serial);
                 var items = new List<ProductItem>();
-                for (int i = 1; i <= qty; i++)
+                for (int i = 0; i < qty; i++)
                     items.Add(new ProductItem
                     {
-                        ItemSerialNumber = $"{serial}-{(existingCount + i):D2}",
-                        ProductSerial    = serial,
-                        BatchMovementId  = movementId
+                        ProductID       = productId,
+                        BatchMovementId = movementId
                     });
                 ProductItemRepository.AddBatch(items);
             }
@@ -139,42 +137,44 @@ namespace InventoryManagementSystem.Forms
         }
 
         private bool ValidateInputs(out string name, out decimal price, out int qty,
-                                    out string serial, out string categoryName,
-                                    out List<string> selectedSuppliers)
+                                    out int productId, out int categoryId,
+                                    out int? selectedSupplierTaxNum)
         {
-            name      = txtName.Text.Trim();
-            serial    = txtSerialNumber.Text.Trim();
-            categoryName = cmbCategory.SelectedItem is Models.Category c ? c.CategoryName : string.Empty;
+            name     = txtName.Text.Trim();
+            categoryId = cmbCategory.SelectedItem is Models.Category c ? c.CategoryID : 0;
 
-            selectedSuppliers = new List<string>();
+            selectedSupplierTaxNum = null;
             foreach (var item in clbSuppliers.CheckedItems)
-                if (item is Models.Supplier s) selectedSuppliers.Add(s.SupplierName);
+            {
+                if (item is Models.Supplier s)
+                { selectedSupplierTaxNum = s.SupplierTaxNumber; break; }
+            }
 
-            price = 0m;
-            qty   = 0;
+            productId = 0;
+            price     = 0m;
+            qty       = 0;
 
             _errorProvider.Clear();
             bool   isValid = true;
             string errorMsg;
 
-            // Name
             if (!ValidationHelper.IsRequired(name, out errorMsg))
             { _errorProvider.SetError(txtName, errorMsg); isValid = false; }
             else if (!ValidationHelper.IsValidLength(name, 2, 200, out errorMsg))
             { _errorProvider.SetError(txtName, errorMsg); isValid = false; }
             else _errorProvider.SetError(txtName, string.Empty);
 
-            // Serial Number (required)
-            if (!ValidationHelper.IsRequired(serial, out errorMsg))
+            string idText = txtSerialNumber.Text.Trim();
+            if (!ValidationHelper.IsRequired(idText, out errorMsg))
             { _errorProvider.SetError(txtSerialNumber, errorMsg); isValid = false; }
+            else if (!int.TryParse(idText, out productId) || productId <= 0)
+            { _errorProvider.SetError(txtSerialNumber, "Product ID must be a positive integer."); isValid = false; }
             else _errorProvider.SetError(txtSerialNumber, string.Empty);
 
-            // Category
-            if (string.IsNullOrEmpty(categoryName))
+            if (categoryId == 0)
             { _errorProvider.SetError(cmbCategory, "Please select a category."); isValid = false; }
             else _errorProvider.SetError(cmbCategory, string.Empty);
 
-            // Price
             string priceText = txtPrice.Text.Trim();
             if (!ValidationHelper.IsRequired(priceText, out errorMsg))
             { _errorProvider.SetError(txtPrice, errorMsg); isValid = false; }
@@ -182,7 +182,6 @@ namespace InventoryManagementSystem.Forms
             { _errorProvider.SetError(txtPrice, errorMsg); isValid = false; }
             else { price = decimal.Parse(priceText); _errorProvider.SetError(txtPrice, string.Empty); }
 
-            // Quantity (optional — 0 is acceptable)
             string qtyText = txtQuantity.Text.Trim();
             if (string.IsNullOrWhiteSpace(qtyText)) qtyText = "0";
             if (!ValidationHelper.IsValidInteger(qtyText, out errorMsg))

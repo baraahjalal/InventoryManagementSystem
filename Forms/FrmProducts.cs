@@ -83,14 +83,14 @@ namespace InventoryManagementSystem
         {
             cmbCategory.SelectedIndexChanged -= CmbCategory_SelectedIndexChanged;
 
-            var allItem = new Models.Category { CategoryName = "All Categories" };
+            var allItem    = new Models.Category { CategoryID = 0, CategoryName = "All Categories" };
             var categories = new List<Models.Category> { allItem };
             categories.AddRange(CategoryRepository.GetAll());
 
             cmbCategory.DataSource    = null;
             cmbCategory.DataSource    = categories;
             cmbCategory.DisplayMember = "CategoryName";
-            cmbCategory.ValueMember   = "CategoryName";
+            cmbCategory.ValueMember   = "CategoryID";
 
             if (cmbCategory.Items.Count > 0)
                 cmbCategory.SelectedIndex = 0;
@@ -98,10 +98,7 @@ namespace InventoryManagementSystem
             cmbCategory.SelectedIndexChanged += CmbCategory_SelectedIndexChanged;
         }
 
-        private void CmbCategory_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ApplyFilters();
-        }
+        private void CmbCategory_SelectedIndexChanged(object sender, EventArgs e) => ApplyFilters();
 
         private void RefreshData()
         {
@@ -131,20 +128,15 @@ namespace InventoryManagementSystem
 
             var filtered = _allProducts.AsEnumerable();
 
-            // Category filter
-            if (cmbCategory.SelectedItem is Models.Category selectedCat
-                && selectedCat.CategoryName != "All Categories")
-            {
-                filtered = filtered.Where(p => p.CategoryName == selectedCat.CategoryName);
-            }
+            if (cmbCategory.SelectedItem is Models.Category selectedCat && selectedCat.CategoryID != 0)
+                filtered = filtered.Where(p => p.CategoryID == selectedCat.CategoryID);
 
-            // Text search
             string searchText = txtSearch.Text.Trim().ToLower();
             if (!string.IsNullOrWhiteSpace(searchText))
             {
                 filtered = filtered.Where(p =>
                     p.ProductName.ToLower().Contains(searchText) ||
-                    p.SerialNumber.ToLower().Contains(searchText));
+                    p.ProductID.ToString().Contains(searchText));
             }
 
             LoadGridData(filtered.ToList());
@@ -158,7 +150,7 @@ namespace InventoryManagementSystem
             foreach (var p in productsToDisplay)
             {
                 dgvProducts.Rows.Add(
-                    p.SerialNumber,
+                    p.ProductID.ToString(),
                     p.ProductName,
                     p.CategoryName,
                     p.Quantity.ToString(),
@@ -175,10 +167,10 @@ namespace InventoryManagementSystem
             if (dgvProducts.SelectedRows.Count > 0)
             {
                 var row = dgvProducts.SelectedRows[0];
-                if (row.Cells["colID"].Value != null)
+                if (row.Cells["colID"].Value != null &&
+                    int.TryParse(row.Cells["colID"].Value.ToString(), out int productId))
                 {
-                    string serial = row.Cells["colID"].Value.ToString();
-                    _selectedProduct = _allProducts?.FirstOrDefault(p => p.SerialNumber == serial);
+                    _selectedProduct = _allProducts?.FirstOrDefault(p => p.ProductID == productId);
                     ShowProductDetails();
                 }
             }
@@ -195,8 +187,8 @@ namespace InventoryManagementSystem
             txtProdName.Text  = _selectedProduct.ProductName;
             txtProdPrice.Text = _selectedProduct.Price.ToString("0.00");
 
-            var specs = ProductRepository.GetSpecifications(_selectedProduct.SerialNumber);
-            var items = ProductItemRepository.GetAvailable(_selectedProduct.SerialNumber);
+            var specs = ProductRepository.GetSpecifications(_selectedProduct.ProductID);
+            var items = ProductItemRepository.GetAvailable(_selectedProduct.ProductID);
 
             dgvSpecs.Rows.Clear();
             foreach (var s in specs)
@@ -204,15 +196,15 @@ namespace InventoryManagementSystem
 
             var sb = new StringBuilder();
             sb.AppendLine($"Category: {_selectedProduct.CategoryName}");
-            sb.AppendLine($"Product Serial: {_selectedProduct.SerialNumber}");
+            sb.AppendLine($"Product ID: {_selectedProduct.ProductID}");
             sb.AppendLine($"In Stock: {items.Count}");
 
             if (items.Count > 0)
             {
                 sb.AppendLine();
-                sb.AppendLine("Available Items:");
-                foreach (var item in items.Take(15).OrderBy(i => i.ItemSerialNumber))
-                    sb.AppendLine($"  ► {item.ItemSerialNumber}");
+                sb.AppendLine("Available Items (by ItemID):");
+                foreach (var item in items.Take(15).OrderBy(i => i.ItemID))
+                    sb.AppendLine($"  ► {item.ItemID}");
                 if (items.Count > 15)
                     sb.AppendLine($"  ... and {items.Count - 15} more");
             }
@@ -244,8 +236,7 @@ namespace InventoryManagementSystem
             { _errorProvider.SetError(txtProdName, errorMsg); isValid = false; }
             else if (!ValidationHelper.IsValidLength(nameText, 2, 200, out errorMsg))
             { _errorProvider.SetError(txtProdName, errorMsg); isValid = false; }
-            else
-              _errorProvider.SetError(txtProdName, string.Empty);
+            else _errorProvider.SetError(txtProdName, string.Empty);
 
             decimal newPrice = 0;
             string priceText = txtProdPrice.Text.Trim();
@@ -253,8 +244,7 @@ namespace InventoryManagementSystem
             { _errorProvider.SetError(txtProdPrice, errorMsg); isValid = false; }
             else if (!ValidationHelper.IsValidDecimal(priceText, out errorMsg))
             { _errorProvider.SetError(txtProdPrice, errorMsg); isValid = false; }
-            else
-            { newPrice = decimal.Parse(priceText); _errorProvider.SetError(txtProdPrice, string.Empty); }
+            else { newPrice = decimal.Parse(priceText); _errorProvider.SetError(txtProdPrice, string.Empty); }
 
             if (!isValid)
             {
@@ -279,7 +269,7 @@ namespace InventoryManagementSystem
                 if (frmAdd.ShowDialog() == DialogResult.OK)
                 {
                     LoadCategories();
-                    var cats = (List<Models.Category>)cmbCategory.DataSource;
+                    var cats   = (List<Models.Category>)cmbCategory.DataSource;
                     var newCat = cats?.FirstOrDefault(c =>
                         c.CategoryName.Equals(frmAdd.CreatedCategoryName, StringComparison.OrdinalIgnoreCase));
                     if (newCat != null)
@@ -303,7 +293,6 @@ namespace InventoryManagementSystem
             if (cmbCategory.Items.Count > 0) cmbCategory.SelectedIndex = 0;
         }
 
-        // ── Context Menu ────────────────────────────────────────────────
         private void InitContextMenu()
         {
             _ctxProductMenu      = new ContextMenuStrip();
@@ -340,10 +329,10 @@ namespace InventoryManagementSystem
             var frmMain = this.ParentForm as FrmMain;
             if (frmMain == null) return;
 
-            string serial = _selectedProduct.SerialNumber;
+            int productId = _selectedProduct.ProductID;
             Form stockForm = isStockIn
-                ? (Form)new FrmStockIn(serial)
-                : (Form)new FrmStockOut(serial);
+                ? (Form)new FrmStockIn(productId)
+                : (Form)new FrmStockOut(productId);
 
             frmMain.OpenChildForm(stockForm);
         }

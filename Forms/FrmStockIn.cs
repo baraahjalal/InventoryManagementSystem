@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using InventoryManagementSystem.DAL;
@@ -11,9 +10,8 @@ namespace InventoryManagementSystem
     public partial class FrmStockIn : Form
     {
         private readonly ErrorProvider _errorProvider = new ErrorProvider();
-        private string _preselectedProductSerial = null;
+        private int? _preselectedProductId = null;
 
-        /// <summary>Standard constructor — no preselection.</summary>
         public FrmStockIn()
         {
             InitializeComponent();
@@ -23,10 +21,9 @@ namespace InventoryManagementSystem
             numQuantity.ValueChanged += NumQuantity_ValueChanged;
         }
 
-        /// <summary>Constructor used when launched via right-click from FrmProducts.</summary>
-        public FrmStockIn(string productSerial) : this()
+        public FrmStockIn(int productId) : this()
         {
-            _preselectedProductSerial = productSerial;
+            _preselectedProductId = productId;
         }
 
         private void FrmStockIn_Load(object sender, EventArgs e) => RefreshData();
@@ -35,8 +32,8 @@ namespace InventoryManagementSystem
         {
             LoadProducts();
 
-            if (!string.IsNullOrEmpty(_preselectedProductSerial))
-                cmbProduct.SelectedValue = _preselectedProductSerial;
+            if (_preselectedProductId.HasValue)
+                cmbProduct.SelectedValue = _preselectedProductId.Value;
 
             if (cmbStorageZone.Items.Count > 0)
                 cmbStorageZone.SelectedIndex = 0;
@@ -49,7 +46,7 @@ namespace InventoryManagementSystem
             cmbProduct.SelectedIndexChanged -= CmbProduct_SelectedIndexChanged;
             cmbProduct.DataSource    = null;
             cmbProduct.DisplayMember = "ProductName";
-            cmbProduct.ValueMember   = "SerialNumber";
+            cmbProduct.ValueMember   = "ProductID";
             cmbProduct.DataSource    = products;
             cmbProduct.SelectedIndex = -1;
             cmbProduct.SelectedIndexChanged += CmbProduct_SelectedIndexChanged;
@@ -62,10 +59,10 @@ namespace InventoryManagementSystem
             cmbStorageZone.DataSource = null;
             if (cmbProduct.SelectedItem is Product product)
             {
-                var zones = StorageZoneRepository.GetByCategory(product.CategoryName);
+                var zones = StorageZoneRepository.GetByCategory(product.CategoryID);
                 cmbStorageZone.DataSource    = zones;
                 cmbStorageZone.DisplayMember = "ZoneName";
-                cmbStorageZone.ValueMember   = "ZoneName";
+                cmbStorageZone.ValueMember   = "ZoneID";
                 if (zones.Count > 0) cmbStorageZone.SelectedIndex = 0;
 
                 LoadActiveSuppliers();
@@ -77,7 +74,7 @@ namespace InventoryManagementSystem
             var suppliers = SupplierRepository.GetActive();
             cmbSupplier.DataSource    = null;
             cmbSupplier.DisplayMember = "SupplierName";
-            cmbSupplier.ValueMember   = "SupplierName";
+            cmbSupplier.ValueMember   = "SupplierTaxNumber";
             cmbSupplier.DataSource    = suppliers;
 
             if (suppliers.Count > 0) cmbSupplier.SelectedIndex = 0;
@@ -96,18 +93,17 @@ namespace InventoryManagementSystem
 
             if (qty <= 0)
             {
-                txtSerialNumbers.Text = $"Product Serial: {product.SerialNumber}\r\n\r\n(Enter quantity to preview item serials)";
+                txtSerialNumbers.Text = $"Product ID: {product.ProductID}\r\n\r\n(Enter quantity to preview item IDs)";
                 return;
             }
 
-            // Count existing items to figure out next index
-            int existingCount = ProductItemRepository.CountAll(product.SerialNumber);
+            int existingCount = ProductItemRepository.CountAll(product.ProductID);
             var sb = new StringBuilder();
-            sb.AppendLine($"Product Serial: {product.SerialNumber}");
+            sb.AppendLine($"Product ID: {product.ProductID}");
             sb.AppendLine($"Items to be generated ({qty}):");
             sb.AppendLine("─────────────────────────");
-            for (int i = 1; i <= qty; i++)
-                sb.AppendLine($"  ► {product.SerialNumber}-{(existingCount + i):D2}");
+            sb.AppendLine($"  IDs will be assigned from sequence seq_ProductItems");
+            sb.AppendLine($"  (current total existing items: {existingCount})");
             txtSerialNumbers.Text = sb.ToString();
         }
 
@@ -115,7 +111,6 @@ namespace InventoryManagementSystem
         {
             _errorProvider.Clear();
             bool isValid = true;
-            string errorMsg;
 
             if (cmbSupplier.SelectedValue == null)
             { _errorProvider.SetError(cmbSupplier, "Please select a supplier."); isValid = false; }
@@ -140,43 +135,38 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            var product      = (Product)cmbProduct.SelectedItem;
-            string supplier  = cmbSupplier.SelectedValue?.ToString();
-            string zoneName  = cmbStorageZone.SelectedValue?.ToString();
-            int warrantyVal  = (int)numWarrantyMonths.Value;
-            int? warranty    = warrantyVal > 0 ? warrantyVal : (int?)null;
+            var product          = (Product)cmbProduct.SelectedItem;
+            var supplier         = cmbSupplier.SelectedItem as Supplier;
+            int? supplierTaxNum  = supplier?.SupplierTaxNumber;
+            string zoneName      = (cmbStorageZone.SelectedItem as StorageZone)?.ZoneName ?? "";
+            int warrantyVal      = (int)numWarrantyMonths.Value;
+            int? warranty        = warrantyVal > 0 ? warrantyVal : (int?)null;
 
             string notes = $"Zone: {zoneName} | Warranty: {warrantyVal} Months";
 
-            // 1. Insert StockMovement record
             var movement = new StockMovement
             {
-                ProductSerial   = product.SerialNumber,
-                MovementType    = "StockIn",
-                QuantityChanged = quantity,
-                Username        = DatabaseHelper.CurrentUser?.Username,
-                Notes           = notes,
-                WarrantyMonths  = warranty,
-                SupplierName    = supplier
+                ProductID         = product.ProductID,
+                MovementType      = "StockIn",
+                QuantityChanged   = quantity,
+                EmployeeID        = DatabaseHelper.CurrentUser?.EmployeeID,
+                Notes             = notes,
+                WarrantyMonths    = warranty,
+                SupplierTaxNumber = supplierTaxNum
             };
             int movementId = StockMovementRepository.Add(movement);
 
-            // 2. Generate item-level serial numbers and insert into ProductItems
-            int existingCount = ProductItemRepository.CountAll(product.SerialNumber);
             var newItems = new List<ProductItem>();
-            for (int i = 1; i <= quantity; i++)
-            {
+            for (int i = 0; i < quantity; i++)
                 newItems.Add(new ProductItem
                 {
-                    ItemSerialNumber = $"{product.SerialNumber}-{(existingCount + i):D2}",
-                    ProductSerial    = product.SerialNumber,
-                    BatchMovementId  = movementId
+                    ProductID       = product.ProductID,
+                    BatchMovementId = movementId
                 });
-            }
             ProductItemRepository.AddBatch(newItems);
 
             MessageBox.Show(
-                $"Stock In recorded successfully.\n\nGenerated {quantity} item(s) for [{product.SerialNumber}].",
+                $"Stock In recorded successfully.\n\nGenerated {quantity} item(s) for Product ID [{product.ProductID}].",
                 "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             ClearForm();
         }
