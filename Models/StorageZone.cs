@@ -2,7 +2,8 @@ namespace InventoryManagementSystem.Models
 {
     public class StorageZone
     {
-        public string ZoneName     { get; set; }
-        public string CategoryName { get; set; }
+        public int    ZoneID      { get; set; }
+        public string ZoneName    { get; set; }
+        public int    CategoryID  { get; set; }
     }
 }
