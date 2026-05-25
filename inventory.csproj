@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Windows.Forms, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\AppTheme.cs" />
+    <Compile Include="Classes\CrystalReportHelper.cs" />
     <Compile Include="Classes\ValidationHelper.cs" />
     <Compile Include="Forms\FrmAddCategory.cs">
       <SubType>Form</SubType>
@@ -96,6 +101,12 @@
     <Compile Include="Forms\FrmReports.Designer.cs">
       <DependentUpon>FrmReports.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\FrmReportViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmReportViewer.Designer.cs">
+      <DependentUpon>FrmReportViewer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FrmStockOut.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +138,24 @@
     </Compile>
     <Compile Include="Forms\FrmStockIn.Designer.cs">
       <DependentUpon>FrmStockIn.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\StockInventoryStatus.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StockInventoryStatus.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\StockMovementHistory.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>StockMovementHistory.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\SupplierActivityReport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SupplierActivityReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
     </Compile>
     <EmbeddedResource Include="Forms\FrmAddCategory.resx">
       <DependentUpon>FrmAddCategory.cs</DependentUpon>
@@ -170,8 +199,18 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <None Include="2026-05-18-system-analysis-fix-round2.md" />
-    <None Include="Error Fix Plan - FrmProducts.docx" />
+    <EmbeddedResource Include="Reports\StockInventoryStatus.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>StockInventoryStatus.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\StockMovementHistory.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>StockMovementHistory.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\SupplierActivityReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SupplierActivityReport.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -184,6 +223,25 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="README.md" />
+    <None Include="MIGRATION_CONTEXT.md" />
+    <None Include=".gitignore" />
+    <None Include=".gitattributes" />
+    <None Include="2026-05-18-system-analysis-fix-round2.md" />
+    <None Include="Error Fix Plan - FrmProducts.docx" />
+    <None Include="InventoryManagementSystem.csproj" />
+    <None Include="InventoryManagementSystem.sln" />
+    <None Include="docs\PROJECT_ROADMAP.md" />
+    <None Include="docs\superpowers\plans\2026-05-18-final-phase-sql-crystal-reports.md" />
+    <None Include="docs\superpowers\plans\2026-05-18-system-analysis-fix-round2.md" />
+    <None Include="docs\superpowers\specs\2026-05-18-system-analysis-fix-round2-design.md" />
+    <None Include="Database\CreateDatabase.sql" />
+    <None Include="Database\InventoryDB_Fixes.sql" />
+    <None Include="Database\InventoryDB_Script.sql" />
+    <None Include="Database\InventoryDBv3.sql" />
+    <None Include="Database\InventoryDBv3_Complete.sql" />
+    <None Include="Database\SeedData.sql" />
+    <None Include="Database\Triggers.sql" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\AuditLogEntry.cs" />
@@ -204,10 +262,9 @@
     <Compile Include="DAL\SupplierRepository.cs" />
     <Compile Include="DAL\UserRepository.cs" />
     <Compile Include="DAL\CategorySpecTemplateRepository.cs" />
-    <None Include="Database\CreateDatabase.sql" />
-    <None Include="Database\SeedData.sql" />
-    <None Include="Database\Triggers.sql" />
-    <None Include="Database\InventoryDB_Script.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
