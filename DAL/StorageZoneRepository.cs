@@ -13,36 +13,28 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT ZoneName, CategoryName FROM StorageZones ORDER BY ZoneName", conn))
+                    "SELECT ZoneID, ZoneName, CategoryID FROM StorageZones ORDER BY ZoneName", conn))
                 using (var r = cmd.ExecuteReader())
                     while (r.Read())
-                        list.Add(new StorageZone
-                        {
-                            ZoneName     = r.GetString(0),
-                            CategoryName = r.GetString(1)
-                        });
+                        list.Add(MapZone(r));
             }
             return list;
         }
 
-        public static List<StorageZone> GetByCategory(string categoryName)
+        public static List<StorageZone> GetByCategory(int categoryId)
         {
             var list = new List<StorageZone>();
             using (var conn = DatabaseHelper.GetConnection())
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT ZoneName, CategoryName FROM StorageZones " +
-                    "WHERE CategoryName = @c ORDER BY ZoneName", conn))
+                    "SELECT ZoneID, ZoneName, CategoryID FROM StorageZones " +
+                    "WHERE CategoryID = @cid ORDER BY ZoneName", conn))
                 {
-                    cmd.Parameters.AddWithValue("@c", categoryName);
+                    cmd.Parameters.AddWithValue("@cid", categoryId);
                     using (var r = cmd.ExecuteReader())
                         while (r.Read())
-                            list.Add(new StorageZone
-                            {
-                                ZoneName     = r.GetString(0),
-                                CategoryName = r.GetString(1)
-                            });
+                            list.Add(MapZone(r));
                 }
             }
             return list;
@@ -54,27 +46,37 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "INSERT INTO StorageZones (ZoneName, CategoryName) VALUES (@z, @c)", conn))
+                    "INSERT INTO StorageZones (ZoneName, CategoryID) VALUES (@z, @cid)", conn))
                 {
-                    cmd.Parameters.AddWithValue("@z", z.ZoneName);
-                    cmd.Parameters.AddWithValue("@c", z.CategoryName);
+                    cmd.Parameters.AddWithValue("@z",   z.ZoneName);
+                    cmd.Parameters.AddWithValue("@cid", z.CategoryID);
                     cmd.ExecuteNonQuery();
                 }
             }
         }
 
-        public static void Delete(string zoneName)
+        public static void Delete(int zoneId)
         {
             using (var conn = DatabaseHelper.GetConnection())
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "DELETE FROM StorageZones WHERE ZoneName = @z", conn))
+                    "DELETE FROM StorageZones WHERE ZoneID = @id", conn))
                 {
-                    cmd.Parameters.AddWithValue("@z", zoneName);
+                    cmd.Parameters.AddWithValue("@id", zoneId);
                     cmd.ExecuteNonQuery();
                 }
             }
+        }
+
+        private static StorageZone MapZone(SqlDataReader r)
+        {
+            return new StorageZone
+            {
+                ZoneID     = r.GetInt32(0),
+                ZoneName   = r.GetString(1),
+                CategoryID = r.GetInt32(2)
+            };
         }
     }
 }

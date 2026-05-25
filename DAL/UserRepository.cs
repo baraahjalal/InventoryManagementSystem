@@ -12,7 +12,7 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT Username, Password, Role, IsAdmin, ProfilePhoto " +
+                    "SELECT EmployeeID, Username, Password, Role, IsAdmin, ProfilePhoto " +
                     "FROM Users WHERE Username = @u AND Password = @p", conn))
                 {
                     cmd.Parameters.AddWithValue("@u", username);
@@ -33,7 +33,7 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT Username, Password, Role, IsAdmin, ProfilePhoto " +
+                    "SELECT EmployeeID, Username, Password, Role, IsAdmin, ProfilePhoto " +
                     "FROM Users ORDER BY Username", conn))
                 using (var r = cmd.ExecuteReader())
                     while (r.Read())
@@ -48,9 +48,10 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "INSERT INTO Users (Username, Password, Role, IsAdmin, ProfilePhoto) " +
-                    "VALUES (@u, @p, @r, @a, @ph)", conn))
+                    "INSERT INTO Users (EmployeeID, Username, Password, Role, IsAdmin, ProfilePhoto) " +
+                    "VALUES (@id, @u, @p, @r, @a, @ph)", conn))
                 {
+                    cmd.Parameters.AddWithValue("@id", u.EmployeeID);
                     cmd.Parameters.AddWithValue("@u",  u.Username);
                     cmd.Parameters.AddWithValue("@p",  u.Password);
                     cmd.Parameters.AddWithValue("@r",  u.Role);
@@ -68,29 +69,30 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "UPDATE Users SET Password = @p, Role = @r, IsAdmin = @a, ProfilePhoto = @ph " +
-                    "WHERE Username = @u", conn))
+                    "UPDATE Users SET Username = @u, Password = @p, Role = @r, IsAdmin = @a, ProfilePhoto = @ph " +
+                    "WHERE EmployeeID = @id", conn))
                 {
+                    cmd.Parameters.AddWithValue("@u",  u.Username);
                     cmd.Parameters.AddWithValue("@p",  u.Password);
                     cmd.Parameters.AddWithValue("@r",  u.Role);
                     cmd.Parameters.AddWithValue("@a",  u.IsAdmin);
                     var updPhoto = cmd.Parameters.Add("@ph", System.Data.SqlDbType.VarBinary, -1);
                     updPhoto.Value = (object)u.ProfilePhoto ?? System.DBNull.Value;
-                    cmd.Parameters.AddWithValue("@u",  u.Username);
+                    cmd.Parameters.AddWithValue("@id", u.EmployeeID);
                     cmd.ExecuteNonQuery();
                 }
             }
         }
 
-        public static void Delete(string username)
+        public static void Delete(int employeeId)
         {
             using (var conn = DatabaseHelper.GetConnection())
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "DELETE FROM Users WHERE Username = @u", conn))
+                    "DELETE FROM Users WHERE EmployeeID = @id", conn))
                 {
-                    cmd.Parameters.AddWithValue("@u", username);
+                    cmd.Parameters.AddWithValue("@id", employeeId);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -110,15 +112,30 @@ namespace InventoryManagementSystem.DAL
             }
         }
 
+        public static bool EmployeeIdExists(int employeeId)
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(
+                    "SELECT COUNT(1) FROM Users WHERE EmployeeID = @id", conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", employeeId);
+                    return (int)cmd.ExecuteScalar() > 0;
+                }
+            }
+        }
+
         private static User MapUser(SqlDataReader r)
         {
             return new User
             {
-                Username     = r.GetString(0),
-                Password     = r.GetString(1),
-                Role         = r.GetString(2),
-                IsAdmin      = r.GetBoolean(3),
-                ProfilePhoto = r.IsDBNull(4) ? null : (byte[])r[4]
+                EmployeeID   = r.GetInt32(0),
+                Username     = r.GetString(1),
+                Password     = r.GetString(2),
+                Role         = r.GetString(3),
+                IsAdmin      = r.GetBoolean(4),
+                ProfilePhoto = r.IsDBNull(5) ? null : (byte[])r[5]
             };
         }
     }
