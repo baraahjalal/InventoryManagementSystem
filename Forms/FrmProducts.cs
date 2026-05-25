@@ -136,7 +136,7 @@ namespace InventoryManagementSystem
             {
                 filtered = filtered.Where(p =>
                     p.ProductName.ToLower().Contains(searchText) ||
-                    p.ProductID.ToString().Contains(searchText));
+                    p.ProductSerialNumber.ToString().Contains(searchText));
             }
 
             LoadGridData(filtered.ToList());
@@ -150,7 +150,7 @@ namespace InventoryManagementSystem
             foreach (var p in productsToDisplay)
             {
                 dgvProducts.Rows.Add(
-                    p.ProductID.ToString(),
+                    p.ProductSerialNumber.ToString(),
                     p.ProductName,
                     p.CategoryName,
                     p.Quantity.ToString(),
@@ -170,7 +170,7 @@ namespace InventoryManagementSystem
                 if (row.Cells["colID"].Value != null &&
                     int.TryParse(row.Cells["colID"].Value.ToString(), out int productId))
                 {
-                    _selectedProduct = _allProducts?.FirstOrDefault(p => p.ProductID == productId);
+                    _selectedProduct = _allProducts?.FirstOrDefault(p => p.ProductSerialNumber == productId);
                     ShowProductDetails();
                 }
             }
@@ -187,8 +187,8 @@ namespace InventoryManagementSystem
             txtProdName.Text  = _selectedProduct.ProductName;
             txtProdPrice.Text = _selectedProduct.Price.ToString("0.00");
 
-            var specs = ProductRepository.GetSpecifications(_selectedProduct.ProductID);
-            var items = ProductItemRepository.GetAvailable(_selectedProduct.ProductID);
+            var specs = ProductRepository.GetSpecifications(_selectedProduct.ProductSerialNumber);
+            var items = ProductItemRepository.GetAvailable(_selectedProduct.ProductSerialNumber);
 
             dgvSpecs.Rows.Clear();
             foreach (var s in specs)
@@ -196,7 +196,7 @@ namespace InventoryManagementSystem
 
             var sb = new StringBuilder();
             sb.AppendLine($"Category: {_selectedProduct.CategoryName}");
-            sb.AppendLine($"Product ID: {_selectedProduct.ProductID}");
+            sb.AppendLine($"Product ID: {_selectedProduct.ProductSerialNumber}");
             sb.AppendLine($"In Stock: {items.Count}");
 
             if (items.Count > 0)
@@ -329,7 +329,7 @@ namespace InventoryManagementSystem
             var frmMain = this.ParentForm as FrmMain;
             if (frmMain == null) return;
 
-            int productId = _selectedProduct.ProductID;
+            int productId = _selectedProduct.ProductSerialNumber;
             Form stockForm = isStockIn
                 ? (Form)new FrmStockIn(productId)
                 : (Form)new FrmStockOut(productId);

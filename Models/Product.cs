@@ -4,7 +4,7 @@ namespace InventoryManagementSystem.Models
 {
     public class Product
     {
-        public int     ProductID    { get; set; }
+        public int     ProductSerialNumber { get; set; }
         public string  ProductName  { get; set; }
         public int     CategoryID   { get; set; }
         public string  CategoryName { get; set; }
@@ -17,7 +17,7 @@ namespace InventoryManagementSystem.Models
     public class ProductSpecification
     {
         public int    SpecID     { get; set; }
-        public int    ProductID  { get; set; }
+        public int    ProductSerialNumber { get; set; }
         public string SpecKey    { get; set; }
         public string SpecValue  { get; set; }
     }

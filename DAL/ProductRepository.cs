@@ -14,7 +14,7 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT ProductID, ProductName, CategoryID, CategoryName, Price, Quantity, StockStatus " +
+                    "SELECT ProductSerialNumber, ProductName, CategoryID, CategoryName, Price, Quantity, StockStatus " +
                     "FROM vw_ProductStock ORDER BY ProductName", conn))
                 using (var r = cmd.ExecuteReader())
                     while (r.Read())
@@ -30,7 +30,7 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT ProductID, ProductName, CategoryID, CategoryName, Price, Quantity, StockStatus " +
+                    "SELECT ProductSerialNumber, ProductName, CategoryID, CategoryName, Price, Quantity, StockStatus " +
                     "FROM vw_ProductStock WHERE CategoryID = @cid ORDER BY ProductName", conn))
                 {
                     cmd.Parameters.AddWithValue("@cid", categoryId);
@@ -48,8 +48,8 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT ProductID, ProductName, CategoryID, CategoryName, Price, Quantity, StockStatus " +
-                    "FROM vw_ProductStock WHERE ProductID = @id", conn))
+                    "SELECT ProductSerialNumber, ProductName, CategoryID, CategoryName, Price, Quantity, StockStatus " +
+                    "FROM vw_ProductStock WHERE ProductSerialNumber = @id", conn))
                 {
                     cmd.Parameters.AddWithValue("@id", productId);
                     using (var r = cmd.ExecuteReader())
@@ -67,10 +67,10 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "INSERT INTO Products (ProductID, ProductName, CategoryID, Price) " +
+                    "INSERT INTO Products (ProductSerialNumber, ProductName, CategoryID, Price) " +
                     "VALUES (@id, @n, @cid, @pr)", conn))
                 {
-                    cmd.Parameters.AddWithValue("@id",  p.ProductID);
+                    cmd.Parameters.AddWithValue("@id",  p.ProductSerialNumber);
                     cmd.Parameters.AddWithValue("@n",   p.ProductName);
                     cmd.Parameters.AddWithValue("@cid", p.CategoryID);
                     cmd.Parameters.AddWithValue("@pr",  p.Price);
@@ -78,7 +78,7 @@ namespace InventoryManagementSystem.DAL
                 }
 
                 foreach (var spec in p.Specifications)
-                    AddSpecification(conn, p.ProductID, spec.SpecKey, spec.SpecValue);
+                    AddSpecification(conn, p.ProductSerialNumber, spec.SpecKey, spec.SpecValue);
             }
         }
 
@@ -88,11 +88,11 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "UPDATE Products SET ProductName = @n, Price = @pr WHERE ProductID = @id", conn))
+                    "UPDATE Products SET ProductName = @n, Price = @pr WHERE ProductSerialNumber = @id", conn))
                 {
                     cmd.Parameters.AddWithValue("@n",  p.ProductName);
                     cmd.Parameters.AddWithValue("@pr", p.Price);
-                    cmd.Parameters.AddWithValue("@id", p.ProductID);
+                    cmd.Parameters.AddWithValue("@id", p.ProductSerialNumber);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -104,7 +104,7 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "DELETE FROM Products WHERE ProductID = @id", conn))
+                    "DELETE FROM Products WHERE ProductSerialNumber = @id", conn))
                 {
                     cmd.Parameters.AddWithValue("@id", productId);
                     cmd.ExecuteNonQuery();
@@ -118,7 +118,7 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT COUNT(1) FROM Products WHERE ProductID = @id", conn))
+                    "SELECT COUNT(1) FROM Products WHERE ProductSerialNumber = @id", conn))
                 {
                     cmd.Parameters.AddWithValue("@id", productId);
                     return (int)cmd.ExecuteScalar() > 0;
@@ -133,8 +133,8 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT SpecID, ProductID, SpecKey, SpecValue FROM ProductSpecifications " +
-                    "WHERE ProductID = @id ORDER BY SpecKey", conn))
+                    "SELECT SpecID, ProductSerialNumber, SpecKey, SpecValue FROM ProductSpecifications " +
+                    "WHERE ProductSerialNumber = @id ORDER BY SpecKey", conn))
                 {
                     cmd.Parameters.AddWithValue("@id", productId);
                     using (var r = cmd.ExecuteReader())
@@ -142,7 +142,7 @@ namespace InventoryManagementSystem.DAL
                             list.Add(new ProductSpecification
                             {
                                 SpecID    = r.GetInt32(0),
-                                ProductID = r.GetInt32(1),
+                                ProductSerialNumber = r.GetInt32(1),
                                 SpecKey   = r.GetString(2),
                                 SpecValue = r.GetString(3)
                             });
@@ -154,7 +154,7 @@ namespace InventoryManagementSystem.DAL
         private static void AddSpecification(SqlConnection conn, int productId, string key, string value)
         {
             using (var cmd = new SqlCommand(
-                "INSERT INTO ProductSpecifications (ProductID, SpecKey, SpecValue) " +
+                "INSERT INTO ProductSpecifications (ProductSerialNumber, SpecKey, SpecValue) " +
                 "VALUES (@id, @k, @v)", conn))
             {
                 cmd.Parameters.AddWithValue("@id", productId);
@@ -168,7 +168,7 @@ namespace InventoryManagementSystem.DAL
         {
             return new Product
             {
-                ProductID    = r.GetInt32(0),
+                ProductSerialNumber    = r.GetInt32(0),
                 ProductName  = r.GetString(1),
                 CategoryID   = r.GetInt32(2),
                 CategoryName = r.GetString(3),

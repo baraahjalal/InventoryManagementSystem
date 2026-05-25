@@ -15,11 +15,11 @@ namespace InventoryManagementSystem.DAL
                 conn.Open();
                 using (var cmd = new SqlCommand(
                     "INSERT INTO StockMovements " +
-                    "(ProductID, MovementType, QuantityChanged, EmployeeID, Notes, WarrantyMonths, SupplierTaxNumber) " +
+                    "(ProductSerialNumber, MovementType, QuantityChanged, EmployeeID, Notes, WarrantyMonths, SupplierTaxNumber) " +
                     "VALUES (@pid, @mt, @qc, @eid, @n, @wm, @tax); " +
                     "SELECT SCOPE_IDENTITY();", conn))
                 {
-                    cmd.Parameters.AddWithValue("@pid", m.ProductID);
+                    cmd.Parameters.AddWithValue("@pid", m.ProductSerialNumber);
                     cmd.Parameters.AddWithValue("@mt",  m.MovementType);
                     cmd.Parameters.AddWithValue("@qc",  m.QuantityChanged);
                     cmd.Parameters.AddWithValue("@eid", (object)m.EmployeeID        ?? DBNull.Value);
@@ -38,7 +38,7 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT MovementID, ProductID, MovementType, QuantityChanged, MovementDate, " +
+                    "SELECT MovementID, ProductSerialNumber, MovementType, QuantityChanged, MovementDate, " +
                     "EmployeeID, Notes, WarrantyMonths, SupplierTaxNumber " +
                     "FROM StockMovements ORDER BY MovementDate DESC", conn))
                 using (var r = cmd.ExecuteReader())
@@ -55,9 +55,9 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT MovementID, ProductID, MovementType, QuantityChanged, MovementDate, " +
+                    "SELECT MovementID, ProductSerialNumber, MovementType, QuantityChanged, MovementDate, " +
                     "EmployeeID, Notes, WarrantyMonths, SupplierTaxNumber " +
-                    "FROM StockMovements WHERE ProductID = @pid ORDER BY MovementDate DESC", conn))
+                    "FROM StockMovements WHERE ProductSerialNumber = @pid ORDER BY MovementDate DESC", conn))
                 {
                     cmd.Parameters.AddWithValue("@pid", productId);
                     using (var r = cmd.ExecuteReader())
@@ -73,7 +73,7 @@ namespace InventoryManagementSystem.DAL
             return new StockMovement
             {
                 MovementId        = r.GetInt32(0),
-                ProductID         = r.GetInt32(1),
+                ProductSerialNumber         = r.GetInt32(1),
                 MovementType      = r.GetString(2),
                 QuantityChanged   = r.GetInt32(3),
                 MovementDate      = r.GetDateTime(4),

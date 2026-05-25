@@ -5,7 +5,7 @@ namespace InventoryManagementSystem.Models
     public class StockMovement
     {
         public int      MovementId        { get; set; }
-        public int      ProductID         { get; set; }
+        public int      ProductSerialNumber { get; set; }
         public string   MovementType      { get; set; }
         public int      QuantityChanged   { get; set; }
         public DateTime MovementDate      { get; set; }

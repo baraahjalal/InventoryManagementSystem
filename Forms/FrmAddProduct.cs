@@ -25,7 +25,7 @@ namespace InventoryManagementSystem.Forms
 
             txtPrice.KeyPress    += ValidationHelper.AllowOnlyDecimals;
             txtQuantity.KeyPress += ValidationHelper.AllowOnlyDigits;
-            // ProductID is a plain integer entered by the user
+            // ProductSerialNumber is a plain integer entered by the user
             txtSerialNumber.KeyPress += ValidationHelper.AllowOnlyDigits;
 
             LoadCategories();
@@ -94,12 +94,12 @@ namespace InventoryManagementSystem.Forms
                 string key = row.Cells["colSpecKey"].Value?.ToString();
                 string val = row.Cells["colSpecValue"].Value?.ToString();
                 if (!string.IsNullOrWhiteSpace(key) && !string.IsNullOrWhiteSpace(val))
-                    specs.Add(new ProductSpecification { ProductID = productId, SpecKey = key, SpecValue = val });
+                    specs.Add(new ProductSpecification { ProductSerialNumber = productId, SpecKey = key, SpecValue = val });
             }
 
             var newProd = new Product
             {
-                ProductID    = productId,
+                ProductSerialNumber    = productId,
                 ProductName  = name,
                 Price        = price,
                 CategoryID   = categoryId,
@@ -112,7 +112,7 @@ namespace InventoryManagementSystem.Forms
             {
                 var movement = new StockMovement
                 {
-                    ProductID         = productId,
+                    ProductSerialNumber         = productId,
                     MovementType      = "StockIn",
                     QuantityChanged   = qty,
                     EmployeeID        = DatabaseHelper.CurrentUser?.EmployeeID,
@@ -125,7 +125,7 @@ namespace InventoryManagementSystem.Forms
                 for (int i = 0; i < qty; i++)
                     items.Add(new ProductItem
                     {
-                        ProductID       = productId,
+                        ProductSerialNumber       = productId,
                         BatchMovementId = movementId
                     });
                 ProductItemRepository.AddBatch(items);

@@ -197,10 +197,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="MIGRATION_CONTEXT.md" />
     <None Include="Database\CreateDatabase.sql" />
     <None Include="Database\InventoryDB_Fixes.sql" />
     <None Include="Database\InventoryDB_Script.sql" />
     <None Include="Database\InventoryDBv3.sql" />
+    <None Include="Database\InventoryDBv3_Complete.sql" />
     <None Include="Database\SeedData.sql" />
     <None Include="Database\Triggers.sql" />
   </ItemGroup>

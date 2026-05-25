@@ -14,8 +14,8 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT ItemID, ProductID, IsInStock, DateAdded, DateRemoved, BatchMovementID " +
-                    "FROM ProductItems WHERE ProductID = @pid AND IsInStock = 1 " +
+                    "SELECT ItemID, ProductSerialNumber, IsInStock, DateAdded, DateRemoved, BatchMovementID " +
+                    "FROM ProductItems WHERE ProductSerialNumber = @pid AND IsInStock = 1 " +
                     "ORDER BY DateAdded", conn))
                 {
                     cmd.Parameters.AddWithValue("@pid", productId);
@@ -43,11 +43,11 @@ namespace InventoryManagementSystem.DAL
                 {
                     int itemId = NextItemId(conn);
                     using (var cmd = new SqlCommand(
-                        "INSERT INTO ProductItems (ItemID, ProductID, IsInStock, BatchMovementID) " +
+                        "INSERT INTO ProductItems (ItemID, ProductSerialNumber, IsInStock, BatchMovementID) " +
                         "VALUES (@iid, @pid, 1, @bm)", conn))
                     {
                         cmd.Parameters.AddWithValue("@iid", itemId);
-                        cmd.Parameters.AddWithValue("@pid", item.ProductID);
+                        cmd.Parameters.AddWithValue("@pid", item.ProductSerialNumber);
                         cmd.Parameters.AddWithValue("@bm",  (object)item.BatchMovementId ?? DBNull.Value);
                         cmd.ExecuteNonQuery();
                     }
@@ -79,7 +79,7 @@ namespace InventoryManagementSystem.DAL
                 using (var cmd = new SqlCommand(
                     "UPDATE TOP (@q) ProductItems " +
                     "SET IsInStock = 0, DateRemoved = GETDATE() " +
-                    "WHERE ProductID = @pid AND IsInStock = 1", conn))
+                    "WHERE ProductSerialNumber = @pid AND IsInStock = 1", conn))
                 {
                     cmd.Parameters.AddWithValue("@q",   quantity);
                     cmd.Parameters.AddWithValue("@pid", productId);
@@ -94,7 +94,7 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT COUNT(1) FROM ProductItems WHERE ProductID = @pid AND IsInStock = 1", conn))
+                    "SELECT COUNT(1) FROM ProductItems WHERE ProductSerialNumber = @pid AND IsInStock = 1", conn))
                 {
                     cmd.Parameters.AddWithValue("@pid", productId);
                     return (int)cmd.ExecuteScalar();
@@ -108,7 +108,7 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT COUNT(1) FROM ProductItems WHERE ProductID = @pid", conn))
+                    "SELECT COUNT(1) FROM ProductItems WHERE ProductSerialNumber = @pid", conn))
                 {
                     cmd.Parameters.AddWithValue("@pid", productId);
                     return (int)cmd.ExecuteScalar();
@@ -121,7 +121,7 @@ namespace InventoryManagementSystem.DAL
             return new ProductItem
             {
                 ItemID          = r.GetInt32(0),
-                ProductID       = r.GetInt32(1),
+                ProductSerialNumber       = r.GetInt32(1),
                 IsInStock       = r.GetBoolean(2),
                 DateAdded       = r.GetDateTime(3),
                 DateRemoved     = r.IsDBNull(4) ? (DateTime?)null : r.GetDateTime(4),

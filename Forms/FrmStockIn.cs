@@ -46,7 +46,7 @@ namespace InventoryManagementSystem
             cmbProduct.SelectedIndexChanged -= CmbProduct_SelectedIndexChanged;
             cmbProduct.DataSource    = null;
             cmbProduct.DisplayMember = "ProductName";
-            cmbProduct.ValueMember   = "ProductID";
+            cmbProduct.ValueMember   = "ProductSerialNumber";
             cmbProduct.DataSource    = products;
             cmbProduct.SelectedIndex = -1;
             cmbProduct.SelectedIndexChanged += CmbProduct_SelectedIndexChanged;
@@ -93,13 +93,13 @@ namespace InventoryManagementSystem
 
             if (qty <= 0)
             {
-                txtSerialNumbers.Text = $"Product ID: {product.ProductID}\r\n\r\n(Enter quantity to preview item IDs)";
+                txtSerialNumbers.Text = $"Product ID: {product.ProductSerialNumber}\r\n\r\n(Enter quantity to preview item IDs)";
                 return;
             }
 
-            int existingCount = ProductItemRepository.CountAll(product.ProductID);
+            int existingCount = ProductItemRepository.CountAll(product.ProductSerialNumber);
             var sb = new StringBuilder();
-            sb.AppendLine($"Product ID: {product.ProductID}");
+            sb.AppendLine($"Product ID: {product.ProductSerialNumber}");
             sb.AppendLine($"Items to be generated ({qty}):");
             sb.AppendLine("─────────────────────────");
             sb.AppendLine($"  IDs will be assigned from sequence seq_ProductItems");
@@ -146,7 +146,7 @@ namespace InventoryManagementSystem
 
             var movement = new StockMovement
             {
-                ProductID         = product.ProductID,
+                ProductSerialNumber         = product.ProductSerialNumber,
                 MovementType      = "StockIn",
                 QuantityChanged   = quantity,
                 EmployeeID        = DatabaseHelper.CurrentUser?.EmployeeID,
@@ -160,13 +160,13 @@ namespace InventoryManagementSystem
             for (int i = 0; i < quantity; i++)
                 newItems.Add(new ProductItem
                 {
-                    ProductID       = product.ProductID,
+                    ProductSerialNumber       = product.ProductSerialNumber,
                     BatchMovementId = movementId
                 });
             ProductItemRepository.AddBatch(newItems);
 
             MessageBox.Show(
-                $"Stock In recorded successfully.\n\nGenerated {quantity} item(s) for Product ID [{product.ProductID}].",
+                $"Stock In recorded successfully.\n\nGenerated {quantity} item(s) for Product ID [{product.ProductSerialNumber}].",
                 "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             ClearForm();
         }

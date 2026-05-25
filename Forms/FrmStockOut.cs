@@ -57,7 +57,7 @@ namespace InventoryManagementSystem
 
             cmbProduct.DataSource    = null;
             cmbProduct.DisplayMember = "ProductName";
-            cmbProduct.ValueMember   = "ProductID";
+            cmbProduct.ValueMember   = "ProductSerialNumber";
             cmbProduct.DataSource    = products;
             cmbProduct.SelectedIndex = -1;
 
@@ -87,7 +87,7 @@ namespace InventoryManagementSystem
             }
 
             var product        = (Product)cmbProduct.SelectedItem;
-            var availableItems = ProductItemRepository.GetAvailable(product.ProductID);
+            var availableItems = ProductItemRepository.GetAvailable(product.ProductSerialNumber);
             int count          = availableItems.Count;
 
             lblStockStatus.Text      = $"In Stock: {count} items";
@@ -124,7 +124,7 @@ namespace InventoryManagementSystem
                 else { ResetWarrantyCard(); return; }
             }
 
-            txtWarrantyInfo.Text = $"Product ID:\r\n{product.ProductID}";
+            txtWarrantyInfo.Text = $"Product ID:\r\n{product.ProductSerialNumber}";
 
             if (selectedItemIds == null || selectedItemIds.Count == 0)
             {
@@ -138,12 +138,12 @@ namespace InventoryManagementSystem
 
             var warrantyResults = selectedItemIds.Select(itemId =>
             {
-                var item = ProductItemRepository.GetAvailable(product.ProductID)
+                var item = ProductItemRepository.GetAvailable(product.ProductSerialNumber)
                     .FirstOrDefault(i => i.ItemID == itemId);
                 int? months = null;
                 if (item?.BatchMovementId.HasValue == true)
                 {
-                    var movements = StockMovementRepository.GetByProduct(product.ProductID);
+                    var movements = StockMovementRepository.GetByProduct(product.ProductSerialNumber);
                     months = movements.FirstOrDefault(m => m.MovementId == item.BatchMovementId.Value)?.WarrantyMonths;
                 }
                 return new { ItemId = itemId, Months = months };
@@ -183,7 +183,7 @@ namespace InventoryManagementSystem
 
                 var sb = new StringBuilder();
                 sb.AppendLine("Product ID:");
-                sb.AppendLine(product.ProductID.ToString());
+                sb.AppendLine(product.ProductSerialNumber.ToString());
                 sb.AppendLine();
                 sb.AppendLine("Per-item Warranty:");
                 foreach (var r in warrantyResults)
@@ -237,7 +237,7 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            int available = ProductItemRepository.CountInStock(product.ProductID);
+            int available = ProductItemRepository.CountInStock(product.ProductSerialNumber);
             if (quantity > available)
             {
                 MessageBox.Show($"Cannot dispatch {quantity} items. Only {available} available.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -248,7 +248,7 @@ namespace InventoryManagementSystem
 
             var movement = new StockMovement
             {
-                ProductID       = product.ProductID,
+                ProductSerialNumber       = product.ProductSerialNumber,
                 MovementType    = "StockOut",
                 QuantityChanged = quantity,
                 EmployeeID      = DatabaseHelper.CurrentUser?.EmployeeID,
@@ -260,7 +260,7 @@ namespace InventoryManagementSystem
                 foreach (var itemId in selectedIds)
                     ProductItemRepository.MarkRemoved(itemId);
             else
-                ProductItemRepository.MarkRemovedBatch(product.ProductID, quantity);
+                ProductItemRepository.MarkRemovedBatch(product.ProductSerialNumber, quantity);
 
             string details = selectedIds.Count > 0
                 ? $"\n\nDispatched Item IDs:\n{string.Join(", ", selectedIds.Take(10))}{(selectedIds.Count > 10 ? $"\n... and {selectedIds.Count - 10} more" : "")}"
@@ -268,7 +268,7 @@ namespace InventoryManagementSystem
 
             MessageBox.Show($"Stock Out recorded successfully.{details}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-            int remaining = ProductItemRepository.CountInStock(product.ProductID);
+            int remaining = ProductItemRepository.CountInStock(product.ProductSerialNumber);
             if (remaining <= 5)
                 MessageBox.Show($"⚠ Warning: Stock for '{product.ProductName}' is running low ({remaining} left).", "Low Stock Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
