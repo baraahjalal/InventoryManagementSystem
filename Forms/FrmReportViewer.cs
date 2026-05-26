@@ -20,6 +20,7 @@ namespace InventoryManagementSystem
             try
             {
                 CrystalReportHelper.ApplyDatabaseLogon(_report);
+                _report.Refresh();
                 crystalReportViewer.ReportSource = _report;
             }
             catch (Exception ex)
