@@ -146,12 +146,7 @@
       <DependentUpon>StockInventoryStatus.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\StockInventoryStatus1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>StockInventoryStatus.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
+
     <Compile Include="Reports\StockMovementHistory.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -208,7 +203,7 @@
     </Compile>
     <EmbeddedResource Include="Reports\StockInventoryStatus.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>StockInventoryStatus1.cs</LastGenOutput>
+      <LastGenOutput>StockInventoryStatus.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\StockMovementHistory.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
