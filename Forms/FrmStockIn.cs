@@ -135,10 +135,13 @@ namespace InventoryManagementSystem
             }
 
             var sb = new StringBuilder();
+            sb.AppendLine($"Product ID:      {product.ProductSerialNumber}");
             sb.AppendLine($"Current Stock:   {current} items");
             sb.AppendLine($"Adding:          +{qty} items");
             sb.AppendLine("─────────────────────");
-            sb.AppendLine($"After Entry:     {current + qty} items");
+            sb.AppendLine("New unit serials (ItemID):");
+            foreach (int id in ProductItemRepository.PreviewNextItemIds(product.ProductSerialNumber, qty))
+                sb.AppendLine($"  ► {id}");
             txtSerialNumbers.Text = sb.ToString();
         }
 

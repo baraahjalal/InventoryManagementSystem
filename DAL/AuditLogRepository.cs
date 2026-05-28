@@ -85,7 +85,7 @@ namespace InventoryManagementSystem.DAL
                 conn.Open();
                 using (var cmd = new SqlCommand(sql, conn))
                 {
-                    ApplyFilterParams(cmd, search, from, to);
+                    ApplyFilterParams(cmd, actionTypeKey, search, from, to);
                     cmd.Parameters.AddWithValue("@offset",   offset);
                     cmd.Parameters.AddWithValue("@pageSize", pageSize);
                     using (var r = cmd.ExecuteReader())
@@ -105,7 +105,7 @@ namespace InventoryManagementSystem.DAL
                 conn.Open();
                 using (var cmd = new SqlCommand("SELECT COUNT(1) FROM AuditLog " + where, conn))
                 {
-                    ApplyFilterParams(cmd, search, from, to);
+                    ApplyFilterParams(cmd, actionTypeKey, search, from, to);
                     return (int)cmd.ExecuteScalar();
                 }
             }
@@ -167,19 +167,17 @@ namespace InventoryManagementSystem.DAL
             if (!string.IsNullOrEmpty(search))
                 conds.Add("(Description LIKE @search OR Username LIKE @search)");
 
-            switch (actionTypeKey)
-            {
-                case "STOCK_IN":  conds.Add("ActionType IN ('STOCK STOCKIN', 'STOCK RESTOCK')"); break;
-                case "STOCK_OUT": conds.Add("ActionType IN ('STOCK STOCKOUT', 'STOCK RETURNTOSUPPLIER')"); break;
-                case "ADDED":     conds.Add("ActionType LIKE '%ADDED'"); break;
-                case "DELETED":   conds.Add("ActionType LIKE '%DELETED'"); break;
-            }
+            if (!string.IsNullOrEmpty(actionTypeKey))
+                conds.Add("ActionType = @actionType");
 
             return conds.Count > 0 ? "WHERE " + string.Join(" AND ", conds) : "";
         }
 
-        private static void ApplyFilterParams(SqlCommand cmd, string search, DateTime? from, DateTime? to)
+        private static void ApplyFilterParams(SqlCommand cmd, string actionTypeKey, string search,
+            DateTime? from, DateTime? to)
         {
+            if (!string.IsNullOrEmpty(actionTypeKey))
+                cmd.Parameters.AddWithValue("@actionType", actionTypeKey);
             if (from.HasValue) cmd.Parameters.AddWithValue("@from", from.Value);
             if (to.HasValue)   cmd.Parameters.AddWithValue("@to",   to.Value);
             if (!string.IsNullOrEmpty(search))

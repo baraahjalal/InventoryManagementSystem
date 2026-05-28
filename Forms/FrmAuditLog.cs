@@ -13,6 +13,23 @@ namespace InventoryManagementSystem
         private int _currentPage = 1;
         private int _totalPages  = 1;
         private const int PageSize = 20;
+        private bool _suppressFilters;
+        private Timer _searchDebounceTimer;
+
+        private static readonly (string Display, string DbAction)[] ActionFilterOptions =
+        {
+            ("All Actions",          null),
+            ("Stock In",             "STOCK STOCKIN"),
+            ("Stock Out",            "STOCK STOCKOUT"),
+            ("Restock",              "STOCK RESTOCK"),
+            ("Return to Supplier",   "STOCK RETURNTOSUPPLIER"),
+            ("Product Added",        "PRODUCT ADDED"),
+            ("Product Deleted",      "PRODUCT DELETED"),
+            ("User Added",           "USER ADDED"),
+            ("User Deleted",         "USER DELETED"),
+            ("Supplier Added",       "SUPPLIER ADDED"),
+            ("Supplier Deleted",     "SUPPLIER DELETED"),
+        };
 
         public FrmAuditLog()
         {
@@ -32,18 +49,40 @@ namespace InventoryManagementSystem
 
             EnableDoubleBuffered(dgvAuditLog);
 
-            btnPurge.Visible    = true;
-            btnFilter.Click    += BtnFilter_Click;
+            btnPurge.Visible = true;
             btnPrevPage.Click  += BtnPrevPage_Click;
             btnNextPage.Click  += BtnNextPage_Click;
             btnPurge.Click     += BtnPurge_Click;
+            btnFilter.Click    += (s, ev) => ApplyFilters();
             txtSearch.GotFocus  += TxtSearch_GotFocus;
             txtSearch.LostFocus += TxtSearch_LostFocus;
+            txtSearch.TextChanged += TxtSearch_TextChanged;
+            cmbActionType.SelectedIndexChanged += Filter_Changed;
+            cmbDateRange.SelectedIndexChanged  += Filter_Changed;
 
-            cmbActionType.SelectedIndex = -1;
-            cmbDateRange.SelectedIndex  = -1;
+            _searchDebounceTimer = new Timer { Interval = 300 };
+            _searchDebounceTimer.Tick += (s, ev) =>
+            {
+                _searchDebounceTimer.Stop();
+                ApplyFilters();
+            };
 
+            InitializeFilterControls();
             LoadAuditData();
+        }
+
+        private void InitializeFilterControls()
+        {
+            _suppressFilters = true;
+
+            cmbActionType.Items.Clear();
+            foreach (var option in ActionFilterOptions)
+                cmbActionType.Items.Add(option.Display);
+            cmbActionType.SelectedIndex = 0;
+
+            cmbDateRange.SelectedIndex = 0;
+
+            _suppressFilters = false;
         }
 
         private void EnableDoubleBuffered(DataGridView dgv)
@@ -102,14 +141,10 @@ namespace InventoryManagementSystem
 
         private string GetActionTypeKey()
         {
-            switch (cmbActionType.SelectedItem?.ToString())
-            {
-                case "Stock In":  return "STOCK_IN";
-                case "Stock Out": return "STOCK_OUT";
-                case "Addition":  return "ADDED";
-                case "Deletion":  return "DELETED";
-                default:          return null;
-            }
+            int index = cmbActionType.SelectedIndex;
+            if (index < 0 || index >= ActionFilterOptions.Length)
+                return null;
+            return ActionFilterOptions[index].DbAction;
         }
 
         private string GetSearchText()
@@ -130,6 +165,7 @@ namespace InventoryManagementSystem
                     return (DateTime.Today.AddDays(-30), null);
                 case "This Year":
                     return (new DateTime(DateTime.Today.Year, 1, 1), null);
+                case "All Dates":
                 default:
                     return (null, null);
             }
@@ -137,8 +173,18 @@ namespace InventoryManagementSystem
 
         // ── Event handlers ────────────────────────────────────────────────────
 
-        private void BtnFilter_Click(object sender, EventArgs e)
+        private void Filter_Changed(object sender, EventArgs e) => ApplyFilters();
+
+        private void TxtSearch_TextChanged(object sender, EventArgs e)
         {
+            if (_suppressFilters) return;
+            _searchDebounceTimer.Stop();
+            _searchDebounceTimer.Start();
+        }
+
+        private void ApplyFilters()
+        {
+            if (_suppressFilters) return;
             _currentPage = 1;
             LoadAuditData();
         }

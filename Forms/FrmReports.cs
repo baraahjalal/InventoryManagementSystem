@@ -14,14 +14,6 @@ namespace InventoryManagementSystem
         {
             InitializeComponent();
             DoubleBuffered = true;
-            ConfigureAuditCard();
-        }
-
-        private void ConfigureAuditCard()
-        {
-            btnReport4.Enabled = false;
-            btnReport4.Text    = "Not available";
-            lblCardDesc4.Text  = "Audit log report is not included in this version of the project.";
         }
 
         private void Card_Paint(object sender, PaintEventArgs e)
@@ -39,11 +31,6 @@ namespace InventoryManagementSystem
 
         private void btnReport2_Click(object sender, EventArgs e) =>
             OpenReport(new StockMovementHistory(), "Stock Movements History");
-
-        private void btnReport3_Click(object sender, EventArgs e) =>
-            OpenReport(new SupplierActivityReport(), "Supplier Activity");
-
-        private void btnReport4_Click(object sender, EventArgs e) { }
 
         private void OpenReport(ReportClass report, string title)
         {

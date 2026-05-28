@@ -102,15 +102,9 @@ namespace InventoryManagementSystem
             this.cmbActionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbActionType.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.cmbActionType.FormattingEnabled = true;
-            this.cmbActionType.Items.AddRange(new object[] {
-            "All Actions",
-            "Stock In",
-            "Stock Out",
-            "Addition",
-            "Deletion"});
             this.cmbActionType.Location = new System.Drawing.Point(464, 31);
             this.cmbActionType.Name = "cmbActionType";
-            this.cmbActionType.Size = new System.Drawing.Size(135, 25);
+            this.cmbActionType.Size = new System.Drawing.Size(175, 25);
             this.cmbActionType.TabIndex = 2;
             // 
             // lblDate
@@ -132,6 +126,7 @@ namespace InventoryManagementSystem
             this.cmbDateRange.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.cmbDateRange.FormattingEnabled = true;
             this.cmbDateRange.Items.AddRange(new object[] {
+            "All Dates",
             "Today",
             "Last 7 Days",
             "Last 30 Days",

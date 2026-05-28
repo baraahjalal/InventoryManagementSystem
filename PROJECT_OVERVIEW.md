@@ -62,7 +62,7 @@ AuditLog, CategorySpecTemplates
 ```
 
 - **View:** `vw_ProductStock` — يجمع الكميات من ProductItems
-- **Sequence:** `seq_ProductItems` — يولد معرّفات Items تلقائياً
+- **ItemID:** `ProductSerialNumber` + لاحقة (2 أو 3 أرقام) — مثال: `10050101`؛ عند الإخراج يُعاد استخدام الرقم عند Stock In
 - **Triggers:** تكتب في AuditLog عند أي تغيير في الجداول الرئيسية
 - **Stored Proc:** `sp_PurgeOldData` — حذف بيانات قديمة حسب سياسة الاحتفاظ
 
