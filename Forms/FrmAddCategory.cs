@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
+
 
 namespace InventoryManagementSystem.Forms
 {
     public partial class FrmAddCategory : Form
     {
-        // Property to get the newly added Category Name when successful
         public string CreatedCategoryName { get; private set; }
 
         // Dictionary to store "Filter Name" -> "List of Filter Values"
         public Dictionary<string, List<string>> CreatedFilters { get; private set; }
+
+        private readonly ErrorProvider _errorProvider = new ErrorProvider();
 
         public FrmAddCategory()
         {
@@ -60,11 +63,22 @@ namespace InventoryManagementSystem.Forms
 
         private void btnAddFilter_Click(object sender, EventArgs e)
         {
-            string fName = txtFilterName.Text.Trim();
+            _errorProvider.Clear();
+            string fName   = txtFilterName.Text.Trim();
             string fValues = txtFilterValues.Text.Trim();
+            bool hasError  = false;
 
-            if (string.IsNullOrWhiteSpace(fName) || fName == "e.g. RAM" ||
-                string.IsNullOrWhiteSpace(fValues) || fValues == "e.g. 8GB, 16GB, 32GB")
+            if (string.IsNullOrWhiteSpace(fName) || fName == "e.g. RAM")
+            { _errorProvider.SetError(txtFilterName, "Filter name is required."); hasError = true; }
+            else
+              _errorProvider.SetError(txtFilterName, string.Empty);
+
+            if (string.IsNullOrWhiteSpace(fValues) || fValues == "e.g. 8GB, 16GB, 32GB")
+            { _errorProvider.SetError(txtFilterValues, "Filter values are required (comma-separated)."); hasError = true; }
+            else
+              _errorProvider.SetError(txtFilterValues, string.Empty);
+
+            if (hasError)
             {
                 MessageBox.Show("Please enter both a valid Filter Name and valid Values.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -75,6 +89,7 @@ namespace InventoryManagementSystem.Forms
             {
                 if (row.Cells["colFilterName"].Value.ToString().Equals(fName, StringComparison.OrdinalIgnoreCase))
                 {
+                    _errorProvider.SetError(txtFilterName, "This filter name is already added.");
                     MessageBox.Show("This filter name is already added.", "Duplicate", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
@@ -84,7 +99,7 @@ namespace InventoryManagementSystem.Forms
             dgvFilters.Rows.Add(fName, fValues);
 
             // Reset Fields
-            txtFilterName.Text = "";
+            txtFilterName.Text  = "";
             txtFilterValues.Text = "";
             SetPlaceholderName(txtFilterName, null);
             SetPlaceholderValues(txtFilterValues, null);
@@ -101,34 +116,106 @@ namespace InventoryManagementSystem.Forms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(txtCategoryName.Text))
+            _errorProvider.Clear();
+            bool isValid = true;
+            string errorMsg;
+
+            string catName = txtCategoryName.Text.Trim();
+
+            // ✅ Validation
+            if (!ValidationHelper.IsRequired(catName, out errorMsg))
             {
-                MessageBox.Show("Please enter a category name.", "Validation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                _errorProvider.SetError(txtCategoryName, errorMsg);
+                isValid = false;
+            }
+            else if (!ValidationHelper.IsValidLength(catName, 2, 50, out errorMsg))
+            {
+                _errorProvider.SetError(txtCategoryName, errorMsg);
+                isValid = false;
+            }
+            else if (MemoryStore.Categories.Any(c => c.Name.Equals(catName, StringComparison.OrdinalIgnoreCase)))
+            {
+                _errorProvider.SetError(txtCategoryName, "A category with this name already exists.");
+                isValid = false;
+            }
+            else
+            {
+                _errorProvider.SetError(txtCategoryName, string.Empty);
+            }
+
+            if (!isValid)
+            {
+                MessageBox.Show("Please correct the highlighted errors before saving.", "Validation",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            // Save the data to properties
-            CreatedCategoryName = txtCategoryName.Text.Trim();
-            CreatedFilters.Clear();
+            // 🔥 1. إنشاء Category
+            int newCategoryId = MemoryStore.Categories.Count > 0
+                ? MemoryStore.Categories.Max(c => c.Id) + 1
+                : 1;
+
+            var newCategory = new Category
+            {
+                Id = newCategoryId,
+                Name = catName
+            };
+
+            MemoryStore.Categories.Add(newCategory);
+
+            // 🔥 2. إنشاء Filters (Template)
+            var filtersDict = new Dictionary<string, List<string>>();
 
             foreach (DataGridViewRow row in dgvFilters.Rows)
             {
-                string fName = row.Cells["colFilterName"].Value.ToString();
-                string[] fValuesArray = row.Cells["colFilterValues"].Value.ToString().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                if (row.IsNewRow) continue;
 
-                List<string> fValuesList = new List<string>();
-                foreach (var val in fValuesArray)
-                {
-                    fValuesList.Add(val.Trim());
-                }
+                var nameCell = row.Cells["colFilterName"].Value;
+                var valuesCell = row.Cells["colFilterValues"].Value;
 
-                CreatedFilters.Add(fName, fValuesList);
+                if (nameCell == null || valuesCell == null) continue;
+
+                string fName = nameCell.ToString();
+                string[] fValuesArray = valuesCell.ToString()
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                List<string> fValuesList = fValuesArray.Select(v => v.Trim()).ToList();
+
+                if (!filtersDict.ContainsKey(fName))
+                    filtersDict.Add(fName, fValuesList);
             }
+
+            MemoryStore.CategoryTemplates.Add(new CategoryTemplate
+            {
+                CategoryId = newCategoryId,
+                AvailableFilters = filtersDict
+            });
+
+            // 🔥🔥🔥 3. أهم جزء (حل مشكلتك)
+            int newZoneId = MemoryStore.StorageZones.Count > 0
+                ? MemoryStore.StorageZones.Max(z => z.Id) + 1
+                : 1;
+
+            MemoryStore.StorageZones.Add(new StorageZone
+            {
+                Id = newZoneId,
+                Name = $"Auto Zone: {catName}",
+                TargetCategoryId = newCategoryId
+            });
+
+            // Set Properties for parent form to retrieve
+            CreatedCategoryName = catName;
+            CreatedFilters = filtersDict;
+
+            // (اختياري) Logging
+            MemoryStore.LogAction("CATEGORY CREATED", $"New category '{catName}' created with storage zone.");
+
+            MessageBox.Show("Category created successfully.", "Success",
+                MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             this.DialogResult = DialogResult.OK;
             this.Close();
         }
-
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;

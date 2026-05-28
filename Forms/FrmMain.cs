@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,11 +16,10 @@ namespace InventoryManagementSystem
         {
             InitializeComponent();
             this.DoubleBuffered = true;
-        }
 
-        private bool isExpanded = false; // متغير لتتبع حالة الشريط الجانبي (موسع أم لا)
-        private Size originalNavSize; // حجم أيقونة التنقل الأصلي
-        private Point originalNavLoc; // موقع أيقونة التنقل الأصلي
+        }
+ 
+        private bool isExpanded = true ; // متغير لتتبع حالة الشريط الجانبي (موسع أم لا)
         private const int MinWidth = 70; // الحد الأدنى لعرض الشريط الجانبي (عندما يكون منكمشاً)
         private const int MaxWidth = 235; // الحد الأقصى لعرض الشريط الجانبي (عندما يكون موسعاً)
         private const int AnimSpeed = 20; // سرعة حركة التوسع والانكماش
@@ -99,7 +98,7 @@ namespace InventoryManagementSystem
             var user = MemoryStore.CurrentUser;
             if (user == null || !user.IsAdmin)
             {
-                MessageBox.Show("Access Denied: Only administrators can open User Management.", "Permission Restricted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("You do not have permission to access this feature.", "Permission Restricted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -113,6 +112,13 @@ namespace InventoryManagementSystem
 
         private void btnAuditLog_Click(object sender, EventArgs e)
         {
+            var user = MemoryStore.CurrentUser;
+            if (user == null || !user.IsAdmin)
+            {
+                MessageBox.Show("You do not have permission to access this feature.", "Permission Restricted", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             OpenChildForm(new FrmAuditLog());
         }
 
@@ -124,18 +130,11 @@ namespace InventoryManagementSystem
         private void FrmMain_Load(object sender, EventArgs e)
         {
             ApplyUserPermissions();
-            
-            // Optionally open the Dashboard by default if a user is logged in
-            if (MemoryStore.CurrentUser != null)
-            {
-                btnDashboard_Click(this, EventArgs.Empty);
-            }
         }
 
         private void ApplyUserPermissions()
         {
-            // UI visibility changes are intentionally not applied here.
-            // Access is enforced at the action level (e.g., btnUserManagement click)
+            // All buttons remain visible, authorization check is done on click
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)

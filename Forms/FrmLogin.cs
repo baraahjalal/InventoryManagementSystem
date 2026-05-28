@@ -3,6 +3,7 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
+
 namespace InventoryManagementSystem
 {
     public partial class FrmLogin : Form
@@ -12,6 +13,8 @@ namespace InventoryManagementSystem
 
         // Variable to track the countdown
         private int lockoutSecondsRemaining = 0;
+
+        private readonly ErrorProvider _errorProvider = new ErrorProvider();
 
         public FrmLogin()
         {
@@ -36,13 +39,28 @@ namespace InventoryManagementSystem
 
         private void btnAuthenticate_Click(object sender, EventArgs e)
         {
+            _errorProvider.Clear();
+            bool isValid = true;
+
+            if (string.IsNullOrWhiteSpace(cmbUserName.Text))
+            { _errorProvider.SetError(cmbUserName, "Please select or enter a username."); isValid = false; }
+            else
+              _errorProvider.SetError(cmbUserName, string.Empty);
+
+            if (string.IsNullOrWhiteSpace(txtPassword.Text))
+            { _errorProvider.SetError(txtPassword, "Password cannot be empty."); isValid = false; }
+            else
+              _errorProvider.SetError(txtPassword, string.Empty);
+
+            if (!isValid) return;
+
             string enteredUsername = cmbUserName.Text.Trim();
-            string enteredPassword = txtPassword.Text.Trim();
+            string enteredPassword = txtPassword.Text;
 
             User authenticatedUser = MemoryStore.Users.FirstOrDefault(u =>
               u.Username.Equals(enteredUsername, StringComparison.OrdinalIgnoreCase) &&
               u.Password == enteredPassword);
-
+            // في حالة المستخدم صح !
             if (authenticatedUser != null)
             {
                 // Successful login
@@ -51,12 +69,14 @@ namespace InventoryManagementSystem
                 // Save the current user for the session
                 MemoryStore.CurrentUser = authenticatedUser;
 
-                MessageBox.Show($"Welcome, {authenticatedUser.Role}!", "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
+             //   MessageBox.Show($"Welcome, {authenticatedUser.Role}!", "Login Successful", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 FrmMain mainForm = new FrmMain();
                 mainForm.Show();
                 this.Hide();
             }
+
+            // في حالة المستخدم غلط !
             else
             {
                 // Failed login

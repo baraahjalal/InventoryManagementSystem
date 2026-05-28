@@ -92,7 +92,7 @@
             this.pnlSideBar.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlSideBar.Location = new System.Drawing.Point(0, 0);
             this.pnlSideBar.Name = "pnlSideBar";
-            this.pnlSideBar.Size = new System.Drawing.Size(235, 749);
+            this.pnlSideBar.Size = new System.Drawing.Size(70, 749);
             this.pnlSideBar.TabIndex = 2;
             // 
             // btnReports
@@ -123,6 +123,7 @@
             this.picReports.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picReports.TabIndex = 19;
             this.picReports.TabStop = false;
+            this.picReports.Click += new System.EventHandler(this.btnReports_Click);
             // 
             // btnSuppliersManagement
             // 
@@ -152,6 +153,7 @@
             this.picSupplierManagement.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picSupplierManagement.TabIndex = 17;
             this.picSupplierManagement.TabStop = false;
+            this.picSupplierManagement.Click += new System.EventHandler(this.btnSuppliersManagement_Click);
             // 
             // btnAuditLog
             // 
@@ -181,6 +183,7 @@
             this.picAuditLog.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picAuditLog.TabIndex = 15;
             this.picAuditLog.TabStop = false;
+            this.picAuditLog.Click += new System.EventHandler(this.btnAuditLog_Click);
             // 
             // btnUserManagement
             // 
@@ -210,6 +213,7 @@
             this.picUserManagement.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picUserManagement.TabIndex = 13;
             this.picUserManagement.TabStop = false;
+            this.picUserManagement.Click += new System.EventHandler(this.btnUserManagement_Click);
             // 
             // btnStockOut
             // 
@@ -239,6 +243,7 @@
             this.picStockOut.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picStockOut.TabIndex = 11;
             this.picStockOut.TabStop = false;
+            this.picStockOut.Click += new System.EventHandler(this.btnStockOut_Click);
             // 
             // btnStockIn
             // 
@@ -268,6 +273,7 @@
             this.picStockIn.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picStockIn.TabIndex = 9;
             this.picStockIn.TabStop = false;
+            this.picStockIn.Click += new System.EventHandler(this.btnStockIn_Click);
             // 
             // btnProducts
             // 
@@ -297,6 +303,7 @@
             this.picProducts.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picProducts.TabIndex = 7;
             this.picProducts.TabStop = false;
+            this.picProducts.Click += new System.EventHandler(this.btnProducts_Click);
             // 
             // picNav
             // 
@@ -339,6 +346,7 @@
             this.picDashboard.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picDashboard.TabIndex = 1;
             this.picDashboard.TabStop = false;
+            this.picDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
             // 
             // pnlMainContent
             // 
@@ -348,9 +356,9 @@
             this.pnlMainContent.Controls.Add(this.lblCompanyName);
             this.pnlMainContent.Controls.Add(this.picLogoMain);
             this.pnlMainContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlMainContent.Location = new System.Drawing.Point(235, 0);
+            this.pnlMainContent.Location = new System.Drawing.Point(70, 0);
             this.pnlMainContent.Name = "pnlMainContent";
-            this.pnlMainContent.Size = new System.Drawing.Size(1135, 749);
+            this.pnlMainContent.Size = new System.Drawing.Size(1300, 749);
             this.pnlMainContent.TabIndex = 3;
             // 
             // lblSystemID
@@ -367,20 +375,20 @@
             // 
             // lblCompanyDetails
             // 
-            this.lblCompanyDetails.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCompanyDetails.Font = new System.Drawing.Font("Hacen Saudi Arabia", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCompanyDetails.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(96)))), ((int)(((byte)(96)))));
-            this.lblCompanyDetails.Location = new System.Drawing.Point(327, 350);
+            this.lblCompanyDetails.Location = new System.Drawing.Point(327, 368);
             this.lblCompanyDetails.Name = "lblCompanyDetails";
             this.lblCompanyDetails.Size = new System.Drawing.Size(400, 60);
             this.lblCompanyDetails.TabIndex = 15;
-            this.lblCompanyDetails.Text = "Address | Phone | Email";
+            this.lblCompanyDetails.Text = "شركة التقنية الحديثة ";
             this.lblCompanyDetails.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblCompanyName
             // 
             this.lblCompanyName.Font = new System.Drawing.Font("Segoe UI Semibold", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCompanyName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.lblCompanyName.Location = new System.Drawing.Point(327, 310);
+            this.lblCompanyName.Location = new System.Drawing.Point(327, 328);
             this.lblCompanyName.Name = "lblCompanyName";
             this.lblCompanyName.Size = new System.Drawing.Size(400, 40);
             this.lblCompanyName.TabIndex = 14;

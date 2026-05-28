@@ -1,10 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using System.Drawing.Drawing2D;
+
 
 namespace InventoryManagementSystem
 {
@@ -12,37 +11,12 @@ namespace InventoryManagementSystem
     {
         private List<Product> _allProducts;
         private Product _selectedProduct;
+        private readonly ErrorProvider _errorProvider = new ErrorProvider();
+        private ContextMenuStrip _ctxProductMenu;
 
         // Holds our newly created dynamic combos mapped to their filter name
         private Dictionary<string, ComboBox> _dynamicFilters = new Dictionary<string, ComboBox>();
         private FlowLayoutPanel _flpDynamicFilters;
-
-        private const int DynamicFiltersRightPadding = 20;
-        private const int DynamicFiltersTop = 20;
-        private const int DynamicFiltersHeight = 50;
-        private const int DynamicFiltersGapFromSearch = 12;
-
-        // Theme colors local to this form (do not affect other forms)
-        private static class Theme
-        {
-            // Base primary (user requested)
-            public static readonly Color Base = Color.FromArgb(15, 23, 42); // #0F172A
-            // Header / Top Bar (vivid, attention-grabbing, complements base)
-            public static readonly Color Header = Color.FromArgb(37, 99, 235); // #2563EB
-            // Secondary / muted text
-            public static readonly Color Secondary = Color.FromArgb(100, 116, 139); // #64748B
-            // Page background
-            public static readonly Color PageBackground = Color.FromArgb(248, 250, 252); // #F8FAFC
-            // Card background
-            public static readonly Color CardBackground = Color.White;
-            // Borders / dividers
-            public static readonly Color Divider = Color.FromArgb(230, 234, 240); // #E6EAF0
-            // Success / Danger
-            public static readonly Color Success = Color.FromArgb(16, 185, 129); // #10B981
-            public static readonly Color Danger = Color.FromArgb(239, 68, 68); // #EF4444
-            // Grid header accent
-            public static readonly Color GridHeader = Color.FromArgb(30, 64, 175); // #1E40AF
-        }
 
         // Public flag to request the form show only low-stock items when opened
         public bool ShowLowStockFilter { get; set; } = false;
@@ -53,10 +27,23 @@ namespace InventoryManagementSystem
         public FrmProducts()
         {
             InitializeComponent();
-            SetupDynamicFilterContainer();
 
-            // Apply theme to controls in this form only
-            ApplyTheme();
+            // Initialize the FlowLayoutPanel for dynamic filters
+            _flpDynamicFilters = new FlowLayoutPanel
+            {
+                FlowDirection = FlowDirection.LeftToRight,
+                AutoSize = true,
+                WrapContents = false,
+                Location = new System.Drawing.Point(485, 28),
+                Height = 35
+            };
+            pnlHeader.Controls.Add(_flpDynamicFilters);
+
+            // Hide old static filters to make room for the dynamic ones
+            lblProcessor.Visible = false;
+            cmbFilterProcessor.Visible = false;
+            lblRAM.Visible = false;
+            cmbFilterRAM.Visible = false;
 
             this.Load += FrmProducts_Load;
 
@@ -68,189 +55,8 @@ namespace InventoryManagementSystem
             btnAddProduct.Click += BtnAddProduct_Click;
             btnClearSelection.Click += BtnClearSelection_Click;
 
-            pnlHeader.Resize += (s, e) => LayoutHeader();
-
+            InitContextMenu();
             EnableDoubleBuffered(dgvProducts);
-        }
-
-        private void ApplyTheme()
-        {
-            // Overall backgrounds
-            this.BackColor = Theme.PageBackground;
-
-            // Header
-            if (pnlHeader != null)
-            {
-                pnlHeader.BackColor = Theme.Header; // eye-catching header
-                try { pnlHeader.Padding = new Padding(24, 18, 24, 0); } catch { }
-            }
-
-            // Titles
-            if (lblMainTitle != null)
-            {
-                lblMainTitle.ForeColor = Theme.Base;
-                lblMainTitle.Font = new Font("Segoe UI", 26F, FontStyle.Bold);
-            }
-            if (lblSubTitle != null)
-            {
-                lblSubTitle.ForeColor = Theme.Secondary;
-                lblSubTitle.Font = new Font("Segoe UI", 12F, FontStyle.Regular);
-            }
-
-            // Buttons - square, consistent
-            if (btnAddProduct != null)
-            {
-                btnAddProduct.FlatStyle = FlatStyle.Flat;
-                btnAddProduct.FlatAppearance.BorderSize = 0;
-                btnAddProduct.BackColor = Theme.Base;
-                btnAddProduct.ForeColor = Color.White;
-                btnAddProduct.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-                btnAddProduct.Size = new Size(260, 40);
-            }
-
-            if (btnEdit != null)
-            {
-                btnEdit.FlatStyle = FlatStyle.Flat;
-                btnEdit.FlatAppearance.BorderSize = 0;
-                btnEdit.BackColor = Theme.Base;
-                btnEdit.ForeColor = Color.White;
-                btnEdit.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
-                btnEdit.Size = new Size(274, 40);
-            }
-
-            if (btnClearSelection != null)
-            {
-                btnClearSelection.FlatStyle = FlatStyle.Flat;
-                btnClearSelection.FlatAppearance.BorderSize = 1;
-                btnClearSelection.FlatAppearance.BorderColor = Theme.Base;
-                btnClearSelection.BackColor = Color.White;
-                btnClearSelection.ForeColor = Theme.Base;
-                btnClearSelection.Font = new Font("Segoe UI", 9.5F, FontStyle.Regular);
-                btnClearSelection.Size = new Size(120, 28);
-            }
-
-            if (btnAddCategory != null)
-            {
-                btnAddCategory.FlatStyle = FlatStyle.Flat;
-                btnAddCategory.FlatAppearance.BorderSize = 1;
-                btnAddCategory.FlatAppearance.BorderColor = Theme.Divider;
-                btnAddCategory.BackColor = Color.White;
-                btnAddCategory.ForeColor = Theme.Base;
-                btnAddCategory.Size = new Size(60, 28);
-            }
-
-            // Category combo and search box styling
-            if (cmbCategory != null)
-            {
-                cmbCategory.BackColor = Color.White;
-                cmbCategory.ForeColor = Theme.Base;
-                cmbCategory.FlatStyle = FlatStyle.Flat;
-            }
-            if (txtSearch != null)
-            {
-                txtSearch.BackColor = Color.White;
-                txtSearch.ForeColor = Theme.Base;
-                txtSearch.BorderStyle = BorderStyle.FixedSingle;
-                txtSearch.Font = new Font("Segoe UI", 9.5F);
-            }
-            if (lblSearch != null) lblSearch.ForeColor = Color.FromArgb(255, 255, 255);
-
-            // Details panel
-            if (pnlDetails != null)
-            {
-                pnlDetails.BackColor = Theme.CardBackground;
-                pnlDetails.Padding = new Padding(20);
-                pnlDetails.BorderStyle = BorderStyle.FixedSingle;
-            }
-            if (lblDetailsTitle != null)
-            {
-                lblDetailsTitle.ForeColor = Theme.Base;
-                lblDetailsTitle.Font = new Font("Segoe UI Semibold", 15F, FontStyle.Bold);
-            }
-
-            // DataGridView styling
-            if (dgvProducts != null)
-            {
-                dgvProducts.EnableHeadersVisualStyles = false;
-                dgvProducts.ColumnHeadersDefaultCellStyle.BackColor = Theme.GridHeader;
-                dgvProducts.ColumnHeadersDefaultCellStyle.ForeColor = Color.White;
-                dgvProducts.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI Semibold", 11F, FontStyle.Bold);
-                dgvProducts.DefaultCellStyle.BackColor = Color.White;
-                dgvProducts.AlternatingRowsDefaultCellStyle.BackColor = Color.FromArgb(248, 250, 252);
-                dgvProducts.GridColor = Theme.Divider;
-                dgvProducts.DefaultCellStyle.SelectionBackColor = Theme.Header;
-                dgvProducts.DefaultCellStyle.SelectionForeColor = Color.White;
-                dgvProducts.RowTemplate.Height = 42;
-            }
-
-            // Labels and other text
-            foreach (Control c in this.Controls)
-            {
-                if (c is Label lbl)
-                {
-                    if (lbl == lblMainTitle || lbl == lblSubTitle || lbl == lblDetailsTitle) continue;
-                    lbl.ForeColor = Theme.Base;
-                }
-            }
-
-            // Dynamic filters container background should be transparent to show header
-            if (_flpDynamicFilters != null)
-            {
-                _flpDynamicFilters.BackColor = Color.Transparent;
-            }
-
-            try { dgvProducts.ClearSelection(); } catch { }
-        }
-
-        private void SetupDynamicFilterContainer()
-        {
-            // Hide the old hardcoded controls safely if they exist
-            if (lblProcessor != null) lblProcessor.Visible = false;
-            if (cmbFilterProcessor != null) cmbFilterProcessor.Visible = false;
-            if (lblRAM != null) lblRAM.Visible = false;
-            if (cmbFilterRAM != null) cmbFilterRAM.Visible = false;
-
-            // Create a FlowLayoutPanel to automatically arrange our new dynamic filters cleanly
-            _flpDynamicFilters = new FlowLayoutPanel
-            {
-                Location = new Point(0, DynamicFiltersTop),
-                Size = new Size(10, DynamicFiltersHeight),
-                Anchor = AnchorStyles.Top | AnchorStyles.Right,
-                BackColor = Color.Transparent,
-                WrapContents = false,
-                AutoScroll = true
-            };
-            this.pnlHeader.Controls.Add(_flpDynamicFilters);
-
-            LayoutHeader();
-
-            // Make sure the action button always stays visible above dynamic controls
-            btnAddProduct.BringToFront();
-        }
-
-        private void LayoutHeader()
-        {
-            if (_flpDynamicFilters == null || pnlHeader == null || txtSearch == null) return;
-
-            // Reserve space for the search label + textbox, and keep filters to its left.
-            int rightEdge = txtSearch.Left - DynamicFiltersGapFromSearch;
-            int leftEdge = btnAddProduct.Right + 10;
-
-            int width = rightEdge - leftEdge;
-            if (width < 0) width = 0;
-
-            _flpDynamicFilters.SuspendLayout();
-            try
-            {
-                _flpDynamicFilters.Location = new Point(leftEdge, DynamicFiltersTop);
-                _flpDynamicFilters.Size = new Size(width, DynamicFiltersHeight);
-            }
-            finally
-            {
-                _flpDynamicFilters.ResumeLayout();
-            }
-
-            btnAddProduct.BringToFront();
         }
 
         private void BtnAddProduct_Click(object sender, EventArgs e)
@@ -277,23 +83,44 @@ namespace InventoryManagementSystem
 
         private void FrmProducts_Load(object sender, EventArgs e)
         {
-            // Load Dynamic Categories
-            cmbCategory.Items.Clear();
-            cmbCategory.Items.Add("All Categories");
-            foreach (var template in MemoryStore.CategoryTemplates)
-            {
-                cmbCategory.Items.Add(template.CategoryName);
-            }
+            txtProdSpec.ReadOnly = true; // منع التعديل اليدوي على حقل المواصفات المجمع
+            txtProdSpec.BackColor = System.Drawing.SystemColors.Window; // الحفاظ على لونه كأنه نشط لسهولة القراءة
 
-            if (cmbCategory.Items.Count > 0)
-                cmbCategory.SelectedIndex = 0; // Default to "All Categories"
+            LoadCategories();
+
+            // KeyPress restriction on price edit field
+            txtProdPrice.KeyPress += ValidationHelper.AllowOnlyDecimals;
 
             RefreshData();
         }
 
+        private void LoadCategories()
+        {
+            cmbCategory.SelectedIndexChanged -= CmbCategory_SelectedIndexChanged;
+
+            var displayCategories = new List<Category>
+            {
+                new Category { Id = 0, Name = "All Categories" }
+            };
+            displayCategories.AddRange(MemoryStore.Categories);
+
+            cmbCategory.DataSource = null;
+            cmbCategory.DataSource = displayCategories;
+            cmbCategory.DisplayMember = "Name";
+            cmbCategory.ValueMember = "Id";
+
+            if (cmbCategory.Items.Count > 0)
+                cmbCategory.SelectedIndex = 0;
+
+            cmbCategory.SelectedIndexChanged += CmbCategory_SelectedIndexChanged;
+        }
+
         private void CmbCategory_SelectedIndexChanged(object sender, EventArgs e)
         {
-            GenerateDynamicFilters(cmbCategory.SelectedItem?.ToString());
+            if (cmbCategory.SelectedItem is Category selectedCategory)
+            {
+                GenerateDynamicFilters(selectedCategory.Name);
+            }
             ApplyFilters();
         }
 
@@ -302,7 +129,7 @@ namespace InventoryManagementSystem
             _flpDynamicFilters.Controls.Clear();
             _dynamicFilters.Clear();
 
-            var template = MemoryStore.CategoryTemplates.FirstOrDefault(t => t.CategoryName == selectedCategory);
+            var template = MemoryStore.CategoryTemplates.FirstOrDefault(t => MemoryStore.Categories.FirstOrDefault(c => c.Id == t.CategoryId)?.Name == selectedCategory);
 
             if (template == null) return; // "All Categories" or category without filters
 
@@ -313,18 +140,18 @@ namespace InventoryManagementSystem
                 {
                     Text = filter.Key + ":",
                     AutoSize = true,
-                    Font = new Font("Segoe UI", 9.5F),
-                    ForeColor = Color.FromArgb(100, 100, 100),
-                    Margin = new Padding(10, 8, 3, 0)
+                    Font = new System.Drawing.Font("Segoe UI", 9.5F, System.Drawing.FontStyle.Bold),
+                    ForeColor = System.Drawing.Color.White,
+                    Margin = new Padding(0, 3, 6, 0)
                 };
 
                 // Create ComboBox
                 ComboBox cmb = new ComboBox
                 {
                     DropDownStyle = ComboBoxStyle.DropDownList,
-                    Font = new Font("Segoe UI", 9.5F),
-                    Width = 120,
-                    Margin = new Padding(3, 5, 10, 0)
+                    Font = new System.Drawing.Font("Segoe UI", 9.5F),
+                    Width = 110, // Reduced width to prevent overlapping the search box
+                    Margin = new Padding(0, 0, 15, 0) // Reduced margin to ensure filters fit when sidebar opens
                 };
 
                 cmb.Items.Add("All");
@@ -342,7 +169,7 @@ namespace InventoryManagementSystem
 
         /// <summary>
         /// Retrieves the latest products from the MemoryStore and displays them.
-        /// </summary>
+        /// </summary
         private void RefreshData()
         {
             _allProducts = MemoryStore.Products.ToList();
@@ -385,10 +212,9 @@ namespace InventoryManagementSystem
             var filteredList = _allProducts.AsEnumerable();
 
             // 1. Static Category Filter
-            string selectedCategory = cmbCategory.SelectedItem?.ToString();
-            if (!string.IsNullOrEmpty(selectedCategory) && selectedCategory != "All Categories")
+            if (cmbCategory.SelectedItem is Category selectedCat && selectedCat.Id != 0)
             {
-                filteredList = filteredList.Where(p => p.Category.Equals(selectedCategory, StringComparison.OrdinalIgnoreCase));
+                filteredList = filteredList.Where(p => p.CategoryId == selectedCat.Id);
             }
 
             // 2. Dynamic Attribute Filters
@@ -428,37 +254,16 @@ namespace InventoryManagementSystem
                 dgvProducts.Rows.Add(
                     product.Id.ToString(),
                     product.Name,
-                    product.Category,
+                    MemoryStore.Categories.FirstOrDefault(c => c.Id == product.CategoryId)?.Name ?? "",
                     product.Quantity.ToString(),
                     $"${product.Price:0.00}",
                     product.Status
                 );
             }
 
-            // Remove selection formatting issue
-            dgvProducts.CellFormatting -= DgvProducts_CellFormatting;
-            dgvProducts.CellFormatting += DgvProducts_CellFormatting;
-
             // Clear selection details if list is empty
             if (productsToDisplay.Count == 0)
                 ClearDetails();
-        }
-
-        private void DgvProducts_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
-        {
-            if (e.RowIndex >= 0 && e.Value != null && dgvProducts.Columns[e.ColumnIndex].Name == "colStatus")
-            {
-                string status = e.Value.ToString();
-
-                if (status == "Low Stock")
-                    e.CellStyle.ForeColor = Color.DarkOrange;
-                else if (status == "Out of Stock")
-                    e.CellStyle.ForeColor = Color.Red;
-                else
-                    e.CellStyle.ForeColor = Color.ForestGreen;
-
-                e.CellStyle.Font = new Font(dgvProducts.Font, FontStyle.Bold);
-            }
         }
 
         private void DgvProducts_SelectionChanged(object sender, EventArgs e)
@@ -488,7 +293,36 @@ namespace InventoryManagementSystem
 
                 // Generate specs list
                 var specDisplay = string.Join("\r\n", _selectedProduct.Specifications.Select(x => $"{x.Key}: {x.Value}"));
-                txtProdSpec.Text = $"Category: {_selectedProduct.Category}\r\nSerial No: {_selectedProduct.SerialNumber}\r\nSupplier ID: {_selectedProduct.SupplierId}\r\n\r\n{specDisplay}";
+
+                // Get item-level serial numbers from ProductItems store
+                var availableItems = MemoryStore.GetAvailableItems(_selectedProduct.Id);
+                var allItems = MemoryStore.ProductItems.Where(pi => pi.ProductId == _selectedProduct.Id).ToList();
+
+                var sb = new System.Text.StringBuilder();
+                sb.AppendLine($"Category: {MemoryStore.Categories.FirstOrDefault(c => c.Id == _selectedProduct.CategoryId)?.Name ?? ""}");
+                sb.AppendLine($"Product Serial: {_selectedProduct.SerialNumber}");
+                sb.AppendLine($"Supplier ID: {string.Join(", ", MemoryStore.ProductSuppliers.Where(ps => ps.ProductId == _selectedProduct.Id).Select(ps => ps.SupplierId))}");
+                sb.AppendLine();
+                sb.AppendLine(specDisplay);
+                sb.AppendLine();
+                sb.AppendLine($"── Item Tracking ──");
+                sb.AppendLine($"Total Items: {allItems.Count} | In Stock: {availableItems.Count} | Dispatched: {allItems.Count - availableItems.Count}");
+                
+                if (availableItems.Count > 0)
+                {
+                    sb.AppendLine();
+                    sb.AppendLine("Available Items:");
+                    foreach (var item in availableItems.Take(15).OrderBy(i => i.ItemSerialNumber))
+                    {
+                        sb.AppendLine($"  ► {item.ItemSerialNumber}");
+                    }
+                    if (availableItems.Count > 15)
+                    {
+                        sb.AppendLine($"  ... and {availableItems.Count - 15} more");
+                    }
+                }
+
+                txtProdSpec.Text = sb.ToString();
 
                 btnEdit.Enabled = true;
             }
@@ -507,21 +341,35 @@ namespace InventoryManagementSystem
         {
             if (_selectedProduct == null) return;
 
-            // Simple validation
-            if (string.IsNullOrWhiteSpace(txtProdName.Text))
-            {
-                MessageBox.Show("Product Name cannot be empty.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            _errorProvider.Clear();
+            bool isValid = true;
+            string errorMsg;
 
-            if (!decimal.TryParse(txtProdPrice.Text, out decimal newPrice))
+            string nameText = txtProdName.Text.Trim();
+            if (!ValidationHelper.IsRequired(nameText, out errorMsg))
+            { _errorProvider.SetError(txtProdName, errorMsg); isValid = false; }
+            else if (!ValidationHelper.IsValidLength(nameText, 2, 100, out errorMsg))
+            { _errorProvider.SetError(txtProdName, errorMsg); isValid = false; }
+            else
+              _errorProvider.SetError(txtProdName, string.Empty);
+
+            decimal newPrice = 0;
+            string priceText = txtProdPrice.Text.Trim();
+            if (!ValidationHelper.IsRequired(priceText, out errorMsg))
+            { _errorProvider.SetError(txtProdPrice, errorMsg); isValid = false; }
+            else if (!ValidationHelper.IsValidDecimal(priceText, out errorMsg))
+            { _errorProvider.SetError(txtProdPrice, errorMsg); isValid = false; }
+            else
+            { newPrice = decimal.Parse(priceText); _errorProvider.SetError(txtProdPrice, string.Empty); }
+
+            if (!isValid)
             {
-                MessageBox.Show("Please enter a valid price.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Please correct the highlighted errors before saving.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             // Update in MemoryStore
-            _selectedProduct.Name = txtProdName.Text.Trim();
+            _selectedProduct.Name  = nameText;
             _selectedProduct.Price = newPrice;
 
             MemoryStore.LogAction("PRODUCT UPDATED", $"Details updated for Product ID {_selectedProduct.Id} - {_selectedProduct.Name}.");
@@ -546,22 +394,15 @@ namespace InventoryManagementSystem
                     string newCategory = frmAdd.CreatedCategoryName;
                     var newFilters = frmAdd.CreatedFilters;
 
-                    // Add template to memory store if it doesn't exist
-                    if (!MemoryStore.CategoryTemplates.Any(t => t.CategoryName.Equals(newCategory, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        MemoryStore.CategoryTemplates.Add(new CategoryTemplate
-                        {
-                            CategoryName = newCategory,
-                            AvailableFilters = newFilters
-                        });
-                    }
+                    // The category and template are already added to MemoryStore by FrmAddCategory
+                    // Just reload and select
+                    LoadCategories();
+                    
+                    var newCatItem = ((List<Category>)cmbCategory.DataSource).FirstOrDefault(c => c.Name.Equals(newCategory, StringComparison.OrdinalIgnoreCase));
+                    if (newCatItem != null)
+                        cmbCategory.SelectedItem = newCatItem;
 
-                    if (!cmbCategory.Items.Contains(newCategory))
-                    {
-                        cmbCategory.Items.Add(newCategory);
-                    }
-
-                    MessageBox.Show($"Category '{newCategory}' with {newFilters.Count} filters added successfully.", "Add Category", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Category '{newCategory}' with {newFilters?.Count ?? 0} filters added successfully.", "Add Category", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
@@ -591,20 +432,74 @@ namespace InventoryManagementSystem
             }
         }
 
-        protected override void OnLoad(EventArgs e)
+        // ─────────────────────────────────────────────────────────────────────
+        // Right-Click Context Menu – Stock IN / OUT shortcut from product list
+        // ─────────────────────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Builds the ContextMenuStrip programmatically and wires CellMouseDown.
+        /// Kept out of the Designer file intentionally to avoid .resx churn.
+        /// </summary>
+        private void InitContextMenu()
         {
-            base.OnLoad(e);
-            // Add shadow to details panel for card effect
-            pnlDetails.Paint += (s, pe) =>
-            {
-                using (var shadow = new System.Drawing.Drawing2D.GraphicsPath())
-                {
-                    shadow.AddRectangle(new Rectangle(5, 5, pnlDetails.Width - 10, pnlDetails.Height - 10));
-                    pe.Graphics.FillPath(new SolidBrush(Color.FromArgb(30, 0, 0, 0)), shadow);
-                }
-            };
-            // Add icon to search box (optional, if you have resources)
-            // txtSearch.PlaceholderText = "Search by name or ID..."; // For .NET6+, otherwise skip
+            _ctxProductMenu = new ContextMenuStrip();
+            _ctxProductMenu.Font = new System.Drawing.Font("Segoe UI", 9.5F);
+
+            var mnuStockIn  = new ToolStripMenuItem("📦   Perform Stock IN");
+            var mnuStockOut = new ToolStripMenuItem("📤   Perform Stock OUT");
+
+            mnuStockIn.Click  += (s, e) => OpenStockForm(isStockIn: true);
+            mnuStockOut.Click += (s, e) => OpenStockForm(isStockIn: false);
+
+            _ctxProductMenu.Items.AddRange(new ToolStripItem[] { mnuStockIn, new ToolStripSeparator(), mnuStockOut });
+
+            dgvProducts.CellMouseDown += DgvProducts_CellMouseDown;
         }
+
+        /// <summary>
+        /// Selects the right-clicked row and shows the context menu.
+        /// Clicking the header row (RowIndex &lt; 0) is ignored.
+        /// </summary>
+        private void DgvProducts_CellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            if (e.RowIndex < 0) return; // header row – do nothing
+
+            // Programmatically select the right-clicked row so _selectedProduct is populated
+            dgvProducts.ClearSelection();
+            dgvProducts.Rows[e.RowIndex].Selected = true;
+
+            int safeColumnIndex = e.ColumnIndex >= 0 ? e.ColumnIndex : 0;
+            dgvProducts.CurrentCell = dgvProducts.Rows[e.RowIndex].Cells[safeColumnIndex];
+
+            // Guard: only show menu when a valid product row is selected
+            if (_selectedProduct == null) return;
+
+            _ctxProductMenu.Show(dgvProducts, dgvProducts.PointToClient(Cursor.Position));
+        }
+
+        /// <summary>
+        /// Opens FrmStockIn or FrmStockOut with the currently selected product
+        /// pre-selected in the form's product ComboBox.
+        /// Uses FrmMain.OpenChildForm so the target form is embedded inside
+        /// pnlMainContent — exactly the same way sidebar navigation works.
+        /// </summary>
+        private void OpenStockForm(bool isStockIn)
+        {
+            if (_selectedProduct == null) return;
+
+            // Walk up to FrmMain (this form is itself a child embedded inside it)
+            var frmMain = this.ParentForm as FrmMain;
+            if (frmMain == null) return;
+
+            int productId = _selectedProduct.Id;
+
+            Form stockForm = isStockIn
+                ? (Form)new FrmStockIn(productId)
+                : (Form)new FrmStockOut(productId);
+
+            frmMain.OpenChildForm(stockForm);
+        }
+
     }
 }
