@@ -17,10 +17,10 @@ namespace InventoryManagementSystem
 
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle specsCellStyle = new System.Windows.Forms.DataGridViewCellStyle();
             this.colID = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colProductName = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colCategory = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -48,19 +48,19 @@ namespace InventoryManagementSystem
             this.txtProdPrice = new System.Windows.Forms.TextBox();
             this.txtProdName = new System.Windows.Forms.TextBox();
             this.lblDetailsTitle = new System.Windows.Forms.Label();
-            this.dgvSpecs        = new System.Windows.Forms.DataGridView();
-            this.colSpecProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colSpecValue    = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblItemTracking = new System.Windows.Forms.Label();
+            this.dgvSpecs = new System.Windows.Forms.DataGridView();
+            this.colSpecProperty = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSpecValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlGridContainer = new System.Windows.Forms.Panel();
             this.dgvProducts = new System.Windows.Forms.DataGridView();
             this.lblMainTitle = new System.Windows.Forms.Label();
             this.lblSubTitle = new System.Windows.Forms.Label();
             this.pnlHeader.SuspendLayout();
             this.pnlDetails.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSpecs)).BeginInit();
             this.pnlGridContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvSpecs)).BeginInit();
             this.SuspendLayout();
             // 
             // colID
@@ -277,7 +277,7 @@ namespace InventoryManagementSystem
             this.btnAddProduct.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnAddProduct.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnAddProduct.ForeColor = System.Drawing.Color.White;
-            this.btnAddProduct.Location = new System.Drawing.Point(23, 498);
+            this.btnAddProduct.Location = new System.Drawing.Point(23, 551);
             this.btnAddProduct.Name = "btnAddProduct";
             this.btnAddProduct.Size = new System.Drawing.Size(272, 40);
             this.btnAddProduct.TabIndex = 12;
@@ -313,7 +313,7 @@ namespace InventoryManagementSystem
             this.lblProdSpec.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
             this.lblProdSpec.Location = new System.Drawing.Point(20, 323);
             this.lblProdSpec.Name = "lblProdSpec";
-            this.lblProdSpec.Size = new System.Drawing.Size(83, 15);
+            this.lblProdSpec.Size = new System.Drawing.Size(78, 15);
             this.lblProdSpec.TabIndex = 7;
             this.lblProdSpec.Text = "Item Tracking";
             // 
@@ -322,7 +322,7 @@ namespace InventoryManagementSystem
             this.lblProdPrice.AutoSize = true;
             this.lblProdPrice.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblProdPrice.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblProdPrice.Location = new System.Drawing.Point(20, 145);
+            this.lblProdPrice.Location = new System.Drawing.Point(20, 95);
             this.lblProdPrice.Name = "lblProdPrice";
             this.lblProdPrice.Size = new System.Drawing.Size(33, 15);
             this.lblProdPrice.TabIndex = 6;
@@ -333,7 +333,7 @@ namespace InventoryManagementSystem
             this.lblProdName.AutoSize = true;
             this.lblProdName.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblProdName.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblProdName.Location = new System.Drawing.Point(20, 80);
+            this.lblProdName.Location = new System.Drawing.Point(20, 44);
             this.lblProdName.Name = "lblProdName";
             this.lblProdName.Size = new System.Drawing.Size(84, 15);
             this.lblProdName.TabIndex = 5;
@@ -347,7 +347,7 @@ namespace InventoryManagementSystem
             this.btnEdit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEdit.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold);
             this.btnEdit.ForeColor = System.Drawing.Color.White;
-            this.btnEdit.Location = new System.Drawing.Point(23, 447);
+            this.btnEdit.Location = new System.Drawing.Point(23, 505);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(274, 40);
             this.btnEdit.TabIndex = 4;
@@ -357,17 +357,17 @@ namespace InventoryManagementSystem
             // txtProdSpec
             // 
             this.txtProdSpec.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtProdSpec.Location = new System.Drawing.Point(23, 340);
+            this.txtProdSpec.Location = new System.Drawing.Point(23, 341);
             this.txtProdSpec.Multiline = true;
             this.txtProdSpec.Name = "txtProdSpec";
             this.txtProdSpec.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtProdSpec.Size = new System.Drawing.Size(274, 95);
+            this.txtProdSpec.Size = new System.Drawing.Size(274, 158);
             this.txtProdSpec.TabIndex = 3;
             // 
             // txtProdPrice
             // 
             this.txtProdPrice.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.txtProdPrice.Location = new System.Drawing.Point(23, 165);
+            this.txtProdPrice.Location = new System.Drawing.Point(23, 115);
             this.txtProdPrice.Name = "txtProdPrice";
             this.txtProdPrice.Size = new System.Drawing.Size(274, 27);
             this.txtProdPrice.TabIndex = 2;
@@ -375,7 +375,7 @@ namespace InventoryManagementSystem
             // txtProdName
             // 
             this.txtProdName.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.txtProdName.Location = new System.Drawing.Point(23, 100);
+            this.txtProdName.Location = new System.Drawing.Point(23, 64);
             this.txtProdName.Name = "txtProdName";
             this.txtProdName.Size = new System.Drawing.Size(274, 27);
             this.txtProdName.TabIndex = 1;
@@ -385,7 +385,7 @@ namespace InventoryManagementSystem
             this.lblDetailsTitle.AutoSize = true;
             this.lblDetailsTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 15F, System.Drawing.FontStyle.Bold);
             this.lblDetailsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            this.lblDetailsTitle.Location = new System.Drawing.Point(18, 25);
+            this.lblDetailsTitle.Location = new System.Drawing.Point(18, 11);
             this.lblDetailsTitle.Name = "lblDetailsTitle";
             this.lblDetailsTitle.Size = new System.Drawing.Size(150, 28);
             this.lblDetailsTitle.TabIndex = 0;
@@ -396,7 +396,7 @@ namespace InventoryManagementSystem
             this.lblItemTracking.AutoSize = true;
             this.lblItemTracking.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.lblItemTracking.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblItemTracking.Location = new System.Drawing.Point(20, 200);
+            this.lblItemTracking.Location = new System.Drawing.Point(20, 150);
             this.lblItemTracking.Name = "lblItemTracking";
             this.lblItemTracking.Size = new System.Drawing.Size(80, 15);
             this.lblItemTracking.TabIndex = 8;
@@ -413,35 +413,34 @@ namespace InventoryManagementSystem
             this.dgvSpecs.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
             this.dgvSpecs.ColumnHeadersHeight = 26;
             this.dgvSpecs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.dgvSpecs.ColumnHeadersVisible = true;
-            this.dgvSpecs.EnableHeadersVisualStyles = false;
             this.dgvSpecs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colSpecProperty,
             this.colSpecValue});
-            specsCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            specsCellStyle.BackColor = System.Drawing.Color.White;
-            specsCellStyle.Font = new System.Drawing.Font("Segoe UI", 9F);
-            specsCellStyle.ForeColor = System.Drawing.SystemColors.ControlText;
-            specsCellStyle.SelectionBackColor = System.Drawing.Color.White;
-            specsCellStyle.SelectionForeColor = System.Drawing.SystemColors.ControlText;
-            specsCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvSpecs.DefaultCellStyle = specsCellStyle;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI", 9F);
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvSpecs.DefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvSpecs.EnableHeadersVisualStyles = false;
             this.dgvSpecs.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(231)))), ((int)(((byte)(235)))));
-            this.dgvSpecs.Location = new System.Drawing.Point(23, 218);
+            this.dgvSpecs.Location = new System.Drawing.Point(21, 168);
             this.dgvSpecs.Name = "dgvSpecs";
             this.dgvSpecs.ReadOnly = true;
             this.dgvSpecs.RowHeadersVisible = false;
             this.dgvSpecs.RowTemplate.Height = 26;
             this.dgvSpecs.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvSpecs.Size = new System.Drawing.Size(274, 88);
+            this.dgvSpecs.Size = new System.Drawing.Size(274, 152);
             this.dgvSpecs.TabIndex = 9;
+            this.dgvSpecs.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvSpecs_CellContentClick);
             // 
             // colSpecProperty
             // 
             this.colSpecProperty.HeaderText = "Property";
             this.colSpecProperty.Name = "colSpecProperty";
             this.colSpecProperty.ReadOnly = true;
-            this.colSpecProperty.Width = 100;
             // 
             // colSpecValue
             // 
@@ -466,20 +465,20 @@ namespace InventoryManagementSystem
             this.dgvProducts.AllowUserToAddRows = false;
             this.dgvProducts.AllowUserToDeleteRows = false;
             this.dgvProducts.AllowUserToResizeRows = false;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
-            this.dgvProducts.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(250)))), ((int)(((byte)(251)))));
+            this.dgvProducts.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle2;
             this.dgvProducts.BackgroundColor = System.Drawing.Color.White;
             this.dgvProducts.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvProducts.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.SingleHorizontal;
             this.dgvProducts.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvProducts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(41)))), ((int)(((byte)(59)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvProducts.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvProducts.ColumnHeadersHeight = 45;
             this.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvProducts.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -489,14 +488,14 @@ namespace InventoryManagementSystem
             this.colStock,
             this.colPrice,
             this.colStatus});
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 10F);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(232)))), ((int)(((byte)(240)))));
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvProducts.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Segoe UI", 10F);
+            dataGridViewCellStyle4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(30)))), ((int)(((byte)(30)))), ((int)(((byte)(30)))));
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(232)))), ((int)(((byte)(240)))));
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvProducts.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgvProducts.EnableHeadersVisualStyles = false;
             this.dgvProducts.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(231)))), ((int)(((byte)(235)))));
             this.dgvProducts.Location = new System.Drawing.Point(12, 20);
@@ -549,11 +548,9 @@ namespace InventoryManagementSystem
             this.pnlHeader.PerformLayout();
             this.pnlDetails.ResumeLayout(false);
             this.pnlDetails.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvSpecs)).EndInit();
             this.pnlGridContainer.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvSpecs)).EndInit();
-            InventoryManagementSystem.Classes.AppTheme.ApplyStandardGrid(this.dgvProducts);
-            InventoryManagementSystem.Classes.AppTheme.ApplyCompactGrid(this.dgvSpecs);
             this.ResumeLayout(false);
             this.PerformLayout();
 

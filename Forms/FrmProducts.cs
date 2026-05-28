@@ -336,5 +336,10 @@ namespace InventoryManagementSystem
 
             frmMain.OpenChildForm(stockForm);
         }
+
+        private void dgvSpecs_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }
