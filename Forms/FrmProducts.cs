@@ -298,13 +298,24 @@ namespace InventoryManagementSystem
             _ctxProductMenu      = new ContextMenuStrip();
             _ctxProductMenu.Font = new System.Drawing.Font("Segoe UI", 9.5F);
 
-            var mnuStockIn  = new ToolStripMenuItem("📦   Perform Stock IN");
-            var mnuStockOut = new ToolStripMenuItem("📤   Perform Stock OUT");
+            var mnuStockIn          = new ToolStripMenuItem("📦   Perform Stock IN");
+            var mnuRestock          = new ToolStripMenuItem("🔄   Perform Restock");
+            var mnuStockOut         = new ToolStripMenuItem("📤   Perform Stock OUT");
+            var mnuReturnToSupplier = new ToolStripMenuItem("↩️   Return to Supplier");
 
-            mnuStockIn.Click  += (s, e) => OpenStockForm(isStockIn: true);
-            mnuStockOut.Click += (s, e) => OpenStockForm(isStockIn: false);
+            mnuStockIn.Click          += (s, e) => OpenStockForm("StockIn");
+            mnuRestock.Click          += (s, e) => OpenStockForm("Restock");
+            mnuStockOut.Click         += (s, e) => OpenStockForm("StockOut");
+            mnuReturnToSupplier.Click += (s, e) => OpenStockForm("ReturnToSupplier");
 
-            _ctxProductMenu.Items.AddRange(new ToolStripItem[] { mnuStockIn, new ToolStripSeparator(), mnuStockOut });
+            _ctxProductMenu.Items.AddRange(new ToolStripItem[]
+            {
+                mnuStockIn,
+                mnuRestock,
+                new ToolStripSeparator(),
+                mnuStockOut,
+                mnuReturnToSupplier
+            });
             dgvProducts.CellMouseDown += DgvProducts_CellMouseDown;
         }
 
@@ -323,17 +334,29 @@ namespace InventoryManagementSystem
             _ctxProductMenu.Show(dgvProducts, dgvProducts.PointToClient(System.Windows.Forms.Cursor.Position));
         }
 
-        private void OpenStockForm(bool isStockIn)
+        private void OpenStockForm(string movementType)
         {
             if (_selectedProduct == null) return;
             var frmMain = this.ParentForm as FrmMain;
             if (frmMain == null) return;
 
             int productId = _selectedProduct.ProductSerialNumber;
-            Form stockForm = isStockIn
-                ? (Form)new FrmStockIn(productId)
-                : (Form)new FrmStockOut(productId);
-
+            Form stockForm;
+            switch (movementType)
+            {
+                case "Restock":
+                    stockForm = new FrmStockIn(productId, "Restock");
+                    break;
+                case "StockOut":
+                    stockForm = new FrmStockOut(productId, "StockOut");
+                    break;
+                case "ReturnToSupplier":
+                    stockForm = new FrmStockOut(productId, "ReturnToSupplier");
+                    break;
+                default:
+                    stockForm = new FrmStockIn(productId, "StockIn");
+                    break;
+            }
             frmMain.OpenChildForm(stockForm);
         }
 

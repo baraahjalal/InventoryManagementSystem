@@ -43,12 +43,10 @@ namespace InventoryManagementSystem.Forms
             this.txtSerialNumber = new System.Windows.Forms.TextBox();
             this.lblCategory = new System.Windows.Forms.Label();
             this.cmbCategory = new System.Windows.Forms.ComboBox();
-            this.lblSuppliers = new System.Windows.Forms.Label();
-            this.clbSuppliers = new System.Windows.Forms.CheckedListBox();
             this.lblSpecs = new System.Windows.Forms.Label();
             this.dgvProductSpecs = new System.Windows.Forms.DataGridView();
-            this.colSpecKey      = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colSpecValue    = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSpecKey = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSpecValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlFooter = new System.Windows.Forms.Panel();
             this.btnCancel = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
@@ -61,7 +59,7 @@ namespace InventoryManagementSystem.Forms
             // 
             // pnlHeader
             // 
-            this.pnlHeader.BackColor = System.Drawing.Color.White;
+            this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.pnlHeader.Controls.Add(this.lblTitle);
             this.pnlHeader.Controls.Add(this.lblSubTitle);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
@@ -75,7 +73,7 @@ namespace InventoryManagementSystem.Forms
             // 
             this.lblTitle.AutoSize = true;
             this.lblTitle.Font = new System.Drawing.Font("Segoe UI Semibold", 16F, System.Drawing.FontStyle.Bold);
-            this.lblTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
+            this.lblTitle.ForeColor = System.Drawing.Color.White;
             this.lblTitle.Location = new System.Drawing.Point(20, 18);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(138, 30);
@@ -86,7 +84,7 @@ namespace InventoryManagementSystem.Forms
             // 
             this.lblSubTitle.AutoSize = true;
             this.lblSubTitle.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblSubTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
+            this.lblSubTitle.ForeColor = System.Drawing.Color.White;
             this.lblSubTitle.Location = new System.Drawing.Point(22, 52);
             this.lblSubTitle.Name = "lblSubTitle";
             this.lblSubTitle.Size = new System.Drawing.Size(339, 19);
@@ -101,7 +99,7 @@ namespace InventoryManagementSystem.Forms
             this.pnlBody.Location = new System.Drawing.Point(0, 90);
             this.pnlBody.Name = "pnlBody";
             this.pnlBody.Padding = new System.Windows.Forms.Padding(24, 12, 24, 12);
-            this.pnlBody.Size = new System.Drawing.Size(520, 460);
+            this.pnlBody.Size = new System.Drawing.Size(520, 560);
             this.pnlBody.TabIndex = 1;
             // 
             // tblForm
@@ -119,8 +117,6 @@ namespace InventoryManagementSystem.Forms
             this.tblForm.Controls.Add(this.txtSerialNumber, 1, 3);
             this.tblForm.Controls.Add(this.lblCategory, 0, 4);
             this.tblForm.Controls.Add(this.cmbCategory, 1, 4);
-            this.tblForm.Controls.Add(this.lblSuppliers, 0, 5);
-            this.tblForm.Controls.Add(this.clbSuppliers, 1, 5);
             this.tblForm.Controls.Add(this.lblSpecs, 0, 6);
             this.tblForm.Controls.Add(this.dgvProductSpecs, 1, 6);
             this.tblForm.Dock = System.Windows.Forms.DockStyle.Top;
@@ -131,9 +127,9 @@ namespace InventoryManagementSystem.Forms
             this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
             this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
             this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-            this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44F));
-            this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 190F));
+            this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
+            this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 8F));
+            this.tblForm.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 281F));
             this.tblForm.Size = new System.Drawing.Size(472, 510);
             this.tblForm.TabIndex = 0;
             // 
@@ -231,7 +227,7 @@ namespace InventoryManagementSystem.Forms
             this.lblCategory.AutoSize = true;
             this.lblCategory.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.lblCategory.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblCategory.Location = new System.Drawing.Point(3, 189);
+            this.lblCategory.Location = new System.Drawing.Point(3, 190);
             this.lblCategory.Name = "lblCategory";
             this.lblCategory.Size = new System.Drawing.Size(61, 17);
             this.lblCategory.TabIndex = 8;
@@ -243,35 +239,10 @@ namespace InventoryManagementSystem.Forms
             this.cmbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCategory.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cmbCategory.FormattingEnabled = true;
-            this.cmbCategory.Location = new System.Drawing.Point(153, 184);
+            this.cmbCategory.Location = new System.Drawing.Point(153, 186);
             this.cmbCategory.Name = "cmbCategory";
             this.cmbCategory.Size = new System.Drawing.Size(316, 25);
             this.cmbCategory.TabIndex = 9;
-            // 
-            // lblSuppliers
-            // 
-            this.lblSuppliers.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.lblSuppliers.AutoSize = true;
-            this.lblSuppliers.Font = new System.Drawing.Font("Segoe UI", 9.5F);
-            this.lblSuppliers.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblSuppliers.Location = new System.Drawing.Point(3, 233);
-            this.lblSuppliers.Name = "lblSuppliers";
-            this.lblSuppliers.Size = new System.Drawing.Size(63, 17);
-            this.lblSuppliers.TabIndex = 10;
-            this.lblSuppliers.Text = "Suppliers";
-            // 
-            // clbSuppliers
-            // 
-            this.clbSuppliers.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.clbSuppliers.CheckOnClick = true;
-            this.clbSuppliers.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.clbSuppliers.FormattingEnabled = true;
-            this.clbSuppliers.Location = new System.Drawing.Point(153, 223);
-            this.clbSuppliers.Name = "clbSuppliers";
-            this.clbSuppliers.Size = new System.Drawing.Size(316, 94);
-            this.clbSuppliers.TabIndex = 11;
             // 
             // lblSpecs
             // 
@@ -279,48 +250,45 @@ namespace InventoryManagementSystem.Forms
             this.lblSpecs.AutoSize = true;
             this.lblSpecs.Font = new System.Drawing.Font("Segoe UI", 9.5F);
             this.lblSpecs.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(100)))), ((int)(((byte)(100)))));
-            this.lblSpecs.Location = new System.Drawing.Point(3, 406);
+            this.lblSpecs.Location = new System.Drawing.Point(3, 361);
             this.lblSpecs.Name = "lblSpecs";
             this.lblSpecs.Size = new System.Drawing.Size(87, 17);
             this.lblSpecs.TabIndex = 12;
             this.lblSpecs.Text = "Specifications";
-            //
+            // 
             // dgvProductSpecs
-            //
-            this.dgvProductSpecs.AllowUserToAddRows    = false;
+            // 
+            this.dgvProductSpecs.AllowUserToAddRows = false;
             this.dgvProductSpecs.AllowUserToDeleteRows = false;
             this.dgvProductSpecs.AllowUserToResizeRows = false;
-            this.dgvProductSpecs.BackgroundColor       = System.Drawing.Color.White;
-            this.dgvProductSpecs.BorderStyle           = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.dgvProductSpecs.BackgroundColor = System.Drawing.Color.White;
             this.dgvProductSpecs.ColumnHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.None;
-            this.dgvProductSpecs.ColumnHeadersHeight   = 28;
+            this.dgvProductSpecs.ColumnHeadersHeight = 28;
             this.dgvProductSpecs.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvProductSpecs.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-                this.colSpecKey,
-                this.colSpecValue });
-            this.dgvProductSpecs.Dock          = System.Windows.Forms.DockStyle.Fill;
+            this.colSpecKey,
+            this.colSpecValue});
+            this.dgvProductSpecs.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvProductSpecs.EnableHeadersVisualStyles = false;
-            this.dgvProductSpecs.Location      = new System.Drawing.Point(153, 323);
-            this.dgvProductSpecs.Name          = "dgvProductSpecs";
-            this.dgvProductSpecs.ReadOnly      = false;
+            this.dgvProductSpecs.Location = new System.Drawing.Point(153, 232);
+            this.dgvProductSpecs.Name = "dgvProductSpecs";
             this.dgvProductSpecs.RowHeadersVisible = false;
             this.dgvProductSpecs.RowTemplate.Height = 28;
-            this.dgvProductSpecs.Size          = new System.Drawing.Size(316, 184);
-            this.dgvProductSpecs.TabIndex      = 13;
-            //
+            this.dgvProductSpecs.Size = new System.Drawing.Size(316, 275);
+            this.dgvProductSpecs.TabIndex = 13;
+            // 
             // colSpecKey
-            //
+            // 
             this.colSpecKey.HeaderText = "Property";
-            this.colSpecKey.Name       = "colSpecKey";
-            this.colSpecKey.ReadOnly   = true;
-            this.colSpecKey.Width      = 120;
-            //
+            this.colSpecKey.Name = "colSpecKey";
+            this.colSpecKey.ReadOnly = true;
+            this.colSpecKey.Width = 120;
+            // 
             // colSpecValue
-            //
+            // 
             this.colSpecValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.colSpecValue.HeaderText   = "Value";
-            this.colSpecValue.Name         = "colSpecValue";
-            this.colSpecValue.ReadOnly     = false;
+            this.colSpecValue.HeaderText = "Value";
+            this.colSpecValue.Name = "colSpecValue";
             // 
             // pnlFooter
             // 
@@ -328,7 +296,7 @@ namespace InventoryManagementSystem.Forms
             this.pnlFooter.Controls.Add(this.btnCancel);
             this.pnlFooter.Controls.Add(this.btnSave);
             this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlFooter.Location = new System.Drawing.Point(0, 550);
+            this.pnlFooter.Location = new System.Drawing.Point(0, 650);
             this.pnlFooter.Name = "pnlFooter";
             this.pnlFooter.Padding = new System.Windows.Forms.Padding(24, 12, 24, 20);
             this.pnlFooter.Size = new System.Drawing.Size(520, 70);
@@ -353,7 +321,7 @@ namespace InventoryManagementSystem.Forms
             // btnSave
             // 
             this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(59)))), ((int)(((byte)(130)))), ((int)(((byte)(246)))));
+            this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.btnSave.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSave.FlatAppearance.BorderSize = 0;
             this.btnSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
@@ -388,7 +356,6 @@ namespace InventoryManagementSystem.Forms
             this.tblForm.ResumeLayout(false);
             this.tblForm.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductSpecs)).EndInit();
-            InventoryManagementSystem.Classes.AppTheme.ApplyCompactGrid(this.dgvProductSpecs);
             this.pnlFooter.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -411,8 +378,6 @@ namespace InventoryManagementSystem.Forms
         private System.Windows.Forms.TextBox txtSerialNumber;
         private System.Windows.Forms.Label lblCategory;
         private System.Windows.Forms.ComboBox cmbCategory;
-        private System.Windows.Forms.Label lblSuppliers;
-        private System.Windows.Forms.CheckedListBox clbSuppliers;
         private System.Windows.Forms.Label lblSpecs;
         private System.Windows.Forms.DataGridView dgvProductSpecs;
         private System.Windows.Forms.DataGridViewTextBoxColumn colSpecKey;

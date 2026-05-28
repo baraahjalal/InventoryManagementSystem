@@ -9,6 +9,8 @@ namespace InventoryManagementSystem
         private System.Windows.Forms.Label lblSubHeader;
         private System.Windows.Forms.Panel pnlMainCard;
         private System.Windows.Forms.Panel pnlHeader;
+        private System.Windows.Forms.RadioButton rbStockIn;
+        private System.Windows.Forms.RadioButton rbRestock;
 
         // Input Controls
         private System.Windows.Forms.ComboBox cmbSupplier;
@@ -38,6 +40,8 @@ namespace InventoryManagementSystem
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.lblHeader = new System.Windows.Forms.Label();
             this.lblSubHeader = new System.Windows.Forms.Label();
+            this.rbStockIn = new System.Windows.Forms.RadioButton();
+            this.rbRestock = new System.Windows.Forms.RadioButton();
             this.pnlMainCard = new System.Windows.Forms.Panel();
             this.lblSupplier = new System.Windows.Forms.Label();
             this.cmbSupplier = new System.Windows.Forms.ComboBox();
@@ -63,6 +67,8 @@ namespace InventoryManagementSystem
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.pnlHeader.Controls.Add(this.lblHeader);
             this.pnlHeader.Controls.Add(this.lblSubHeader);
+            this.pnlHeader.Controls.Add(this.rbStockIn);
+            this.pnlHeader.Controls.Add(this.rbRestock);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlHeader.Name = "pnlHeader";
@@ -92,6 +98,32 @@ namespace InventoryManagementSystem
             this.lblSubHeader.Size = new System.Drawing.Size(489, 21);
             this.lblSubHeader.TabIndex = 2;
             this.lblSubHeader.Text = "Record incoming inventory, supplier details, and physical placements.";
+            //
+            // rbStockIn
+            //
+            this.rbStockIn.AutoSize = true;
+            this.rbStockIn.BackColor = System.Drawing.Color.Transparent;
+            this.rbStockIn.Checked = true;
+            this.rbStockIn.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.rbStockIn.ForeColor = System.Drawing.Color.White;
+            this.rbStockIn.Location = new System.Drawing.Point(640, 38);
+            this.rbStockIn.Name = "rbStockIn";
+            this.rbStockIn.Size = new System.Drawing.Size(95, 21);
+            this.rbStockIn.TabIndex = 3;
+            this.rbStockIn.TabStop = true;
+            this.rbStockIn.Text = "Stock In";
+            //
+            // rbRestock
+            //
+            this.rbRestock.AutoSize = true;
+            this.rbRestock.BackColor = System.Drawing.Color.Transparent;
+            this.rbRestock.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.rbRestock.ForeColor = System.Drawing.Color.White;
+            this.rbRestock.Location = new System.Drawing.Point(760, 38);
+            this.rbRestock.Name = "rbRestock";
+            this.rbRestock.Size = new System.Drawing.Size(82, 21);
+            this.rbRestock.TabIndex = 4;
+            this.rbRestock.Text = "Restock";
             // 
             // pnlMainCard
             // 
@@ -210,7 +242,7 @@ namespace InventoryManagementSystem
             this.lblSerialNumbers.Name = "lblSerialNumbers";
             this.lblSerialNumbers.Size = new System.Drawing.Size(189, 17);
             this.lblSerialNumbers.TabIndex = 13;
-            this.lblSerialNumbers.Text = "Auto-Generated Item Serials (Preview)";
+            this.lblSerialNumbers.Text = "Stock Level Preview";
             // 
             // txtSerialNumbers
             // 

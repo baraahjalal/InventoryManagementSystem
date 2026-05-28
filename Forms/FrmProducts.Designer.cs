@@ -498,7 +498,7 @@ namespace InventoryManagementSystem
             this.dgvProducts.DefaultCellStyle = dataGridViewCellStyle4;
             this.dgvProducts.EnableHeadersVisualStyles = false;
             this.dgvProducts.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(229)))), ((int)(((byte)(231)))), ((int)(((byte)(235)))));
-            this.dgvProducts.Location = new System.Drawing.Point(12, 20);
+            this.dgvProducts.Location = new System.Drawing.Point(22, 6);
             this.dgvProducts.MultiSelect = false;
             this.dgvProducts.Name = "dgvProducts";
             this.dgvProducts.ReadOnly = true;

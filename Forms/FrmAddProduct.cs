@@ -58,16 +58,16 @@ namespace InventoryManagementSystem.Forms
                 foreach (var key in keys)
                     dgvProductSpecs.Rows.Add(key, "");
             }
-            LoadAllActiveSuppliers();
+           // LoadAllActiveSuppliers();
         }
 
-        private void LoadAllActiveSuppliers()
-        {
-            var suppliers = SupplierRepository.GetActive();
-            ((ListBox)clbSuppliers).DataSource    = suppliers;
-            ((ListBox)clbSuppliers).DisplayMember = "SupplierName";
-            ((ListBox)clbSuppliers).ValueMember   = "SupplierTaxNumber";
-        }
+        //private void LoadAllActiveSuppliers()
+        //{
+        //    var suppliers = SupplierRepository.GetActive();
+        //    ((ListBox)clbSuppliers).DataSource    = suppliers;
+        //    ((ListBox)clbSuppliers).DisplayMember = "SupplierName";
+        //    ((ListBox)clbSuppliers).ValueMember   = "SupplierTaxNumber";
+        //}
 
         private void BtnCancel_Click(object sender, EventArgs e)
         {
@@ -144,11 +144,7 @@ namespace InventoryManagementSystem.Forms
             categoryId = cmbCategory.SelectedItem is Models.Category c ? c.CategoryID : 0;
 
             selectedSupplierTaxNum = null;
-            foreach (var item in clbSuppliers.CheckedItems)
-            {
-                if (item is Models.Supplier s)
-                { selectedSupplierTaxNum = s.SupplierTaxNumber; break; }
-            }
+         
 
             productId = 0;
             price     = 0m;

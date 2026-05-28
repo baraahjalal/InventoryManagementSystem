@@ -78,7 +78,7 @@ namespace InventoryManagementSystem.DAL
                 }
 
                 foreach (var spec in p.Specifications)
-                    AddSpecification(conn, p.ProductSerialNumber, spec.SpecKey, spec.SpecValue);
+                    AddSpecification(conn, p.ProductSerialNumber, p.CategoryID, spec.SpecKey, spec.SpecValue);
             }
         }
 
@@ -133,33 +133,38 @@ namespace InventoryManagementSystem.DAL
             {
                 conn.Open();
                 using (var cmd = new SqlCommand(
-                    "SELECT SpecID, ProductSerialNumber, SpecKey, SpecValue FROM ProductSpecifications " +
-                    "WHERE ProductSerialNumber = @id ORDER BY SpecKey", conn))
+                    "SELECT ps.SpecID, ps.ProductSerialNumber, ps.TemplateID, cst.SpecKey, ps.SpecValue " +
+                    "FROM ProductSpecifications ps " +
+                    "INNER JOIN CategorySpecTemplates cst ON cst.TemplateID = ps.TemplateID " +
+                    "WHERE ps.ProductSerialNumber = @id ORDER BY cst.SpecKey", conn))
                 {
                     cmd.Parameters.AddWithValue("@id", productId);
                     using (var r = cmd.ExecuteReader())
                         while (r.Read())
                             list.Add(new ProductSpecification
                             {
-                                SpecID    = r.GetInt32(0),
+                                SpecID              = r.GetInt32(0),
                                 ProductSerialNumber = r.GetInt32(1),
-                                SpecKey   = r.GetString(2),
-                                SpecValue = r.GetString(3)
+                                TemplateID         = r.GetInt32(2),
+                                SpecKey            = r.GetString(3),
+                                SpecValue          = r.GetString(4)
                             });
                 }
             }
             return list;
         }
 
-        private static void AddSpecification(SqlConnection conn, int productId, string key, string value)
+        private static void AddSpecification(SqlConnection conn, int productId, int categoryId, string key, string value)
         {
             using (var cmd = new SqlCommand(
-                "INSERT INTO ProductSpecifications (ProductSerialNumber, SpecKey, SpecValue) " +
-                "VALUES (@id, @k, @v)", conn))
+                "INSERT INTO ProductSpecifications (ProductSerialNumber, TemplateID, SpecValue) " +
+                "SELECT @id, TemplateID, @v FROM CategorySpecTemplates " +
+                "WHERE CategoryID = @cid AND SpecKey = @sk", conn))
             {
-                cmd.Parameters.AddWithValue("@id", productId);
-                cmd.Parameters.AddWithValue("@k",  key);
-                cmd.Parameters.AddWithValue("@v",  value);
+                cmd.Parameters.AddWithValue("@id",  productId);
+                cmd.Parameters.AddWithValue("@cid", categoryId);
+                cmd.Parameters.AddWithValue("@sk",  key);
+                cmd.Parameters.AddWithValue("@v",   value);
                 cmd.ExecuteNonQuery();
             }
         }

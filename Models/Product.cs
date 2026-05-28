@@ -16,9 +16,10 @@ namespace InventoryManagementSystem.Models
 
     public class ProductSpecification
     {
-        public int    SpecID     { get; set; }
+        public int    SpecID              { get; set; }
         public int    ProductSerialNumber { get; set; }
-        public string SpecKey    { get; set; }
-        public string SpecValue  { get; set; }
+        public int    TemplateID         { get; set; }
+        public string SpecKey            { get; set; }
+        public string SpecValue          { get; set; }
     }
 }

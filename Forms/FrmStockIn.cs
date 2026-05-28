@@ -11,6 +11,7 @@ namespace InventoryManagementSystem
     {
         private readonly ErrorProvider _errorProvider = new ErrorProvider();
         private int? _preselectedProductId = null;
+        private string _movementType = "StockIn";
 
         public FrmStockIn()
         {
@@ -26,7 +27,42 @@ namespace InventoryManagementSystem
             _preselectedProductId = productId;
         }
 
-        private void FrmStockIn_Load(object sender, EventArgs e) => RefreshData();
+        public FrmStockIn(int productId, string movementType) : this(productId)
+        {
+            _movementType = movementType;
+        }
+
+        private void FrmStockIn_Load(object sender, EventArgs e)
+        {
+            InitModeToggle();
+            RefreshData();
+        }
+
+        private void InitModeToggle()
+        {
+            rbStockIn.Checked  = (_movementType == "StockIn");
+            rbRestock.Checked  = (_movementType == "Restock");
+            rbStockIn.CheckedChanged  += (s, e) => { if (rbStockIn.Checked)  ApplyMode("StockIn"); };
+            rbRestock.CheckedChanged  += (s, e) => { if (rbRestock.Checked)  ApplyMode("Restock"); };
+            ApplyMode(_movementType);
+        }
+
+        private void ApplyMode(string mode)
+        {
+            _movementType = mode;
+            if (mode == "Restock")
+            {
+                lblHeader.Text    = "Restock Product";
+                lblSubHeader.Text = "Replenish existing product stock from a supplier.";
+                btnExecute.Text   = "Confirm Restock";
+            }
+            else
+            {
+                lblHeader.Text    = "Stock In Receipt";
+                lblSubHeader.Text = "Record incoming inventory, supplier details, and physical placements.";
+                btnExecute.Text   = "Register Stock Entry";
+            }
+        }
 
         public void RefreshData()
         {
@@ -90,20 +126,19 @@ namespace InventoryManagementSystem
 
             var product = (Product)cmbProduct.SelectedItem;
             int qty     = (int)numQuantity.Value;
+            int current = ProductItemRepository.CountAll(product.ProductSerialNumber);
 
             if (qty <= 0)
             {
-                txtSerialNumbers.Text = $"Product ID: {product.ProductSerialNumber}\r\n\r\n(Enter quantity to preview item IDs)";
+                txtSerialNumbers.Text = $"Current Stock:   {current} items\r\n\r\n(Enter quantity to see updated total)";
                 return;
             }
 
-            int existingCount = ProductItemRepository.CountAll(product.ProductSerialNumber);
             var sb = new StringBuilder();
-            sb.AppendLine($"Product ID: {product.ProductSerialNumber}");
-            sb.AppendLine($"Items to be generated ({qty}):");
-            sb.AppendLine("─────────────────────────");
-            sb.AppendLine($"  IDs will be assigned from sequence seq_ProductItems");
-            sb.AppendLine($"  (current total existing items: {existingCount})");
+            sb.AppendLine($"Current Stock:   {current} items");
+            sb.AppendLine($"Adding:          +{qty} items");
+            sb.AppendLine("─────────────────────");
+            sb.AppendLine($"After Entry:     {current + qty} items");
             txtSerialNumbers.Text = sb.ToString();
         }
 
@@ -146,13 +181,13 @@ namespace InventoryManagementSystem
 
             var movement = new StockMovement
             {
-                ProductSerialNumber         = product.ProductSerialNumber,
-                MovementType      = "StockIn",
-                QuantityChanged   = quantity,
-                EmployeeID        = DatabaseHelper.CurrentUser?.EmployeeID,
-                Notes             = notes,
-                WarrantyMonths    = warranty,
-                SupplierTaxNumber = supplierTaxNum
+                ProductSerialNumber = product.ProductSerialNumber,
+                MovementType        = _movementType,
+                QuantityChanged     = quantity,
+                EmployeeID          = DatabaseHelper.CurrentUser?.EmployeeID,
+                Notes               = notes,
+                WarrantyMonths      = warranty,
+                SupplierTaxNumber   = supplierTaxNum
             };
             int movementId = StockMovementRepository.Add(movement);
 
@@ -160,13 +195,14 @@ namespace InventoryManagementSystem
             for (int i = 0; i < quantity; i++)
                 newItems.Add(new ProductItem
                 {
-                    ProductSerialNumber       = product.ProductSerialNumber,
-                    BatchMovementId = movementId
+                    ProductSerialNumber = product.ProductSerialNumber,
+                    BatchMovementId     = movementId
                 });
             ProductItemRepository.AddBatch(newItems);
 
+            string actionLabel = _movementType == "Restock" ? "Restock" : "Stock In";
             MessageBox.Show(
-                $"Stock In recorded successfully.\n\nGenerated {quantity} item(s) for Product ID [{product.ProductSerialNumber}].",
+                $"{actionLabel} recorded successfully.\n\nGenerated {quantity} item(s) for Product ID [{product.ProductSerialNumber}].",
                 "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
             ClearForm();
         }

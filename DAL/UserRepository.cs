@@ -34,7 +34,7 @@ namespace InventoryManagementSystem.DAL
                 conn.Open();
                 using (var cmd = new SqlCommand(
                     "SELECT EmployeeID, Username, Password, Role, IsAdmin, ProfilePhoto " +
-                    "FROM Users ORDER BY Username", conn))
+                    "FROM Users ORDER BY EmployeeID", conn))
                 using (var r = cmd.ExecuteReader())
                     while (r.Read())
                         list.Add(MapUser(r));

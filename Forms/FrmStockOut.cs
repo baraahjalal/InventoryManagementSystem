@@ -13,6 +13,7 @@ namespace InventoryManagementSystem
     {
         private readonly ErrorProvider _errorProvider = new ErrorProvider();
         private int? _preselectedProductId = null;
+        private string _movementType = "StockOut";
 
         public FrmStockOut()
         {
@@ -28,10 +29,52 @@ namespace InventoryManagementSystem
             _preselectedProductId = productId;
         }
 
+        public FrmStockOut(int productId, string movementType) : this(productId)
+        {
+            _movementType = movementType;
+        }
+
         private void FrmStockOut_Load(object sender, EventArgs e)
         {
             lblSystemID.Text = "SYSTEM USER: " + (DatabaseHelper.CurrentUser?.Username?.ToUpper() ?? "UNKNOWN");
+            InitModeToggle();
             RefreshData();
+        }
+
+        private void InitModeToggle()
+        {
+            rbStockOut.Checked          = (_movementType == "StockOut");
+            rbReturnToSupplier.Checked  = (_movementType == "ReturnToSupplier");
+            rbStockOut.CheckedChanged         += (s, e) => { if (rbStockOut.Checked)         ApplyMode("StockOut"); };
+            rbReturnToSupplier.CheckedChanged += (s, e) => { if (rbReturnToSupplier.Checked) ApplyMode("ReturnToSupplier"); };
+            ApplyMode(_movementType);
+        }
+
+        private void ApplyMode(string mode)
+        {
+            _movementType = mode;
+            bool isReturn = (mode == "ReturnToSupplier");
+
+            lblHeader.Text    = isReturn ? "Return to Supplier"                           : "Inventory Outbound";
+            lblSubHeader.Text = isReturn ? "Send defective or excess units back to supplier." : "Track and manage hardware distribution with precision.";
+            btnExecuteStockOut.Text = isReturn ? "CONFIRM RETURN TO SUPPLIER" : "CONFIRM STOCK OUT";
+
+            lblReturnSupplier.Visible  = isReturn;
+            cmbReturnSupplier.Visible  = isReturn;
+
+            if (isReturn && cmbReturnSupplier.Items.Count == 0)
+                LoadReturnSuppliers();
+        }
+
+        private void LoadReturnSuppliers()
+        {
+            var suppliers = SupplierRepository.GetActive();
+            cmbReturnSupplier.DataSource    = null;
+            cmbReturnSupplier.DisplayMember = "SupplierName";
+            cmbReturnSupplier.ValueMember   = "SupplierTaxNumber";
+            cmbReturnSupplier.DataSource    = suppliers;
+            if (suppliers.Count > 0) cmbReturnSupplier.SelectedIndex = 0;
+            else                     cmbReturnSupplier.SelectedIndex = -1;
         }
 
         public void RefreshData()
@@ -221,38 +264,52 @@ namespace InventoryManagementSystem
             { _errorProvider.SetError(cmbProduct, "Please select a product."); isValid = false; }
             else _errorProvider.SetError(cmbProduct, string.Empty);
 
+            bool isReturn = (_movementType == "ReturnToSupplier");
+            if (isReturn && cmbReturnSupplier.SelectedValue == null)
+            { _errorProvider.SetError(cmbReturnSupplier, "Please select a supplier for the return."); isValid = false; }
+            else _errorProvider.SetError(cmbReturnSupplier, string.Empty);
+
             if (!isValid)
             {
                 MessageBox.Show("Please correct the highlighted errors before proceeding.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            var product      = (Product)cmbProduct.SelectedItem;
-            var selectedIds  = clbSerialNumbers.CheckedItems.Cast<int>().ToList();
-            int quantity     = selectedIds.Count > 0 ? selectedIds.Count : (int)numQty.Value;
+            var product     = (Product)cmbProduct.SelectedItem;
+            var selectedIds = clbSerialNumbers.CheckedItems.Cast<int>().ToList();
+            int quantity    = selectedIds.Count > 0 ? selectedIds.Count : (int)numQty.Value;
 
             if (quantity <= 0)
             {
-                MessageBox.Show("Please select at least one item to dispatch.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                string action = isReturn ? "return" : "dispatch";
+                MessageBox.Show($"Please select at least one item to {action}.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             int available = ProductItemRepository.CountInStock(product.ProductSerialNumber);
             if (quantity > available)
             {
-                MessageBox.Show($"Cannot dispatch {quantity} items. Only {available} available.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                string action = isReturn ? "return" : "dispatch";
+                MessageBox.Show($"Cannot {action} {quantity} items. Only {available} available.", "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            string notes = $"Warranty: {lblWarrantyDuration.Text}";
+            int? supplierTaxNum = null;
+            if (isReturn && cmbReturnSupplier.SelectedItem is Supplier returnSupplier)
+                supplierTaxNum = returnSupplier.SupplierTaxNumber;
+
+            string notes = isReturn
+                ? $"Return to Supplier | Warranty: {lblWarrantyDuration.Text}"
+                : $"Warranty: {lblWarrantyDuration.Text}";
 
             var movement = new StockMovement
             {
-                ProductSerialNumber       = product.ProductSerialNumber,
-                MovementType    = "StockOut",
-                QuantityChanged = quantity,
-                EmployeeID      = DatabaseHelper.CurrentUser?.EmployeeID,
-                Notes           = notes
+                ProductSerialNumber = product.ProductSerialNumber,
+                MovementType        = _movementType,
+                QuantityChanged     = quantity,
+                EmployeeID          = DatabaseHelper.CurrentUser?.EmployeeID,
+                Notes               = notes,
+                SupplierTaxNumber   = supplierTaxNum
             };
             StockMovementRepository.Add(movement);
 
@@ -262,15 +319,16 @@ namespace InventoryManagementSystem
             else
                 ProductItemRepository.MarkRemovedBatch(product.ProductSerialNumber, quantity);
 
+            string actionLabel = isReturn ? "Return to Supplier" : "Stock Out";
             string details = selectedIds.Count > 0
-                ? $"\n\nDispatched Item IDs:\n{string.Join(", ", selectedIds.Take(10))}{(selectedIds.Count > 10 ? $"\n... and {selectedIds.Count - 10} more" : "")}"
-                : $"\n\n{quantity} item(s) dispatched via FIFO.";
+                ? $"\n\nItem IDs:\n{string.Join(", ", selectedIds.Take(10))}{(selectedIds.Count > 10 ? $"\n... and {selectedIds.Count - 10} more" : "")}"
+                : $"\n\n{quantity} item(s) processed via FIFO.";
 
-            MessageBox.Show($"Stock Out recorded successfully.{details}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"{actionLabel} recorded successfully.{details}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             int remaining = ProductItemRepository.CountInStock(product.ProductSerialNumber);
             if (remaining <= 5)
-                MessageBox.Show($"⚠ Warning: Stock for '{product.ProductName}' is running low ({remaining} left).", "Low Stock Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Warning: Stock for '{product.ProductName}' is running low ({remaining} left).", "Low Stock Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             RefreshData();
         }

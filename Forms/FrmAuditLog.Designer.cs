@@ -36,7 +36,10 @@ namespace InventoryManagementSystem
             this.colTimestamp = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colUserIdentity = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colActionType = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDescription = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSubject = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQtyOrPrice = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSupplierOrCat = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colNotes = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.pnlMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuditLog)).BeginInit();
             this.pnlFilterBar.SuspendLayout();
@@ -77,7 +80,10 @@ namespace InventoryManagementSystem
             this.colTimestamp,
             this.colUserIdentity,
             this.colActionType,
-            this.colDescription});
+            this.colSubject,
+            this.colQtyOrPrice,
+            this.colSupplierOrCat,
+            this.colNotes});
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -209,12 +215,33 @@ namespace InventoryManagementSystem
             this.colActionType.Name = "colActionType";
             this.colActionType.ReadOnly = true;
             //
-            // colDescription
+            // colSubject
             //
-            this.colDescription.FillWeight = 50F;
-            this.colDescription.HeaderText = "Description";
-            this.colDescription.Name = "colDescription";
-            this.colDescription.ReadOnly = true;
+            this.colSubject.FillWeight = 20F;
+            this.colSubject.HeaderText = "Product / Entity";
+            this.colSubject.Name = "colSubject";
+            this.colSubject.ReadOnly = true;
+            //
+            // colQtyOrPrice
+            //
+            this.colQtyOrPrice.FillWeight = 8F;
+            this.colQtyOrPrice.HeaderText = "Qty / Price";
+            this.colQtyOrPrice.Name = "colQtyOrPrice";
+            this.colQtyOrPrice.ReadOnly = true;
+            //
+            // colSupplierOrCat
+            //
+            this.colSupplierOrCat.FillWeight = 14F;
+            this.colSupplierOrCat.HeaderText = "Supplier / Category";
+            this.colSupplierOrCat.Name = "colSupplierOrCat";
+            this.colSupplierOrCat.ReadOnly = true;
+            //
+            // colNotes
+            //
+            this.colNotes.FillWeight = 8F;
+            this.colNotes.HeaderText = "Notes";
+            this.colNotes.Name = "colNotes";
+            this.colNotes.ReadOnly = true;
             // 
             // FrmAuditLog
             // 
@@ -248,6 +275,9 @@ namespace InventoryManagementSystem
         private DataGridViewTextBoxColumn colTimestamp;
         private DataGridViewTextBoxColumn colUserIdentity;
         private DataGridViewTextBoxColumn colActionType;
-        private DataGridViewTextBoxColumn colDescription;
+        private DataGridViewTextBoxColumn colSubject;
+        private DataGridViewTextBoxColumn colQtyOrPrice;
+        private DataGridViewTextBoxColumn colSupplierOrCat;
+        private DataGridViewTextBoxColumn colNotes;
     }
 }
