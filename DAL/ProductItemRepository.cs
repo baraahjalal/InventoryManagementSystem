@@ -116,6 +116,52 @@ namespace InventoryManagementSystem.DAL
             }
         }
 
+        public static DateTime? GetOldestRemovedDate()
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(
+                    "SELECT MIN(DateRemoved) FROM ProductItems WHERE IsInStock=0 AND DateRemoved IS NOT NULL", conn))
+                {
+                    var result = cmd.ExecuteScalar();
+                    return (result == null || result == DBNull.Value) ? (DateTime?)null : (DateTime)result;
+                }
+            }
+        }
+
+        public static bool HasRemovedItemsOlderThan(int years)
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(
+                    "SELECT COUNT(1) FROM ProductItems " +
+                    "WHERE IsInStock = 0 AND DateRemoved IS NOT NULL " +
+                    "AND DateRemoved < DATEADD(YEAR, -@y, GETDATE())", conn))
+                {
+                    cmd.Parameters.AddWithValue("@y", years);
+                    return (int)cmd.ExecuteScalar() > 0;
+                }
+            }
+        }
+
+        public static int CountRemovedOlderThan(int years)
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(
+                    "SELECT COUNT(1) FROM ProductItems " +
+                    "WHERE IsInStock = 0 AND DateRemoved IS NOT NULL " +
+                    "AND DateRemoved < DATEADD(YEAR, -@y, GETDATE())", conn))
+                {
+                    cmd.Parameters.AddWithValue("@y", years);
+                    return (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+
         private static ProductItem MapItem(SqlDataReader r)
         {
             return new ProductItem

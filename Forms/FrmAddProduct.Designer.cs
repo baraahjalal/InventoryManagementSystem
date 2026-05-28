@@ -239,7 +239,7 @@ namespace InventoryManagementSystem.Forms
             this.cmbCategory.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbCategory.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cmbCategory.FormattingEnabled = true;
-            this.cmbCategory.Location = new System.Drawing.Point(153, 186);
+            this.cmbCategory.Location = new System.Drawing.Point(153, 185);
             this.cmbCategory.Name = "cmbCategory";
             this.cmbCategory.Size = new System.Drawing.Size(316, 25);
             this.cmbCategory.TabIndex = 9;

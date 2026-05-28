@@ -58,6 +58,7 @@
     <Compile Include="Models\StockMovement.cs" />
     <Compile Include="Models\StorageZone.cs" />
     <Compile Include="Models\AuditLogEntry.cs" />
+    <Compile Include="Models\RetentionSettings.cs" />
     <Compile Include="DAL\DatabaseHelper.cs" />
     <Compile Include="DAL\UserRepository.cs" />
     <Compile Include="DAL\CategoryRepository.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="DAL\StockMovementRepository.cs" />
     <Compile Include="DAL\StorageZoneRepository.cs" />
     <Compile Include="DAL\AuditLogRepository.cs" />
+    <Compile Include="DAL\DataMaintenanceRepository.cs" />
     <Compile Include="Classes\AppTheme.cs" />
     <Compile Include="Classes\CrystalReportHelper.cs" />
     <Compile Include="Classes\ValidationHelper.cs" />
@@ -148,6 +150,12 @@
     </Compile>
     <Compile Include="Forms\FrmExitDialog.Designer.cs">
       <DependentUpon>FrmExitDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FrmDataMaintenance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FrmDataMaintenance.Designer.cs">
+      <DependentUpon>FrmDataMaintenance.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -263,6 +271,8 @@
     <None Include="Database\InventoryDBv3_Complete.sql" />
     <None Include="Database\SeedData.sql" />
     <None Include="Database\Triggers.sql" />
+    <None Include="Database\sp_PurgeOldData.sql" />
+    <None Include="Database\DataRetentionSettings.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using InventoryManagementSystem.DAL;
+using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem
 {
@@ -41,6 +42,81 @@ namespace InventoryManagementSystem
             SetupGridStyle();
             LoadDashboardMetrics();
             LoadRecentMovements();
+            CheckRetentionPolicy();
+        }
+
+        private void CheckRetentionPolicy()
+        {
+            var user = DatabaseHelper.CurrentUser;
+            if (user == null || !user.IsAdmin) return;
+
+            RetentionSettings settings;
+            try
+            {
+                settings = DataMaintenanceRepository.GetRetentionSettings();
+            }
+            catch
+            {
+                return;
+            }
+
+            if (!settings.IsEnabled) return;
+
+            // ── Step 1: auto-purge data that has exceeded the retention period ─
+            DataMaintenanceRepository.PurgeOldData(settings.RetentionYears,
+                out int auditDeleted, out int itemsDeleted);
+
+            if (auditDeleted + itemsDeleted > 0)
+            {
+                MessageBox.Show(
+                    "Auto-Purge Completed\n\n" +
+                    $"Records older than {settings.RetentionYears} year(s) have been automatically removed:\n\n" +
+                    $"  • Audit Log:     {auditDeleted:N0} entries deleted\n" +
+                    $"  • Product Items: {itemsDeleted:N0} items deleted",
+                    "Auto-Purge", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            // ── Step 2: warn if oldest remaining data is close to deletion ─────
+            // Throttle: show at most once every 30 days
+            bool shouldWarn = !settings.LastWarnDate.HasValue ||
+                (DateTime.Now - settings.LastWarnDate.Value).TotalDays >= 30;
+
+            if (!shouldWarn) return;
+
+            DateTime? oldestAudit = AuditLogRepository.GetOldestLogDate();
+            DateTime? oldestItems = ProductItemRepository.GetOldestRemovedDate();
+
+            // Pick whichever is older (will be deleted soonest)
+            DateTime? oldestDate = null;
+            if (oldestAudit.HasValue)
+                oldestDate = oldestAudit;
+            if (oldestItems.HasValue && (!oldestDate.HasValue || oldestItems.Value < oldestDate.Value))
+                oldestDate = oldestItems;
+
+            if (!oldestDate.HasValue) return;
+
+            DateTime deletionDate   = oldestDate.Value.AddYears(settings.RetentionYears);
+            double   daysRemaining  = (deletionDate - DateTime.Now).TotalDays;
+            double   monthsRemaining = daysRemaining / 30.0;
+
+            // Only warn if within the configured warning window
+            if (monthsRemaining > settings.WarnIntervalMonths || daysRemaining <= 0) return;
+
+            string timeLeft = (int)monthsRemaining >= 1
+                ? $"{(int)monthsRemaining} month(s)"
+                : $"{(int)daysRemaining} day(s)";
+
+            MessageBox.Show(
+                "⚠  Data Deletion Approaching\n\n" +
+                $"Your oldest records date from {oldestDate.Value:MMM dd, yyyy}.\n\n" +
+                $"Based on your retention policy ({settings.RetentionYears} year(s)), " +
+                $"they will be automatically deleted on {deletionDate:MMM dd, yyyy}.\n\n" +
+                $"Time remaining: {timeLeft}\n\n" +
+                "Please take a database backup before that date to preserve your records.\n\n" +
+                "To change these settings: Audit Log → Retention Settings.",
+                "Data Deletion Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            DataMaintenanceRepository.UpdateLastWarnDate();
         }
 
         private void LoadDashboardMetrics()

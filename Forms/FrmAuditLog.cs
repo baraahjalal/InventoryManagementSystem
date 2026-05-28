@@ -10,6 +10,10 @@ namespace InventoryManagementSystem
 {
     public partial class FrmAuditLog : Form
     {
+        private int _currentPage = 1;
+        private int _totalPages  = 1;
+        private const int PageSize = 20;
+
         public FrmAuditLog()
         {
             InitializeComponent();
@@ -27,6 +31,18 @@ namespace InventoryManagementSystem
             }
 
             EnableDoubleBuffered(dgvAuditLog);
+
+            btnPurge.Visible    = true;
+            btnFilter.Click    += BtnFilter_Click;
+            btnPrevPage.Click  += BtnPrevPage_Click;
+            btnNextPage.Click  += BtnNextPage_Click;
+            btnPurge.Click     += BtnPurge_Click;
+            txtSearch.GotFocus  += TxtSearch_GotFocus;
+            txtSearch.LostFocus += TxtSearch_LostFocus;
+
+            cmbActionType.SelectedIndex = -1;
+            cmbDateRange.SelectedIndex  = -1;
+
             LoadAuditData();
         }
 
@@ -38,11 +54,27 @@ namespace InventoryManagementSystem
                 null, dgv, new object[] { true });
         }
 
+        // ── Data loading ──────────────────────────────────────────────────────
+
         private void LoadAuditData()
         {
+            string actionKey   = GetActionTypeKey();
+            string search      = GetSearchText();
+            var (from, to)     = GetDateRange();
+
+            int total   = AuditLogRepository.GetCount(actionKey, search, from, to);
+            _totalPages = Math.Max(1, (int)Math.Ceiling(total / (double)PageSize));
+            if (_currentPage > _totalPages) _currentPage = _totalPages;
+            if (_currentPage < 1)           _currentPage = 1;
+
+            lblRecordCount.Text = $"Total: {total:N0} records";
+            lblPageInfo.Text    = $"Page {_currentPage} of {_totalPages}";
+            btnPrevPage.Enabled = _currentPage > 1;
+            btnNextPage.Enabled = _currentPage < _totalPages;
+
             dgvAuditLog.Rows.Clear();
 
-            var logs        = AuditLogRepository.GetAll();
+            var logs        = AuditLogRepository.GetPaged(_currentPage, PageSize, actionKey, search, from, to);
             var productDict = ProductRepository.GetAll()
                 .ToDictionary(p => p.ProductSerialNumber, p => p.ProductName);
 
@@ -66,7 +98,89 @@ namespace InventoryManagementSystem
             dgvAuditLog.ClearSelection();
         }
 
-        // Parses all 4 trigger description formats into clean column values.
+        // ── Filter helpers ────────────────────────────────────────────────────
+
+        private string GetActionTypeKey()
+        {
+            switch (cmbActionType.SelectedItem?.ToString())
+            {
+                case "Stock In":  return "STOCK_IN";
+                case "Stock Out": return "STOCK_OUT";
+                case "Addition":  return "ADDED";
+                case "Deletion":  return "DELETED";
+                default:          return null;
+            }
+        }
+
+        private string GetSearchText()
+        {
+            string t = txtSearch.Text.Trim();
+            return (t == "Search entities or users..." || t.Length == 0) ? null : t;
+        }
+
+        private (DateTime? from, DateTime? to) GetDateRange()
+        {
+            switch (cmbDateRange.SelectedItem?.ToString())
+            {
+                case "Today":
+                    return (DateTime.Today, DateTime.Today.AddDays(1).AddTicks(-1));
+                case "Last 7 Days":
+                    return (DateTime.Today.AddDays(-7), null);
+                case "Last 30 Days":
+                    return (DateTime.Today.AddDays(-30), null);
+                case "This Year":
+                    return (new DateTime(DateTime.Today.Year, 1, 1), null);
+                default:
+                    return (null, null);
+            }
+        }
+
+        // ── Event handlers ────────────────────────────────────────────────────
+
+        private void BtnFilter_Click(object sender, EventArgs e)
+        {
+            _currentPage = 1;
+            LoadAuditData();
+        }
+
+        private void BtnPrevPage_Click(object sender, EventArgs e)
+        {
+            if (_currentPage > 1) { _currentPage--; LoadAuditData(); }
+        }
+
+        private void BtnNextPage_Click(object sender, EventArgs e)
+        {
+            if (_currentPage < _totalPages) { _currentPage++; LoadAuditData(); }
+        }
+
+        private void BtnPurge_Click(object sender, EventArgs e)
+        {
+            using (var frm = new FrmDataMaintenance())
+                frm.ShowDialog(this);
+            _currentPage = 1;
+            LoadAuditData();
+        }
+
+        private void TxtSearch_GotFocus(object sender, EventArgs e)
+        {
+            if (txtSearch.Text == "Search entities or users...")
+            {
+                txtSearch.Text      = "";
+                txtSearch.ForeColor = Color.FromArgb(55, 65, 81);
+            }
+        }
+
+        private void TxtSearch_LostFocus(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtSearch.Text))
+            {
+                txtSearch.Text      = "Search entities or users...";
+                txtSearch.ForeColor = Color.FromArgb(107, 114, 128);
+            }
+        }
+
+        // ── Description parsing ───────────────────────────────────────────────
+
         private static void ParseDescription(string desc, Dictionary<int, string> productDict,
             out string subject, out string qtyOrPrice, out string supplierOrCat, out string notes)
         {
@@ -77,11 +191,10 @@ namespace InventoryManagementSystem
 
             if (string.IsNullOrEmpty(desc)) return;
 
-            // ── Stock movements ──────────────────────────────────────────────────────
+            // ── Stock movements ──────────────────────────────────────────────
             // Format: "Product [ID]: N units[. Supplier: NAME][. Notes: Zone: X | Warranty: Y]"
             if (desc.StartsWith("Product ["))
             {
-                // Resolve product name from DB dict
                 int idStart = desc.IndexOf('[') + 1;
                 int idEnd   = desc.IndexOf(']');
                 if (idStart > 0 && idEnd > idStart &&
@@ -93,7 +206,6 @@ namespace InventoryManagementSystem
                         : $"Product [{productId}]";
                 }
 
-                // Quantity: between "]: " and next "."
                 int afterClose = desc.IndexOf("]: ");
                 if (afterClose >= 0)
                 {
@@ -117,13 +229,13 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            // ── Product Added ────────────────────────────────────────────────────────
+            // ── Product Added ────────────────────────────────────────────────
             // Format: "New product: [ID] NAME | Category: CAT | Price: PRICE"
             if (desc.StartsWith("New product: "))
             {
-                string[] parts    = desc.Substring(13).Split('|');
+                string[] parts     = desc.Substring(13).Split('|');
                 string productPart = parts[0].Trim();
-                int closeBracket  = productPart.IndexOf(']');
+                int closeBracket   = productPart.IndexOf(']');
                 subject = closeBracket >= 0
                     ? productPart.Substring(closeBracket + 2).Trim()
                     : productPart;
@@ -137,7 +249,7 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            // ── Product Deleted ──────────────────────────────────────────────────────
+            // ── Product Deleted ──────────────────────────────────────────────
             // Format: "Product removed: [ID] NAME"
             if (desc.StartsWith("Product removed: "))
             {
@@ -149,12 +261,12 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            // ── User Added ───────────────────────────────────────────────────────────
+            // ── User Added ───────────────────────────────────────────────────
             // Format: "New user: USERNAME (ROLE) — EmployeeID: ID"
             if (desc.StartsWith("New user: "))
             {
-                string rest  = desc.Substring(10);
-                int dashIdx  = rest.IndexOf(" — "); // em-dash
+                string rest = desc.Substring(10);
+                int dashIdx = rest.IndexOf(" — ");
                 if (dashIdx > 0)
                 {
                     subject = rest.Substring(0, dashIdx).Trim();
@@ -167,7 +279,7 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            // ── User Deleted ─────────────────────────────────────────────────────────
+            // ── User Deleted ─────────────────────────────────────────────────
             // Format: "User removed: USERNAME (ROLE)"
             if (desc.StartsWith("User removed: "))
             {
@@ -175,7 +287,7 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            // ── Supplier Added ───────────────────────────────────────────────────────
+            // ── Supplier Added ───────────────────────────────────────────────
             // Format: "New supplier: NAME | TaxNumber: X[| Phone: Y][| Email: Z]"
             if (desc.StartsWith("New supplier: "))
             {
@@ -195,7 +307,7 @@ namespace InventoryManagementSystem
                 return;
             }
 
-            // ── Supplier Deleted ─────────────────────────────────────────────────────
+            // ── Supplier Deleted ─────────────────────────────────────────────
             // Format: "Supplier removed: NAME"
             if (desc.StartsWith("Supplier removed: "))
             {
@@ -226,26 +338,35 @@ namespace InventoryManagementSystem
         {
             var row    = dgvAuditLog.Rows[e.RowIndex];
             string raw = row.Tag?.ToString() ?? "";
-            Color bg;
+
             switch (raw)
             {
                 case "STOCK STOCKIN":
                 case "STOCK RESTOCK":
-                    bg = Color.FromArgb(220, 252, 231); break;
+                    row.DefaultCellStyle.BackColor          = Color.FromArgb(240, 253, 244);
+                    row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(213, 244, 222);
+                    break;
+
                 case "STOCK STOCKOUT":
                 case "STOCK RETURNTOSUPPLIER":
-                    bg = Color.FromArgb(254, 226, 226); break;
-                case "USER ADDED":
+                    row.DefaultCellStyle.BackColor          = Color.FromArgb(255, 242, 242);
+                    row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(254, 220, 220);
+                    break;
+
+                case "PRODUCT DELETED":
                 case "USER DELETED":
-                    bg = Color.FromArgb(219, 234, 254); break;
-                case "SUPPLIER ADDED":
                 case "SUPPLIER DELETED":
-                    bg = Color.FromArgb(254, 249, 195); break;
+                    row.DefaultCellStyle.BackColor          = Color.FromArgb(255, 253, 234);
+                    row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(254, 243, 199);
+                    break;
+
                 default:
-                    bg = Color.FromArgb(243, 244, 246); break;
+                    row.DefaultCellStyle.BackColor          = e.RowIndex % 2 == 0
+                        ? Color.White
+                        : Color.FromArgb(249, 250, 251);
+                    row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(226, 232, 240);
+                    break;
             }
-            row.DefaultCellStyle.BackColor          = bg;
-            row.DefaultCellStyle.SelectionBackColor = bg;
         }
 
         private void DgvAuditLog_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
