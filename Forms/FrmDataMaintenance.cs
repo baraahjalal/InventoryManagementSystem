@@ -18,21 +18,11 @@ namespace InventoryManagementSystem
 
         private void LoadSettings()
         {
-            try
-            {
-                var s = DataMaintenanceRepository.GetRetentionSettings();
-                chkEnabled.Checked = s.IsEnabled;
-                cmbRetentionYears.SelectedIndex = YearsToIndex(s.RetentionYears);
-                cmbWarnInterval.SelectedIndex   = MonthsToIndex(s.WarnIntervalMonths);
-                UpdateControlStates();
-            }
-            catch
-            {
-                MessageBox.Show(
-                    "Could not load retention settings.\n\nPlease run Database/DataRetentionSettings.sql first.",
-                    "Setup Required", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                this.Close();
-            }
+            var s = DataMaintenanceRepository.GetRetentionSettings();
+            chkEnabled.Checked = s.IsEnabled;
+            cmbRetentionYears.SelectedIndex = YearsToIndex(s.RetentionYears);
+            cmbWarnInterval.SelectedIndex   = MonthsToIndex(s.WarnIntervalMonths);
+            UpdateControlStates();
         }
 
         private static int YearsToIndex(int years)

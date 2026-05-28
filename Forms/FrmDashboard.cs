@@ -50,15 +50,7 @@ namespace InventoryManagementSystem
             var user = DatabaseHelper.CurrentUser;
             if (user == null || !user.IsAdmin) return;
 
-            RetentionSettings settings;
-            try
-            {
-                settings = DataMaintenanceRepository.GetRetentionSettings();
-            }
-            catch
-            {
-                return;
-            }
+            RetentionSettings settings = DataMaintenanceRepository.GetRetentionSettings();
 
             if (!settings.IsEnabled) return;
 

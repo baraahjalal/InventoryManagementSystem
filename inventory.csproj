@@ -152,7 +152,6 @@
       <DependentUpon>StockInventoryStatus.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-
     <Compile Include="Reports\StockMovementHistory.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -275,6 +274,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Database\اخررر سكريبت للداتا بيز الساعة واحد الظهر.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

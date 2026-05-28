@@ -2,6 +2,7 @@ using System;
 using System.Data;
 using System.Data.SqlClient;
 using InventoryManagementSystem.Models;
+using InventoryManagementSystem.Properties;
 
 namespace InventoryManagementSystem.DAL
 {
@@ -11,53 +12,31 @@ namespace InventoryManagementSystem.DAL
 
         public static RetentionSettings GetRetentionSettings()
         {
-            using (var conn = DatabaseHelper.GetConnection())
+            DateTime? lastWarn = null;
+            if (DateTime.TryParse(Settings.Default.LastWarnDate, out DateTime parsed))
+                lastWarn = parsed;
+
+            return new RetentionSettings
             {
-                conn.Open();
-                using (var cmd = new SqlCommand(
-                    "SELECT RetentionYears, WarnIntervalMonths, IsEnabled, LastWarnDate " +
-                    "FROM DataRetentionSettings WHERE Id = 1", conn))
-                using (var r = cmd.ExecuteReader())
-                {
-                    if (!r.Read()) return new RetentionSettings();
-                    return new RetentionSettings
-                    {
-                        RetentionYears     = r.GetInt32(0),
-                        WarnIntervalMonths = r.GetInt32(1),
-                        IsEnabled          = r.GetBoolean(2),
-                        LastWarnDate       = r.IsDBNull(3) ? (DateTime?)null : r.GetDateTime(3)
-                    };
-                }
-            }
+                RetentionYears     = Settings.Default.RetentionYears,
+                WarnIntervalMonths = Settings.Default.WarnIntervalMonths,
+                IsEnabled          = Settings.Default.RetentionEnabled,
+                LastWarnDate       = lastWarn
+            };
         }
 
         public static void SaveRetentionSettings(int retentionYears, int warnIntervalMonths, bool isEnabled)
         {
-            using (var conn = DatabaseHelper.GetConnection())
-            {
-                conn.Open();
-                using (var cmd = new SqlCommand(
-                    "UPDATE DataRetentionSettings " +
-                    "SET RetentionYears = @ry, WarnIntervalMonths = @wim, IsEnabled = @en " +
-                    "WHERE Id = 1", conn))
-                {
-                    cmd.Parameters.AddWithValue("@ry",  retentionYears);
-                    cmd.Parameters.AddWithValue("@wim", warnIntervalMonths);
-                    cmd.Parameters.AddWithValue("@en",  isEnabled);
-                    cmd.ExecuteNonQuery();
-                }
-            }
+            Settings.Default.RetentionYears     = retentionYears;
+            Settings.Default.WarnIntervalMonths = warnIntervalMonths;
+            Settings.Default.RetentionEnabled   = isEnabled;
+            Settings.Default.Save();
         }
 
         public static void UpdateLastWarnDate()
         {
-            using (var conn = DatabaseHelper.GetConnection())
-            {
-                conn.Open();
-                using (var cmd = new SqlCommand(
-                    "UPDATE DataRetentionSettings SET LastWarnDate = GETDATE() WHERE Id = 1", conn))
-                    cmd.ExecuteNonQuery();
-            }
+            Settings.Default.LastWarnDate = DateTime.Now.ToString("o");
+            Settings.Default.Save();
         }
 
         // ── Auto-purge ────────────────────────────────────────────────────────
