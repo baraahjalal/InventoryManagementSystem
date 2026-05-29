@@ -57,20 +57,19 @@ namespace InventoryManagementSystem
 
         private void AddEmployeeIdField()
         {
-            // Insert Employee ID label + textbox above lblUserName in pnlDetails
             _lblEmployeeId = new Label
             {
                 Text      = "Employee ID",
+                AutoSize  = true,
                 Font      = lblUserName.Font,
                 ForeColor = lblUserName.ForeColor,
-                Size      = lblUserName.Size,
-                Location  = new Point(lblUserName.Left, lblUserName.Top - 50)
+                Location  = new Point(22, 234)
             };
             _txtEmployeeId = new TextBox
             {
-                Font      = txtUserName.Font,
-                Size      = txtUserName.Size,
-                Location  = new Point(txtUserName.Left, txtUserName.Top - 50)
+                Font     = txtUserName.Font,
+                Size     = new Size(274, 27),
+                Location = new Point(22, 252)
             };
             _txtEmployeeId.KeyPress += ValidationHelper.AllowOnlyDigits;
 
