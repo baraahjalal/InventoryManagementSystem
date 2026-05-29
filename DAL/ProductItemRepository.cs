@@ -64,8 +64,31 @@ namespace InventoryManagementSystem.DAL
                 var removed = GetRemovedItemIds(conn, null, productSerialNumber, quantity);
                 result.AddRange(removed);
                 int needNew = quantity - removed.Count;
-                for (int i = 0; i < needNew; i++)
-                    result.Add(FindLowestUnusedItemId(conn, null, productSerialNumber));
+                if (needNew > 0)
+                {
+                    // Track already-claimed IDs to avoid showing duplicates in preview
+                    var claimed  = new System.Collections.Generic.HashSet<int>(result);
+                    int mult     = (int)Math.Pow(10, GetSuffixDigitCount(productSerialNumber));
+                    int baseId   = productSerialNumber * mult;
+                    int found    = 0;
+
+                    for (int suffix = 1; suffix < mult && found < needNew; suffix++)
+                    {
+                        int candidateId = baseId + suffix;
+                        if (claimed.Contains(candidateId)) continue;
+                        using (var cmd = new SqlCommand(
+                            "SELECT COUNT(1) FROM ProductItems WHERE ItemID = @id", conn))
+                        {
+                            cmd.Parameters.AddWithValue("@id", candidateId);
+                            if ((int)cmd.ExecuteScalar() == 0)
+                            {
+                                result.Add(candidateId);
+                                claimed.Add(candidateId);
+                                found++;
+                            }
+                        }
+                    }
+                }
             }
             return result;
         }
@@ -97,6 +120,18 @@ namespace InventoryManagementSystem.DAL
                         throw;
                     }
                 }
+            }
+        }
+
+        // Overload used when the caller manages the transaction (no inner transaction created)
+        public static void AddBatch(List<ProductItem> items, SqlConnection conn, SqlTransaction tran)
+        {
+            if (items == null || items.Count == 0) return;
+            foreach (var item in items)
+            {
+                if (TryReactivateOne(conn, tran, item)) continue;
+                int itemId = FindLowestUnusedItemId(conn, tran, item.ProductSerialNumber);
+                InsertNew(conn, tran, itemId, item);
             }
         }
 
@@ -183,13 +218,18 @@ namespace InventoryManagementSystem.DAL
             using (var conn = DatabaseHelper.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SqlCommand(
-                    "UPDATE ProductItems SET IsInStock = 0, DateRemoved = GETDATE() " +
-                    "WHERE ItemID = @iid", conn))
-                {
-                    cmd.Parameters.AddWithValue("@iid", itemId);
-                    cmd.ExecuteNonQuery();
-                }
+                MarkRemoved(itemId, conn, null);
+            }
+        }
+
+        public static void MarkRemoved(int itemId, SqlConnection conn, SqlTransaction tran)
+        {
+            using (var cmd = new SqlCommand(
+                "UPDATE ProductItems SET IsInStock = 0, DateRemoved = GETDATE() " +
+                "WHERE ItemID = @iid", conn, tran))
+            {
+                cmd.Parameters.AddWithValue("@iid", itemId);
+                cmd.ExecuteNonQuery();
             }
         }
 
@@ -199,15 +239,20 @@ namespace InventoryManagementSystem.DAL
             using (var conn = DatabaseHelper.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SqlCommand(
-                    "UPDATE TOP (@q) ProductItems " +
-                    "SET IsInStock = 0, DateRemoved = GETDATE() " +
-                    "WHERE ProductSerialNumber = @pid AND IsInStock = 1", conn))
-                {
-                    cmd.Parameters.AddWithValue("@q",   quantity);
-                    cmd.Parameters.AddWithValue("@pid", productId);
-                    cmd.ExecuteNonQuery();
-                }
+                MarkRemovedBatch(productId, quantity, conn, null);
+            }
+        }
+
+        public static void MarkRemovedBatch(int productId, int quantity, SqlConnection conn, SqlTransaction tran)
+        {
+            using (var cmd = new SqlCommand(
+                "UPDATE TOP (@q) ProductItems " +
+                "SET IsInStock = 0, DateRemoved = GETDATE() " +
+                "WHERE ProductSerialNumber = @pid AND IsInStock = 1", conn, tran))
+            {
+                cmd.Parameters.AddWithValue("@q",   quantity);
+                cmd.Parameters.AddWithValue("@pid", productId);
+                cmd.ExecuteNonQuery();
             }
         }
 

@@ -13,21 +13,26 @@ namespace InventoryManagementSystem.DAL
             using (var conn = DatabaseHelper.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SqlCommand(
-                    "INSERT INTO StockMovements " +
-                    "(ProductSerialNumber, MovementType, QuantityChanged, EmployeeID, Notes, WarrantyMonths, SupplierTaxNumber) " +
-                    "VALUES (@pid, @mt, @qc, @eid, @n, @wm, @tax); " +
-                    "SELECT SCOPE_IDENTITY();", conn))
-                {
-                    cmd.Parameters.AddWithValue("@pid", m.ProductSerialNumber);
-                    cmd.Parameters.AddWithValue("@mt",  m.MovementType);
-                    cmd.Parameters.AddWithValue("@qc",  m.QuantityChanged);
-                    cmd.Parameters.AddWithValue("@eid", (object)m.EmployeeID        ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@n",   (object)m.Notes             ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@wm",  (object)m.WarrantyMonths    ?? DBNull.Value);
-                    cmd.Parameters.AddWithValue("@tax", (object)m.SupplierTaxNumber ?? DBNull.Value);
-                    return Convert.ToInt32(cmd.ExecuteScalar());
-                }
+                return Add(m, conn, null);
+            }
+        }
+
+        public static int Add(StockMovement m, SqlConnection conn, SqlTransaction tran)
+        {
+            using (var cmd = new SqlCommand(
+                "INSERT INTO StockMovements " +
+                "(ProductSerialNumber, MovementType, QuantityChanged, EmployeeID, Notes, WarrantyMonths, SupplierTaxNumber) " +
+                "VALUES (@pid, @mt, @qc, @eid, @n, @wm, @tax); " +
+                "SELECT SCOPE_IDENTITY();", conn, tran))
+            {
+                cmd.Parameters.AddWithValue("@pid", m.ProductSerialNumber);
+                cmd.Parameters.AddWithValue("@mt",  m.MovementType);
+                cmd.Parameters.AddWithValue("@qc",  m.QuantityChanged);
+                cmd.Parameters.AddWithValue("@eid", (object)m.EmployeeID        ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@n",   (object)m.Notes             ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@wm",  (object)m.WarrantyMonths    ?? DBNull.Value);
+                cmd.Parameters.AddWithValue("@tax", (object)m.SupplierTaxNumber ?? DBNull.Value);
+                return Convert.ToInt32(cmd.ExecuteScalar());
             }
         }
 

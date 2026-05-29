@@ -423,5 +423,12 @@ namespace InventoryManagementSystem
                 e.CellStyle.Font = new Font("Segoe UI Semibold", 9.5F, FontStyle.Bold);
             }
         }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            _searchDebounceTimer?.Stop();
+            _searchDebounceTimer?.Dispose();
+            base.OnFormClosed(e);
+        }
     }
 }

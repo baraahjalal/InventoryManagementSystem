@@ -244,7 +244,7 @@ namespace InventoryManagementSystem
             { _errorProvider.SetError(txtProdPrice, errorMsg); isValid = false; }
             else if (!ValidationHelper.IsValidDecimal(priceText, out errorMsg))
             { _errorProvider.SetError(txtProdPrice, errorMsg); isValid = false; }
-            else { newPrice = decimal.Parse(priceText); _errorProvider.SetError(txtProdPrice, string.Empty); }
+            else { newPrice = decimal.Parse(priceText, System.Globalization.CultureInfo.InvariantCulture); _errorProvider.SetError(txtProdPrice, string.Empty); }
 
             if (!isValid)
             {

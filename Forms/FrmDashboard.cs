@@ -136,9 +136,8 @@ namespace InventoryManagementSystem
                 string operatorName   = m.EmployeeID.HasValue
                     ? (userDict.TryGetValue(m.EmployeeID.Value, out string uName) ? uName : $"ID:{m.EmployeeID}")
                     : "System";
-                string formattedQty   = m.QuantityChanged > 0
-                    ? $"+{m.QuantityChanged}"
-                    : m.QuantityChanged.ToString();
+                bool   isOutbound   = m.MovementType == "StockOut" || m.MovementType == "ReturnToSupplier";
+                string formattedQty = isOutbound ? $"-{m.QuantityChanged}" : $"+{m.QuantityChanged}";
 
                 dgvRecentActions.Rows.Add(
                     productDetails,

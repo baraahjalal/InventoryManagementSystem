@@ -245,8 +245,8 @@ namespace InventoryManagementSystem
             if (e.NewValue == CheckState.Checked)   checkedCount++;
             if (e.NewValue == CheckState.Unchecked) checkedCount--;
 
-            if (checkedCount > 0 && checkedCount <= numQty.Maximum)
-                numQty.Value = checkedCount;
+            if (checkedCount >= 0 && checkedCount <= numQty.Maximum)
+                numQty.Value = Math.Max(checkedCount, numQty.Minimum);
 
             this.BeginInvoke(new Action(() =>
             {
@@ -311,13 +311,28 @@ namespace InventoryManagementSystem
                 Notes               = notes,
                 SupplierTaxNumber   = supplierTaxNum
             };
-            StockMovementRepository.Add(movement);
-
-            if (selectedIds.Count > 0)
-                foreach (var itemId in selectedIds)
-                    ProductItemRepository.MarkRemoved(itemId);
-            else
-                ProductItemRepository.MarkRemovedBatch(product.ProductSerialNumber, quantity);
+            using (var conn = DAL.DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                using (var tran = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        StockMovementRepository.Add(movement, conn, tran);
+                        if (selectedIds.Count > 0)
+                            foreach (var itemId in selectedIds)
+                                ProductItemRepository.MarkRemoved(itemId, conn, tran);
+                        else
+                            ProductItemRepository.MarkRemovedBatch(product.ProductSerialNumber, quantity, conn, tran);
+                        tran.Commit();
+                    }
+                    catch
+                    {
+                        tran.Rollback();
+                        throw;
+                    }
+                }
+            }
 
             string actionLabel = isReturn ? "Return to Supplier" : "Stock Out";
             string details = selectedIds.Count > 0
@@ -327,7 +342,7 @@ namespace InventoryManagementSystem
             MessageBox.Show($"{actionLabel} recorded successfully.{details}", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             int remaining = ProductItemRepository.CountInStock(product.ProductSerialNumber);
-            if (remaining <= 5)
+            if (remaining <= 10)
                 MessageBox.Show($"Warning: Stock for '{product.ProductName}' is running low ({remaining} left).", "Low Stock Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             RefreshData();

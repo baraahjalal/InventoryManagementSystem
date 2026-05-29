@@ -244,9 +244,18 @@ namespace InventoryManagementSystem
 
             if (confirm == DialogResult.Yes)
             {
-                UserRepository.Delete(_selectedEmployeeId);
-                MessageBox.Show("User deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadGridData();
+                try
+                {
+                    UserRepository.Delete(_selectedEmployeeId);
+                    MessageBox.Show("User deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    LoadGridData();
+                }
+                catch (System.Data.SqlClient.SqlException ex) when (ex.Number == 547)
+                {
+                    MessageBox.Show(
+                        "Cannot delete this user — they are referenced in existing stock movement records.",
+                        "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
@@ -312,8 +321,8 @@ namespace InventoryManagementSystem
         private Image ByteArrayToImage(byte[] bytes)
         {
             if (bytes == null || bytes.Length == 0) return null;
-            using (MemoryStream ms = new MemoryStream(bytes))
-                return Image.FromStream(ms);
+            using (var ms = new MemoryStream(bytes))
+                return new Bitmap(ms);
         }
     }
 }

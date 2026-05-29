@@ -22,7 +22,7 @@ namespace InventoryManagementSystem
         // 2. Number Validation (Decimal)
         public static bool IsValidDecimal(string value, out string errorMessage)
         {
-            if (!decimal.TryParse(value, out decimal parsedValue))
+            if (!decimal.TryParse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out decimal parsedValue))
             {
                 errorMessage = "الرجاء إدخال رقم صحيح أو عشري صالح.";
                 return false;

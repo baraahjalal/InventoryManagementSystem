@@ -192,16 +192,31 @@ namespace InventoryManagementSystem
                 WarrantyMonths      = warranty,
                 SupplierTaxNumber   = supplierTaxNum
             };
-            int movementId = StockMovementRepository.Add(movement);
-
             var newItems = new List<ProductItem>();
-            for (int i = 0; i < quantity; i++)
-                newItems.Add(new ProductItem
+            using (var conn = DAL.DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                using (var tran = conn.BeginTransaction())
                 {
-                    ProductSerialNumber = product.ProductSerialNumber,
-                    BatchMovementId     = movementId
-                });
-            ProductItemRepository.AddBatch(newItems);
+                    try
+                    {
+                        int movementId = StockMovementRepository.Add(movement, conn, tran);
+                        for (int i = 0; i < quantity; i++)
+                            newItems.Add(new ProductItem
+                            {
+                                ProductSerialNumber = product.ProductSerialNumber,
+                                BatchMovementId     = movementId
+                            });
+                        ProductItemRepository.AddBatch(newItems, conn, tran);
+                        tran.Commit();
+                    }
+                    catch
+                    {
+                        tran.Rollback();
+                        throw;
+                    }
+                }
+            }
 
             string actionLabel = _movementType == "Restock" ? "Restock" : "Stock In";
             MessageBox.Show(
@@ -214,6 +229,7 @@ namespace InventoryManagementSystem
         {
             cmbSupplier.SelectedIndex  = -1;
             cmbProduct.SelectedIndex   = -1;
+            numQuantity.Minimum        = 0;
             numQuantity.Value          = 0;
             cmbStorageZone.DataSource  = null;
             txtSerialNumbers.Clear();

@@ -112,23 +112,39 @@ namespace InventoryManagementSystem.Forms
             {
                 var movement = new StockMovement
                 {
-                    ProductSerialNumber         = productId,
-                    MovementType      = "StockIn",
-                    QuantityChanged   = qty,
-                    EmployeeID        = DatabaseHelper.CurrentUser?.EmployeeID,
-                    Notes             = "Initial stock on product creation",
-                    SupplierTaxNumber = selectedSupplierTaxNum
+                    ProductSerialNumber = productId,
+                    MovementType        = "StockIn",
+                    QuantityChanged     = qty,
+                    EmployeeID          = DatabaseHelper.CurrentUser?.EmployeeID,
+                    Notes               = "Initial stock on product creation",
+                    SupplierTaxNumber   = selectedSupplierTaxNum
                 };
-                int movementId = StockMovementRepository.Add(movement);
 
-                var items = new List<ProductItem>();
-                for (int i = 0; i < qty; i++)
-                    items.Add(new ProductItem
+                using (var conn = DAL.DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+                    using (var tran = conn.BeginTransaction())
                     {
-                        ProductSerialNumber       = productId,
-                        BatchMovementId = movementId
-                    });
-                ProductItemRepository.AddBatch(items);
+                        try
+                        {
+                            int movementId = StockMovementRepository.Add(movement, conn, tran);
+                            var items = new List<ProductItem>();
+                            for (int i = 0; i < qty; i++)
+                                items.Add(new ProductItem
+                                {
+                                    ProductSerialNumber = productId,
+                                    BatchMovementId     = movementId
+                                });
+                            ProductItemRepository.AddBatch(items, conn, tran);
+                            tran.Commit();
+                        }
+                        catch
+                        {
+                            tran.Rollback();
+                            throw;
+                        }
+                    }
+                }
             }
 
             MessageBox.Show("Product created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -176,7 +192,7 @@ namespace InventoryManagementSystem.Forms
             { _errorProvider.SetError(txtPrice, errorMsg); isValid = false; }
             else if (!ValidationHelper.IsValidDecimal(priceText, out errorMsg))
             { _errorProvider.SetError(txtPrice, errorMsg); isValid = false; }
-            else { price = decimal.Parse(priceText); _errorProvider.SetError(txtPrice, string.Empty); }
+            else { price = decimal.Parse(priceText, System.Globalization.CultureInfo.InvariantCulture); _errorProvider.SetError(txtPrice, string.Empty); }
 
             string qtyText = txtQuantity.Text.Trim();
             if (string.IsNullOrWhiteSpace(qtyText)) qtyText = "0";

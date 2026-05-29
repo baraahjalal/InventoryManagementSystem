@@ -220,10 +220,19 @@ namespace InventoryManagementSystem
 
             if (result == DialogResult.Yes)
             {
-                SupplierRepository.Delete(supplier.SupplierTaxNumber);
-                LoadData(txtSearch.Text);
-                ClearForm();
-                MessageBox.Show("Supplier deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                try
+                {
+                    SupplierRepository.Delete(supplier.SupplierTaxNumber);
+                    LoadData(txtSearch.Text);
+                    ClearForm();
+                    MessageBox.Show("Supplier deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (System.Data.SqlClient.SqlException ex) when (ex.Number == 547)
+                {
+                    MessageBox.Show(
+                        "Cannot delete this supplier — they are referenced in existing stock movement records.",
+                        "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 

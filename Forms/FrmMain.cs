@@ -19,8 +19,9 @@ namespace InventoryManagementSystem
 
         public void OpenChildForm(Form childForm)
         {
-            if (pnlMainContent.Controls.Count > 0)
-                pnlMainContent.Controls.Clear();
+            foreach (Control c in pnlMainContent.Controls)
+                c.Dispose();
+            pnlMainContent.Controls.Clear();
 
             childForm.TopLevel        = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
