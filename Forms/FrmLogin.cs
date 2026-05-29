@@ -21,22 +21,6 @@ namespace InventoryManagementSystem
         public FrmLogin()
         {
             InitializeComponent();
-            LoadUsersIntoComboBox();
-        }
-
-        private void LoadUsersIntoComboBox()
-        {
-            cmbUserName.Items.Clear();
-
-            foreach (var user in UserRepository.GetAll())
-            {
-                cmbUserName.Items.Add(user.Username);
-            }
-
-            if (cmbUserName.Items.Count > 0)
-            {
-                cmbUserName.SelectedIndex = 0;
-            }
         }
 
         private void btnAuthenticate_Click(object sender, EventArgs e)

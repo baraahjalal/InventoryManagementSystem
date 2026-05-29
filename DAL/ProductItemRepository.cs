@@ -246,9 +246,14 @@ namespace InventoryManagementSystem.DAL
         public static void MarkRemovedBatch(int productId, int quantity, SqlConnection conn, SqlTransaction tran)
         {
             using (var cmd = new SqlCommand(
-                "UPDATE TOP (@q) ProductItems " +
+                "UPDATE ProductItems " +
                 "SET IsInStock = 0, DateRemoved = GETDATE() " +
-                "WHERE ProductSerialNumber = @pid AND IsInStock = 1", conn, tran))
+                "WHERE ItemID IN ( " +
+                "    SELECT TOP (@q) ItemID " +
+                "    FROM ProductItems " +
+                "    WHERE IsInStock = 1 AND ProductSerialNumber = @pid " +
+                "    ORDER BY DateAdded ASC" +
+                ")", conn, tran))
             {
                 cmd.Parameters.AddWithValue("@q",   quantity);
                 cmd.Parameters.AddWithValue("@pid", productId);
