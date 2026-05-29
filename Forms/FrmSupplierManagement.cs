@@ -214,6 +214,14 @@ namespace InventoryManagementSystem
             var supplier = dgvSuppliers.SelectedRows[0].Tag as Supplier;
             if (supplier == null) return;
 
+            if (SupplierRepository.HasRelatedRecords(supplier.SupplierTaxNumber))
+            {
+                MessageBox.Show(
+                    "Cannot delete this supplier — they are referenced in existing stock movement records.",
+                    "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var result = MessageBox.Show(
                 "Are you sure you want to delete this supplier?\nThis action cannot be undone.",
                 "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
@@ -230,7 +238,13 @@ namespace InventoryManagementSystem
                 catch (System.Data.SqlClient.SqlException ex) when (ex.Number == 547)
                 {
                     MessageBox.Show(
-                        "Cannot delete this supplier — they are referenced in existing stock movement records.",
+                        "Cannot delete this supplier — they are referenced in existing records.",
+                        "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"An error occurred while deleting the supplier: {ex.Message}",
                         "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }

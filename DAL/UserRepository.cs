@@ -126,6 +126,20 @@ namespace InventoryManagementSystem.DAL
             }
         }
 
+        public static bool HasRelatedRecords(int employeeId)
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(
+                    "SELECT COUNT(1) FROM StockMovements WHERE EmployeeID = @id", conn))
+                {
+                    cmd.Parameters.AddWithValue("@id", employeeId);
+                    return (int)cmd.ExecuteScalar() > 0;
+                }
+            }
+        }
+
         private static User MapUser(SqlDataReader r)
         {
             return new User

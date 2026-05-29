@@ -118,6 +118,20 @@ namespace InventoryManagementSystem.DAL
             }
         }
 
+        public static bool HasRelatedRecords(int taxNumber)
+        {
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(
+                    "SELECT COUNT(1) FROM StockMovements WHERE SupplierTaxNumber = @tax", conn))
+                {
+                    cmd.Parameters.AddWithValue("@tax", taxNumber);
+                    return (int)cmd.ExecuteScalar() > 0;
+                }
+            }
+        }
+
         private static Supplier MapSupplier(SqlDataReader r)
         {
             return new Supplier

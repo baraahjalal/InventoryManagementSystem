@@ -296,7 +296,21 @@ namespace InventoryManagementSystem
 
             int? supplierTaxNum = null;
             if (isReturn && cmbReturnSupplier.SelectedItem is Supplier returnSupplier)
+            {
                 supplierTaxNum = returnSupplier.SupplierTaxNumber;
+
+                bool validSupplier;
+                if (selectedIds.Count > 0)
+                    validSupplier = ProductItemRepository.AreItemsFromSupplier(selectedIds, supplierTaxNum.Value);
+                else
+                    validSupplier = ProductItemRepository.AreOldestItemsFromSupplier(product.ProductSerialNumber, quantity, supplierTaxNum.Value);
+
+                if (!validSupplier)
+                {
+                    MessageBox.Show("Cannot return these items to the selected supplier because one or more items did not originally come from them.", "Return Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
 
             string notes = isReturn
                 ? $"Return to Supplier | Warranty: {lblWarrantyDuration.Text}"

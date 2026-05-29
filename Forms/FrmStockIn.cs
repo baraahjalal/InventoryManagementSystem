@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using InventoryManagementSystem.DAL;
@@ -42,8 +43,8 @@ namespace InventoryManagementSystem
         {
             rbStockIn.Checked  = (_movementType == "StockIn");
             rbRestock.Checked  = (_movementType == "Restock");
-            rbStockIn.CheckedChanged  += (s, e) => { if (rbStockIn.Checked)  ApplyMode("StockIn"); };
-            rbRestock.CheckedChanged  += (s, e) => { if (rbRestock.Checked)  ApplyMode("Restock"); };
+            rbStockIn.CheckedChanged  += (s, e) => { if (rbStockIn.Checked)  { ApplyMode("StockIn"); LoadProducts(); } };
+            rbRestock.CheckedChanged  += (s, e) => { if (rbRestock.Checked)  { ApplyMode("Restock"); LoadProducts(); } };
             ApplyMode(_movementType);
         }
 
@@ -79,6 +80,12 @@ namespace InventoryManagementSystem
         {
             var products = ProductRepository.GetAll();
 
+            if (_movementType == "Restock")
+            {
+                // Only allow restocking products that have been stocked before
+                products = products.Where(p => ProductItemRepository.CountAll(p.ProductSerialNumber) > 0).ToList();
+            }
+
             cmbProduct.SelectedIndexChanged -= CmbProduct_SelectedIndexChanged;
             cmbProduct.DataSource    = null;
             cmbProduct.DisplayMember = "ProductName";
@@ -102,6 +109,16 @@ namespace InventoryManagementSystem
                 if (zones.Count > 0) cmbStorageZone.SelectedIndex = 0;
 
                 LoadActiveSuppliers();
+
+                if (_movementType == "Restock")
+                {
+                    var movements = StockMovementRepository.GetByProduct(product.ProductSerialNumber);
+                    var lastStockIn = movements.FirstOrDefault(m => m.MovementType == "StockIn" || m.MovementType == "Restock");
+                    if (lastStockIn != null && lastStockIn.SupplierTaxNumber.HasValue)
+                    {
+                        cmbSupplier.SelectedValue = lastStockIn.SupplierTaxNumber.Value;
+                    }
+                }
             }
         }
 

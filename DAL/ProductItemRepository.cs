@@ -330,6 +330,45 @@ namespace InventoryManagementSystem.DAL
             }
         }
 
+        public static bool AreItemsFromSupplier(List<int> itemIds, int supplierTaxNum)
+        {
+            if (itemIds == null || itemIds.Count == 0) return true;
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                string ids = string.Join(",", itemIds);
+                using (var cmd = new SqlCommand(
+                    $"SELECT COUNT(1) FROM ProductItems p JOIN StockMovements m ON p.BatchMovementID = m.MovementID " +
+                    $"WHERE p.ItemID IN ({ids}) AND (m.SupplierTaxNumber IS NULL OR m.SupplierTaxNumber != @tax)", conn))
+                {
+                    cmd.Parameters.AddWithValue("@tax", supplierTaxNum);
+                    return (int)cmd.ExecuteScalar() == 0;
+                }
+            }
+        }
+
+        public static bool AreOldestItemsFromSupplier(int productId, int quantity, int supplierTaxNum)
+        {
+            if (quantity <= 0) return true;
+            using (var conn = DatabaseHelper.GetConnection())
+            {
+                conn.Open();
+                using (var cmd = new SqlCommand(
+                    "SELECT COUNT(1) FROM (" +
+                    "  SELECT TOP (@q) p.BatchMovementID FROM ProductItems p " +
+                    "  WHERE p.ProductSerialNumber = @pid AND p.IsInStock = 1 ORDER BY p.DateAdded" +
+                    ") AS topItems " +
+                    "LEFT JOIN StockMovements m ON topItems.BatchMovementID = m.MovementID " +
+                    "WHERE m.SupplierTaxNumber IS NULL OR m.SupplierTaxNumber != @tax", conn))
+                {
+                    cmd.Parameters.AddWithValue("@q", quantity);
+                    cmd.Parameters.AddWithValue("@pid", productId);
+                    cmd.Parameters.AddWithValue("@tax", supplierTaxNum);
+                    return (int)cmd.ExecuteScalar() == 0;
+                }
+            }
+        }
+
         private static ProductItem MapItem(SqlDataReader r)
         {
             return new ProductItem

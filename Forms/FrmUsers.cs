@@ -237,6 +237,14 @@ namespace InventoryManagementSystem
             var user  = users.FirstOrDefault(u => u.EmployeeID == _selectedEmployeeId);
             string displayName = user?.Username ?? _selectedEmployeeId.ToString();
 
+            if (UserRepository.HasRelatedRecords(_selectedEmployeeId))
+            {
+                MessageBox.Show(
+                    "Cannot delete this user — they are referenced in existing stock movement records.",
+                    "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             var confirm = MessageBox.Show(
                 $"Are you sure you want to delete user '{displayName}'?",
                 "Confirm Delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -252,7 +260,13 @@ namespace InventoryManagementSystem
                 catch (System.Data.SqlClient.SqlException ex) when (ex.Number == 547)
                 {
                     MessageBox.Show(
-                        "Cannot delete this user — they are referenced in existing stock movement records.",
+                        "Cannot delete this user — they are referenced in existing records.",
+                        "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(
+                        $"An error occurred while deleting the user: {ex.Message}",
                         "Delete Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
