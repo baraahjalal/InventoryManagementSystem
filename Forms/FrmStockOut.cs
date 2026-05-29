@@ -50,8 +50,44 @@ namespace InventoryManagementSystem
             ApplyMode(_movementType);
         }
 
+        /// <summary>Finds the original supplier tax number for a product item, or null if unknown.</summary>
+        private int? FindOriginalSupplierTax(int productSerialNumber, int? explicitItemId = null)
+        {
+            var availableItems = ProductItemRepository.GetAvailable(productSerialNumber);
+            ProductItem targetItem = null;
+
+            if (explicitItemId.HasValue)
+                targetItem = availableItems.FirstOrDefault(i => i.ItemID == explicitItemId.Value);
+            else if (availableItems.Count > 0)
+                targetItem = availableItems.OrderBy(i => i.DateAdded).First();
+
+            if (targetItem != null && targetItem.BatchMovementId.HasValue)
+            {
+                var movements = StockMovementRepository.GetByProduct(productSerialNumber);
+                var movement = movements.FirstOrDefault(m => m.MovementId == targetItem.BatchMovementId.Value);
+                if (movement != null && movement.SupplierTaxNumber.HasValue)
+                    return movement.SupplierTaxNumber.Value;
+            }
+            return null;
+        }
+
         private void ApplyMode(string mode)
         {
+            // If switching to ReturnToSupplier, check if selected product has a known supplier
+            if (mode == "ReturnToSupplier" && cmbProduct.SelectedItem is Product selectedProduct)
+            {
+                int? supplierTax = FindOriginalSupplierTax(selectedProduct.ProductSerialNumber);
+                if (!supplierTax.HasValue)
+                {
+                    MessageBox.Show(
+                        $"Cannot use 'Return to Supplier' for '{selectedProduct.ProductName}' because the original supplier is unknown.\n\nThis product was added without a linked supplier record.",
+                        "Return Not Available", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    // Revert radio button to StockOut without re-triggering
+                    rbStockOut.Checked = true;
+                    return;
+                }
+            }
+
             _movementType = mode;
             bool isReturn = (mode == "ReturnToSupplier");
 
@@ -62,19 +98,46 @@ namespace InventoryManagementSystem
             lblReturnSupplier.Visible  = isReturn;
             cmbReturnSupplier.Visible  = isReturn;
 
-            if (isReturn && cmbReturnSupplier.Items.Count == 0)
-                LoadReturnSuppliers();
+            if (isReturn)
+                UpdateReturnSupplierForProduct();
         }
 
-        private void LoadReturnSuppliers()
+        /// <summary>Sets the supplier combo to show ONLY the original supplier for the selected product.</summary>
+        private void UpdateReturnSupplierForProduct(int? explicitItemId = null)
         {
-            var suppliers = SupplierRepository.GetActive();
-            cmbReturnSupplier.DataSource    = null;
-            cmbReturnSupplier.DisplayMember = "SupplierName";
-            cmbReturnSupplier.ValueMember   = "SupplierTaxNumber";
-            cmbReturnSupplier.DataSource    = suppliers;
-            if (suppliers.Count > 0) cmbReturnSupplier.SelectedIndex = 0;
-            else                     cmbReturnSupplier.SelectedIndex = -1;
+            if (_movementType != "ReturnToSupplier")
+                return;
+
+            var product = cmbProduct.SelectedItem as Product;
+            if (product == null)
+            {
+                cmbReturnSupplier.DataSource = null;
+                cmbReturnSupplier.Items.Clear();
+                return;
+            }
+
+            int? supplierTax = FindOriginalSupplierTax(product.ProductSerialNumber, explicitItemId);
+
+            if (supplierTax.HasValue)
+            {
+                // Load ONLY the original supplier into the combo — one item, no other choices
+                var allSuppliers = SupplierRepository.GetAll();
+                var originalSupplier = allSuppliers.FirstOrDefault(s => s.SupplierTaxNumber == supplierTax.Value);
+                if (originalSupplier != null)
+                {
+                    cmbReturnSupplier.DataSource    = null;
+                    cmbReturnSupplier.DisplayMember = "SupplierName";
+                    cmbReturnSupplier.ValueMember   = "SupplierTaxNumber";
+                    cmbReturnSupplier.DataSource    = new List<Supplier> { originalSupplier };
+                    cmbReturnSupplier.SelectedIndex = 0;
+                    cmbReturnSupplier.Enabled       = true; // Enabled but only 1 option
+                    return;
+                }
+            }
+
+            // Supplier unknown — clear combo
+            cmbReturnSupplier.DataSource = null;
+            cmbReturnSupplier.Items.Clear();
         }
 
         public void RefreshData()
@@ -119,6 +182,8 @@ namespace InventoryManagementSystem
 
             clbSerialNumbers.Items.Clear();
             ResetWarrantyCard();
+            cmbReturnSupplier.DataSource = null;
+            cmbReturnSupplier.Items.Clear();
         }
 
         private void CmbProduct_SelectedIndexChanged(object sender, EventArgs e)
@@ -146,6 +211,8 @@ namespace InventoryManagementSystem
                 clbSerialNumbers.Items.Add(item.ItemID);
 
             UpdateWarrantyDisplay(new List<int>(), product);
+
+            UpdateReturnSupplierForProduct();
         }
 
         private void ResetWarrantyCard()
@@ -252,6 +319,14 @@ namespace InventoryManagementSystem
             {
                 var selected = clbSerialNumbers.CheckedItems.Cast<int>().ToList();
                 UpdateWarrantyDisplay(selected);
+
+                if (_movementType == "ReturnToSupplier")
+                {
+                    if (selected.Count > 0)
+                        UpdateReturnSupplierForProduct(selected.First());
+                    else
+                        UpdateReturnSupplierForProduct();
+                }
             }));
         }
 
@@ -360,6 +435,16 @@ namespace InventoryManagementSystem
                 MessageBox.Show($"Warning: Stock for '{product.ProductName}' is running low ({remaining} left).", "Low Stock Alert", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
             RefreshData();
+        }
+
+        private void rbStockOut_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rbReturnToSupplier_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

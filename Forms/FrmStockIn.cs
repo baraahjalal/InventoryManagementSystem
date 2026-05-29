@@ -252,5 +252,15 @@ namespace InventoryManagementSystem
             txtSerialNumbers.Clear();
             numWarrantyMonths.Value    = 12;
         }
+
+        private void rbStockIn_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rbRestock_CheckedChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }

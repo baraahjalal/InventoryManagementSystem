@@ -338,8 +338,8 @@ namespace InventoryManagementSystem.DAL
                 conn.Open();
                 string ids = string.Join(",", itemIds);
                 using (var cmd = new SqlCommand(
-                    $"SELECT COUNT(1) FROM ProductItems p JOIN StockMovements m ON p.BatchMovementID = m.MovementID " +
-                    $"WHERE p.ItemID IN ({ids}) AND (m.SupplierTaxNumber IS NULL OR m.SupplierTaxNumber != @tax)", conn))
+                    $"SELECT COUNT(1) FROM ProductItems p LEFT JOIN StockMovements m ON p.BatchMovementID = m.MovementID " +
+                    $"WHERE p.ItemID IN ({ids}) AND m.SupplierTaxNumber IS NOT NULL AND m.SupplierTaxNumber != @tax", conn))
                 {
                     cmd.Parameters.AddWithValue("@tax", supplierTaxNum);
                     return (int)cmd.ExecuteScalar() == 0;
@@ -359,7 +359,7 @@ namespace InventoryManagementSystem.DAL
                     "  WHERE p.ProductSerialNumber = @pid AND p.IsInStock = 1 ORDER BY p.DateAdded" +
                     ") AS topItems " +
                     "LEFT JOIN StockMovements m ON topItems.BatchMovementID = m.MovementID " +
-                    "WHERE m.SupplierTaxNumber IS NULL OR m.SupplierTaxNumber != @tax", conn))
+                    "WHERE m.SupplierTaxNumber IS NOT NULL AND m.SupplierTaxNumber != @tax", conn))
                 {
                     cmd.Parameters.AddWithValue("@q", quantity);
                     cmd.Parameters.AddWithValue("@pid", productId);

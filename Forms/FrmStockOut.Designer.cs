@@ -23,8 +23,6 @@ namespace InventoryManagementSystem
             this.rbStockOut = new System.Windows.Forms.RadioButton();
             this.rbReturnToSupplier = new System.Windows.Forms.RadioButton();
             this.pnlMainCard = new System.Windows.Forms.Panel();
-            this.lblReturnSupplier = new System.Windows.Forms.Label();
-            this.cmbReturnSupplier = new System.Windows.Forms.ComboBox();
             this.btnExecuteStockOut = new System.Windows.Forms.Button();
             this.txtWarrantyInfo = new System.Windows.Forms.TextBox();
             this.lblStockStatus = new System.Windows.Forms.Label();
@@ -38,6 +36,8 @@ namespace InventoryManagementSystem
             this.lblWarrantyTitle = new System.Windows.Forms.Label();
             this.lblWarrantyDuration = new System.Windows.Forms.Label();
             this.lblWarrantyExpiry = new System.Windows.Forms.Label();
+            this.lblReturnSupplier = new System.Windows.Forms.Label();
+            this.cmbReturnSupplier = new System.Windows.Forms.ComboBox();
             this.lblSystemID = new System.Windows.Forms.Label();
             this.pnlHeader.SuspendLayout();
             this.pnlMainCard.SuspendLayout();
@@ -50,8 +50,6 @@ namespace InventoryManagementSystem
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.pnlHeader.Controls.Add(this.lblHeader);
             this.pnlHeader.Controls.Add(this.lblSubHeader);
-            this.pnlHeader.Controls.Add(this.rbStockOut);
-            this.pnlHeader.Controls.Add(this.rbReturnToSupplier);
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlHeader.Name = "pnlHeader";
@@ -79,55 +77,36 @@ namespace InventoryManagementSystem
             this.lblSubHeader.Size = new System.Drawing.Size(394, 21);
             this.lblSubHeader.TabIndex = 2;
             this.lblSubHeader.Text = "Track and manage hardware distribution with precision.";
-            //
+            // 
             // rbStockOut
-            //
+            // 
             this.rbStockOut.AutoSize = true;
             this.rbStockOut.BackColor = System.Drawing.Color.Transparent;
             this.rbStockOut.Checked = true;
             this.rbStockOut.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.rbStockOut.ForeColor = System.Drawing.Color.White;
-            this.rbStockOut.Location = new System.Drawing.Point(590, 40);
+            this.rbStockOut.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.rbStockOut.Location = new System.Drawing.Point(617, 128);
             this.rbStockOut.Name = "rbStockOut";
-            this.rbStockOut.Size = new System.Drawing.Size(100, 21);
+            this.rbStockOut.Size = new System.Drawing.Size(92, 23);
             this.rbStockOut.TabIndex = 3;
             this.rbStockOut.TabStop = true;
             this.rbStockOut.Text = "Stock Out";
-            //
+            this.rbStockOut.UseVisualStyleBackColor = false;
+            this.rbStockOut.CheckedChanged += new System.EventHandler(this.rbStockOut_CheckedChanged);
+            // 
             // rbReturnToSupplier
-            //
+            // 
             this.rbReturnToSupplier.AutoSize = true;
             this.rbReturnToSupplier.BackColor = System.Drawing.Color.Transparent;
             this.rbReturnToSupplier.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.rbReturnToSupplier.ForeColor = System.Drawing.Color.White;
-            this.rbReturnToSupplier.Location = new System.Drawing.Point(710, 40);
+            this.rbReturnToSupplier.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
+            this.rbReturnToSupplier.Location = new System.Drawing.Point(715, 128);
             this.rbReturnToSupplier.Name = "rbReturnToSupplier";
-            this.rbReturnToSupplier.Size = new System.Drawing.Size(170, 21);
+            this.rbReturnToSupplier.Size = new System.Drawing.Size(149, 23);
             this.rbReturnToSupplier.TabIndex = 4;
             this.rbReturnToSupplier.Text = "Return to Supplier";
-            //
-            // lblReturnSupplier
-            //
-            this.lblReturnSupplier.AutoSize = true;
-            this.lblReturnSupplier.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
-            this.lblReturnSupplier.ForeColor = System.Drawing.Color.FromArgb(64, 64, 64);
-            this.lblReturnSupplier.Location = new System.Drawing.Point(35, 105);
-            this.lblReturnSupplier.Name = "lblReturnSupplier";
-            this.lblReturnSupplier.Size = new System.Drawing.Size(120, 17);
-            this.lblReturnSupplier.TabIndex = 14;
-            this.lblReturnSupplier.Text = "Return to Supplier";
-            this.lblReturnSupplier.Visible = false;
-            //
-            // cmbReturnSupplier
-            //
-            this.cmbReturnSupplier.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbReturnSupplier.Font = new System.Drawing.Font("Segoe UI", 11.25F);
-            this.cmbReturnSupplier.FormattingEnabled = true;
-            this.cmbReturnSupplier.Location = new System.Drawing.Point(38, 128);
-            this.cmbReturnSupplier.Name = "cmbReturnSupplier";
-            this.cmbReturnSupplier.Size = new System.Drawing.Size(370, 28);
-            this.cmbReturnSupplier.TabIndex = 15;
-            this.cmbReturnSupplier.Visible = false;
+            this.rbReturnToSupplier.UseVisualStyleBackColor = false;
+            this.rbReturnToSupplier.CheckedChanged += new System.EventHandler(this.rbReturnToSupplier_CheckedChanged);
             // 
             // pnlMainCard
             // 
@@ -164,7 +143,6 @@ namespace InventoryManagementSystem
             this.btnExecuteStockOut.TabIndex = 12;
             this.btnExecuteStockOut.Text = "CONFIRM STOCK OUT";
             this.btnExecuteStockOut.UseVisualStyleBackColor = false;
-            // 
             // 
             // txtWarrantyInfo
             // 
@@ -244,9 +222,9 @@ namespace InventoryManagementSystem
             this.lblSerialNumber.Size = new System.Drawing.Size(300, 17);
             this.lblSerialNumber.TabIndex = 6;
             this.lblSerialNumber.Text = "SELECT SPECIFIC SERIAL NUMBERS TO DISPATCH";
-            //
+            // 
             // cmbProduct
-            //
+            // 
             this.cmbProduct.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbProduct.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbProduct.FormattingEnabled = true;
@@ -254,9 +232,9 @@ namespace InventoryManagementSystem
             this.cmbProduct.Name = "cmbProduct";
             this.cmbProduct.Size = new System.Drawing.Size(772, 28);
             this.cmbProduct.TabIndex = 5;
-            //
+            // 
             // lblProduct
-            //
+            // 
             this.lblProduct.AutoSize = true;
             this.lblProduct.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblProduct.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
@@ -265,7 +243,7 @@ namespace InventoryManagementSystem
             this.lblProduct.Size = new System.Drawing.Size(113, 17);
             this.lblProduct.TabIndex = 4;
             this.lblProduct.Text = "SELECT PRODUCT";
-            //
+            // 
             // pnlWarrantyCard
             // 
             this.pnlWarrantyCard.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(244)))), ((int)(((byte)(255)))));
@@ -311,6 +289,29 @@ namespace InventoryManagementSystem
             this.lblWarrantyExpiry.TabIndex = 2;
             this.lblWarrantyExpiry.Text = "Select items below to view warranty";
             // 
+            // lblReturnSupplier
+            // 
+            this.lblReturnSupplier.AutoSize = true;
+            this.lblReturnSupplier.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            this.lblReturnSupplier.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.lblReturnSupplier.Location = new System.Drawing.Point(35, 105);
+            this.lblReturnSupplier.Name = "lblReturnSupplier";
+            this.lblReturnSupplier.Size = new System.Drawing.Size(119, 17);
+            this.lblReturnSupplier.TabIndex = 14;
+            this.lblReturnSupplier.Text = "Return to Supplier";
+            this.lblReturnSupplier.Visible = false;
+            // 
+            // cmbReturnSupplier
+            // 
+            this.cmbReturnSupplier.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbReturnSupplier.Font = new System.Drawing.Font("Segoe UI", 11.25F);
+            this.cmbReturnSupplier.FormattingEnabled = true;
+            this.cmbReturnSupplier.Location = new System.Drawing.Point(38, 128);
+            this.cmbReturnSupplier.Name = "cmbReturnSupplier";
+            this.cmbReturnSupplier.Size = new System.Drawing.Size(370, 28);
+            this.cmbReturnSupplier.TabIndex = 15;
+            this.cmbReturnSupplier.Visible = false;
+            // 
             // lblSystemID
             // 
             this.lblSystemID.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -331,7 +332,9 @@ namespace InventoryManagementSystem
             this.ClientSize = new System.Drawing.Size(1029, 683);
             this.Controls.Add(this.lblSystemID);
             this.Controls.Add(this.pnlMainCard);
+            this.Controls.Add(this.rbStockOut);
             this.Controls.Add(this.pnlHeader);
+            this.Controls.Add(this.rbReturnToSupplier);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "FrmStockOut";
             this.Text = "FrmStockOut";
