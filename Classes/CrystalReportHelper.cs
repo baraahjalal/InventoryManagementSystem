@@ -10,6 +10,32 @@ namespace InventoryManagementSystem.Classes
     /// </summary>
     public static class CrystalReportHelper
     {
+        /// <summary>
+        /// Sets report parameters from the logged-in session (e.g. {?CurrentUser} on Stock Inventory Status).
+        /// Call before <see cref="ReportDocument.Refresh"/>.
+        /// </summary>
+        public static void ApplySessionParameters(ReportDocument report)
+        {
+            if (report == null) throw new ArgumentNullException(nameof(report));
+
+            var printedBy = DatabaseHelper.CurrentUser?.Username ?? "Unknown";
+
+            if (HasParameter(report, "CurrentUser"))
+                report.SetParameterValue("CurrentUser", printedBy);
+        }
+
+        private static bool HasParameter(ReportDocument report, string name)
+        {
+            foreach (ParameterFieldDefinition param in report.DataDefinition.ParameterFields)
+            {
+                if (string.Equals(param.Name, name, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(param.ParameterFieldName, name, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+
+            return false;
+        }
+
         public static void ApplyDatabaseLogon(ReportDocument report)
         {
             if (report == null) throw new ArgumentNullException(nameof(report));
