@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(MSBuild.exe InventoryManagementSystem.csproj /t:Build /p:Configuration=Debug /nologo /v:minimal)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"c:\\\\Users\\\\zaroug\\\\Desktop\\\\InventoryManagementSystem\\\\InventoryManagementSystem.csproj\" /t:Build /p:Configuration=Debug /verbosity:minimal 2>&1)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Professional\\\\Msbuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"c:\\\\Users\\\\zaroug\\\\Desktop\\\\InventoryManagementSystem\\\\InventoryManagementSystem.csproj\" /t:Build /p:Configuration=Debug /verbosity:minimal 2>&1)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\zaroug\\\\Desktop\\\\InventoryManagementSystem\" -Recurse -File)",
+      "Bash(Select-Object FullName)",
+      "Bash(Sort-Object FullName)",
+      "Bash(dotnet build *)",
+      "Bash(\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" InventoryManagementSystem.sln /p:Configuration=Debug /nologo)",
+      "Bash(\"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" InventoryManagementSystem.sln /p:Configuration=Debug /v:minimal)",
+      "PowerShell(cd \"c:\\\\Users\\\\zaroug\\\\Desktop\\\\InventoryManagementSystem\"; $conn = New-Object System.Data.SqlClient.SqlConnection\\(\"Data Source=BARAAH-PC;Initial Catalog=InventoryDBv3;Integrated Security=true;\"\\); $conn.Open\\(\\); $cmd = $conn.CreateCommand\\(\\); $cmd.CommandText = \"SELECT name FROM sys.triggers ORDER BY name\"; $reader = $cmd.ExecuteReader\\(\\); while\\($reader.Read\\(\\)\\) { $reader[\"name\"] }; $reader.Close\\(\\); $conn.Close\\(\\))",
+      "Bash(\"C:\\\\Windows\\\\Microsoft.NET\\\\Framework\\\\v4.0.30319\\\\MSBuild.exe\" InventoryManagementSystem.csproj /p:Configuration=Debug /t:Build /v:quiet)",
+      "Bash(\"C:\\\\Program Files \\(x86\\)\\\\Microsoft Visual Studio\\\\2019\\\\Community\\\\MSBuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"c:\\\\Users\\\\zaroug\\\\Desktop\\\\InventoryManagementSystem\\\\InventoryManagementSystem.csproj\" /p:Configuration=Debug /t:Build /v:minimal)",
+      "PowerShell(& \"C:\\\\Program Files\\\\Microsoft Visual Studio\\\\2022\\\\Professional\\\\Msbuild\\\\Current\\\\Bin\\\\MSBuild.exe\" \"c:\\\\Users\\\\zaroug\\\\Desktop\\\\InventoryManagementSystem\\\\InventoryManagementSystem.csproj\" /p:Configuration=Debug /t:Build /v:minimal 2>&1)",
+      "Bash(MSBuild.exe InventoryManagementSystem.csproj /nologo /v:q)",
+      "Bash(Remove-Item \"c:\\\\Users\\\\zaroug\\\\Desktop\\\\InventoryManagementSystem\\\\Database\\\\DataRetentionSettings.sql\")",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\zaroug\\\\Desktop\\\\InventoryManagementSystem\" -Force | Select-Object Name, @{Name='Type';Expression={if\\($_.PSIsContainer\\){'Folder'}else{'File'}}} | Sort-Object Type, Name)"
+    ]
+  }
+}
