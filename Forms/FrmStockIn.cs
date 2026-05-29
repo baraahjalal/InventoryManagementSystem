@@ -224,28 +224,18 @@ namespace InventoryManagementSystem
                                 ProductSerialNumber = product.ProductSerialNumber,
                                 BatchMovementId     = movementId
                             });
-                        try
-                        {
-                            ProductItemRepository.AddBatch(newItems, conn, tran);
-                        }
-                        catch (InvalidOperationException)
-                        {
-                            MessageBox.Show("تجاوزت الحد الأقصى للوحدات المتاحة لهذا المنتج.",
-                                "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
-                        catch (Exception)
-                        {
-                            MessageBox.Show("حدث خطأ غير متوقع أثناء العملية.",
-                                "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            return;
-                        }
+                        ProductItemRepository.AddBatch(newItems, conn, tran);
                         tran.Commit();
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         tran.Rollback();
-                        throw;
+                        if (ex is InvalidOperationException)
+                            MessageBox.Show("تجاوزت الحد الأقصى للوحدات المتاحة لهذا المنتج.",
+                                "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        else
+                            MessageBox.Show("حدث خطأ غير متوقع أثناء العملية.",
+                                "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
