@@ -221,24 +221,10 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="README.md" />
-    <None Include="MIGRATION_CONTEXT.md" />
     <None Include=".gitignore" />
     <None Include=".gitattributes" />
-    <None Include="2026-05-18-system-analysis-fix-round2.md" />
-    <None Include="Error Fix Plan - FrmProducts.docx" />
     <None Include="InventoryManagementSystem.csproj" />
     <None Include="InventoryManagementSystem.sln" />
-    <None Include="docs\PROJECT_ROADMAP.md" />
-    <None Include="docs\superpowers\plans\2026-05-18-final-phase-sql-crystal-reports.md" />
-    <None Include="docs\superpowers\plans\2026-05-18-system-analysis-fix-round2.md" />
-    <None Include="docs\superpowers\specs\2026-05-18-system-analysis-fix-round2-design.md" />
-    <None Include="Database\CreateDatabase.sql" />
-    <None Include="Database\InventoryDB_Fixes.sql" />
-    <None Include="Database\InventoryDB_Script.sql" />
-    <None Include="Database\InventoryDBv3.sql" />
-    <None Include="Database\InventoryDBv3_Complete.sql" />
-    <None Include="Database\SeedData.sql" />
-    <None Include="Database\Triggers.sql" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\AuditLogEntry.cs" />
@@ -267,7 +253,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Database\اخر سكريبت للداتا بييييز الساعة اربعة ونص العصر يوم الخميسسس.sql" />
-    <Content Include="Database\اخررر سكريبت للداتا بيز الساعة واحد الظهر.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="docs\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
