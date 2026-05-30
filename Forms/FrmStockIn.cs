@@ -236,6 +236,7 @@ namespace InventoryManagementSystem
                         else
                             MessageBox.Show("حدث خطأ غير متوقع أثناء العملية.",
                                 "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
                     }
                 }
             }
