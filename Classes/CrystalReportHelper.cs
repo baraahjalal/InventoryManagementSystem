@@ -24,6 +24,21 @@ namespace InventoryManagementSystem.Classes
                 report.SetParameterValue("CurrentUser", printedBy);
         }
 
+        // Returns ParameterFields to set on the viewer so it doesn't prompt the user.
+        public static ParameterFields BuildViewerParameterFields()
+        {
+            var fields = new ParameterFields();
+
+            var field = new ParameterField { ParameterFieldName = "CurrentUser" };
+            field.CurrentValues.Add(new ParameterDiscreteValue
+            {
+                Value = DatabaseHelper.CurrentUser?.Username ?? "Unknown"
+            });
+            fields.Add(field);
+
+            return fields;
+        }
+
         private static bool HasParameter(ReportDocument report, string name)
         {
             foreach (ParameterFieldDefinition param in report.DataDefinition.ParameterFields)

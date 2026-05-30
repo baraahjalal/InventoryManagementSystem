@@ -1,7 +1,8 @@
+﻿using CrystalDecisions.CrystalReports.Engine;
+using InventoryManagementSystem.Classes;
+using InventoryManagementSystem.DAL;
 using System;
 using System.Windows.Forms;
-using CrystalDecisions.CrystalReports.Engine;
-using InventoryManagementSystem.Classes;
 
 namespace InventoryManagementSystem
 {
@@ -21,6 +22,7 @@ namespace InventoryManagementSystem
             {
                 CrystalReportHelper.ApplyDatabaseLogon(_report);
                 CrystalReportHelper.ApplySessionParameters(_report);
+                crystalReportViewer.ParameterFieldInfo = CrystalReportHelper.BuildViewerParameterFields();
                 _report.Refresh();
                 crystalReportViewer.ReportSource = _report;
             }
