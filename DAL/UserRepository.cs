@@ -1,11 +1,25 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Text;
 using InventoryManagementSystem.Models;
 
 namespace InventoryManagementSystem.DAL
 {
     public static class UserRepository
     {
+        public static string HashPassword(string password)
+        {
+            using (var sha256 = SHA256.Create())
+            {
+                byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
+                var sb = new StringBuilder(64);
+                foreach (byte b in bytes)
+                    sb.Append(b.ToString("x2"));
+                return sb.ToString();
+            }
+        }
+
         public static User Authenticate(string username, string password)
         {
             using (var conn = DatabaseHelper.GetConnection())
@@ -16,7 +30,7 @@ namespace InventoryManagementSystem.DAL
                     "FROM Users WHERE Username = @u AND Password = @p", conn))
                 {
                     cmd.Parameters.AddWithValue("@u", username);
-                    cmd.Parameters.AddWithValue("@p", password);
+                    cmd.Parameters.AddWithValue("@p", HashPassword(password));
                     using (var r = cmd.ExecuteReader())
                     {
                         if (!r.Read()) return null;
@@ -53,7 +67,7 @@ namespace InventoryManagementSystem.DAL
                 {
                     cmd.Parameters.AddWithValue("@id", u.EmployeeID);
                     cmd.Parameters.AddWithValue("@u",  u.Username);
-                    cmd.Parameters.AddWithValue("@p",  u.Password);
+                    cmd.Parameters.AddWithValue("@p",  HashPassword(u.Password));
                     cmd.Parameters.AddWithValue("@r",  u.Role);
                     cmd.Parameters.AddWithValue("@a",  u.IsAdmin);
                     var addPhoto = cmd.Parameters.Add("@ph", System.Data.SqlDbType.VarBinary, -1);
@@ -68,18 +82,36 @@ namespace InventoryManagementSystem.DAL
             using (var conn = DatabaseHelper.GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SqlCommand(
-                    "UPDATE Users SET Username = @u, Password = @p, Role = @r, IsAdmin = @a, ProfilePhoto = @ph " +
-                    "WHERE EmployeeID = @id", conn))
+                if (!string.IsNullOrEmpty(u.Password))
                 {
-                    cmd.Parameters.AddWithValue("@u",  u.Username);
-                    cmd.Parameters.AddWithValue("@p",  u.Password);
-                    cmd.Parameters.AddWithValue("@r",  u.Role);
-                    cmd.Parameters.AddWithValue("@a",  u.IsAdmin);
-                    var updPhoto = cmd.Parameters.Add("@ph", System.Data.SqlDbType.VarBinary, -1);
-                    updPhoto.Value = (object)u.ProfilePhoto ?? System.DBNull.Value;
-                    cmd.Parameters.AddWithValue("@id", u.EmployeeID);
-                    cmd.ExecuteNonQuery();
+                    using (var cmd = new SqlCommand(
+                        "UPDATE Users SET Username = @u, Password = @p, Role = @r, IsAdmin = @a, ProfilePhoto = @ph " +
+                        "WHERE EmployeeID = @id", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@u",  u.Username);
+                        cmd.Parameters.AddWithValue("@p",  HashPassword(u.Password));
+                        cmd.Parameters.AddWithValue("@r",  u.Role);
+                        cmd.Parameters.AddWithValue("@a",  u.IsAdmin);
+                        var updPhoto = cmd.Parameters.Add("@ph", System.Data.SqlDbType.VarBinary, -1);
+                        updPhoto.Value = (object)u.ProfilePhoto ?? System.DBNull.Value;
+                        cmd.Parameters.AddWithValue("@id", u.EmployeeID);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                else
+                {
+                    using (var cmd = new SqlCommand(
+                        "UPDATE Users SET Username = @u, Role = @r, IsAdmin = @a, ProfilePhoto = @ph " +
+                        "WHERE EmployeeID = @id", conn))
+                    {
+                        cmd.Parameters.AddWithValue("@u",  u.Username);
+                        cmd.Parameters.AddWithValue("@r",  u.Role);
+                        cmd.Parameters.AddWithValue("@a",  u.IsAdmin);
+                        var updPhoto = cmd.Parameters.Add("@ph", System.Data.SqlDbType.VarBinary, -1);
+                        updPhoto.Value = (object)u.ProfilePhoto ?? System.DBNull.Value;
+                        cmd.Parameters.AddWithValue("@id", u.EmployeeID);
+                        cmd.ExecuteNonQuery();
+                    }
                 }
             }
         }

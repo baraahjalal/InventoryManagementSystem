@@ -128,7 +128,7 @@ namespace InventoryManagementSystem
                     {
                         if (_txtEmployeeId != null) { _txtEmployeeId.Text = user.EmployeeID.ToString(); _txtEmployeeId.ReadOnly = true; }
                         txtUserName.Text      = user.Username;
-                        txtUserPassword.Text  = user.Password;
+                        txtUserPassword.Text  = string.Empty;
                         cmbRole.SelectedItem  = user.Role;
                         picUser.Image         = ByteArrayToImage(user.ProfilePhoto);
                     }
@@ -302,10 +302,12 @@ namespace InventoryManagementSystem
             { _errorProvider.SetError(txtUserName, errorMsg); isValid = false; }
             else _errorProvider.SetError(txtUserName, string.Empty);
 
-            if (!ValidationHelper.IsRequired(txtUserPassword.Text, out errorMsg))
-            { _errorProvider.SetError(txtUserPassword, errorMsg); isValid = false; }
-            else if (!ValidationHelper.IsValidLength(txtUserPassword.Text, 2, 50, out errorMsg))
-            { _errorProvider.SetError(txtUserPassword, errorMsg); isValid = false; }
+            bool isUpdate = _selectedEmployeeId > 0;
+            string pwd = txtUserPassword.Text;
+            if (!isUpdate && string.IsNullOrEmpty(pwd))
+            { _errorProvider.SetError(txtUserPassword, "هذا الحقل مطلوب ولا يمكن تركه فارغاً."); isValid = false; }
+            else if (!string.IsNullOrEmpty(pwd) && pwd.Length < 8)
+            { _errorProvider.SetError(txtUserPassword, "كلمة المرور يجب أن تكون 8 أحرف على الأقل"); isValid = false; }
             else _errorProvider.SetError(txtUserPassword, string.Empty);
 
             if (cmbRole.SelectedIndex == -1)

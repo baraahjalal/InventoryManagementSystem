@@ -227,10 +227,15 @@ namespace InventoryManagementSystem
                         ProductItemRepository.AddBatch(newItems, conn, tran);
                         tran.Commit();
                     }
-                    catch
+                    catch (Exception ex)
                     {
                         tran.Rollback();
-                        throw;
+                        if (ex is InvalidOperationException)
+                            MessageBox.Show("تجاوزت الحد الأقصى للوحدات المتاحة لهذا المنتج.",
+                                "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        else
+                            MessageBox.Show("حدث خطأ غير متوقع أثناء العملية.",
+                                "خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
