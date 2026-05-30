@@ -26,6 +26,7 @@ namespace InventoryManagementSystem
             ("Product Added",        "PRODUCT ADDED"),
             ("Product Deleted",      "PRODUCT DELETED"),
             ("User Added",           "USER ADDED"),
+            ("User Modified",        "USER MODIFIED"),
             ("User Deleted",         "USER DELETED"),
             ("Supplier Added",       "SUPPLIER ADDED"),
             ("Supplier Deleted",     "SUPPLIER DELETED"),
@@ -325,6 +326,15 @@ namespace InventoryManagementSystem
                 return;
             }
 
+            // ── User Modified ────────────────────────────────────────────────
+            // Format: "User account updated: USERNAME"
+            if (desc.StartsWith("User account updated: "))
+            {
+                subject = desc.Substring(22).Trim();
+                notes   = "Account modified";
+                return;
+            }
+
             // ── User Deleted ─────────────────────────────────────────────────
             // Format: "User removed: USERNAME (ROLE)"
             if (desc.StartsWith("User removed: "))
@@ -373,6 +383,7 @@ namespace InventoryManagementSystem
                 case "PRODUCT ADDED":           return "Product Added";
                 case "PRODUCT DELETED":         return "Product Deleted";
                 case "USER ADDED":              return "User Added";
+                case "USER MODIFIED":           return "User Modified";
                 case "USER DELETED":            return "User Deleted";
                 case "SUPPLIER ADDED":          return "Supplier Added";
                 case "SUPPLIER DELETED":        return "Supplier Deleted";
@@ -397,6 +408,11 @@ namespace InventoryManagementSystem
                 case "STOCK RETURNTOSUPPLIER":
                     row.DefaultCellStyle.BackColor          = Color.FromArgb(255, 242, 242);
                     row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(254, 220, 220);
+                    break;
+
+                case "USER MODIFIED":
+                    row.DefaultCellStyle.BackColor          = Color.FromArgb(239, 246, 255);
+                    row.DefaultCellStyle.SelectionBackColor = Color.FromArgb(211, 229, 255);
                     break;
 
                 case "PRODUCT DELETED":
